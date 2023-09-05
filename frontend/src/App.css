@@ -7,13 +7,15 @@
   height: 100vh;
   box-sizing: border-box;
   margin:auto;
+  background-color: #050F33;
+  color:white;
 }
 
 .Navbar {
   position: absolute;
   bottom: 0px;
   width: 100%;
-  background-color: blue;
+  background-color: #293858;
   border-bottom-left-radius: 2.5rem;
   border-bottom-right-radius: 2.5rem;
 }
@@ -25,7 +27,6 @@
   margin: 50px auto;
   color:white
 }
-
 
 .App-logo {
   height: 40vmin;
