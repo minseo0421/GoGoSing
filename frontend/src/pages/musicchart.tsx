@@ -1,11 +1,11 @@
-import React from "react";
-import AlbumCardContainer from "../components/AlbumCardContainer";
+import React from 'react';
 
 const MusicChart: React.FC = () => {
-  return (
-    <div>
-      <AlbumCardContainer />
-    </div>
-  );
-};
+    return (
+      <div>
+        <h1>MusicChart 입니당</h1>
+      </div>
+    );
+}
 export default MusicChart;
+  
