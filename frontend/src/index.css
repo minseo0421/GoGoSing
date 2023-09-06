@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
 }
 
 code {
@@ -14,4 +15,8 @@ code {
 
 * {
   user-select: none;
+<<<<<<< HEAD
+  -webkit-user-drag: none;
+=======
+>>>>>>> ee2a4b0b0a8c9b0e906ca50c0edc5957d7aff78b
 }

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
+import styled from './bar.module.css';
 
 interface BottomBarProps {
   onClickButton: (index: number) => void;
@@ -7,6 +8,7 @@ interface BottomBarProps {
 
 const BottomBar: React.FC<BottomBarProps> = ({ onClickButton }) => {
   const location = useLocation();
+  const [isBtn, setBtn] = useState(1);
 
   return (
     <>
@@ -14,51 +16,51 @@ const BottomBar: React.FC<BottomBarProps> = ({ onClickButton }) => {
       location.pathname === "/chart" ||
       location.pathname === "/search" ||
       location.pathname === "/like" ? (
-        <div className="Navbar">
-          <div className="icon">
-            <div
+        <div className={styled.Navbar}>
+          <div className={styled.iconbar}>
+            <div className={`${styled.iconbtn} ${isBtn === 1 ? styled.sel_icon : null}`} 
               onClick={() => {
                 onClickButton(0);
-              }}
-            >
-              <img
-                src={`${process.env.PUBLIC_URL}/assets/mainHomeIcon.svg`}
-                alt=""
-              />
+                setBtn(1)
+              }}>
+              <img src={`${isBtn===1 ? `assets/sel_home.png`:`assets/unsel_home.png`}`} alt="" />
               홈
             </div>
-            <div
+            <div  className={`${styled.iconbtn} ${isBtn === 2 ? styled.sel_icon : null}`}
               onClick={() => {
                 onClickButton(1);
+                setBtn(2)
               }}
             >
               <img
-                src={`${process.env.PUBLIC_URL}/assets/musicChartIcon.svg`}
+                src={`${isBtn===2 ? `assets/sel_chart.png`:`assets/unsel_chart.png`}`}
                 alt=""
               />
               차트
             </div>
-            <div
+            <div  className={`${styled.iconbtn} ${isBtn === 3 ? styled.sel_icon : null}`}
               onClick={() => {
                 onClickButton(2);
+                setBtn(3)
               }}
             >
               <img
-                src={`${process.env.PUBLIC_URL}/assets/musicSearchIcon.svg`}
+                src={`${isBtn===3 ? `assets/sel_search.png`:`assets/unsel_search.png`}`}
                 alt=""
               />
               검색
             </div>
-            <div
+            <div  className={`${styled.iconbtn} ${isBtn === 4 ? styled.sel_icon : null}`}
               onClick={() => {
                 onClickButton(3);
+                setBtn(4)
               }}
             >
               <img
-                src={`${process.env.PUBLIC_URL}/assets/musicLikeIcon.svg`}
+                src={`${isBtn===4 ? `assets/sel_like.png`:`assets/unsel_like.png`}`}
                 alt=""
               />
-              보관함
+              좋아요
             </div>
           </div>
         </div>
