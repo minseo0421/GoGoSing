@@ -4,7 +4,7 @@ import AlbumCardContainer from "../components/AlbumCardContainer";
 const MusicChart: React.FC = () => {
   return (
     <div>
-      <AlbumCardContainer></AlbumCardContainer>
+      <AlbumCardContainer />
     </div>
   );
 };

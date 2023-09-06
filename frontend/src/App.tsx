@@ -15,7 +15,7 @@ import LocalLogin from "./pages/account/locallogin";
 import BottomBar from "./components/Bottombar";
 import Topbar from "./components/Topbar";
 import { AnimatePresence, motion } from "framer-motion";
-import { PageVariants, PageTransition } from "./components/PageTransition";
+import { PageVariants, PageTransition } from "./components/pageTransition";
 
 function App() {
   // BottomBar 관련 상태
@@ -30,14 +30,9 @@ function App() {
     setPageNumber(clickedNumber);
   };
 
-  const isMainRoute = location.pathname === "/";
-  const shouldDisplayTopBar =
-    isMainRoute || ["/chart", "/search", "/like"].includes(location.pathname);
-
   return (
-    // <Router>
     <div className="App" style={{ width: `${window.innerHeight / 2}px` }}>
-      <Topbar show={shouldDisplayTopBar} isMain={isMainRoute} />
+      <Topbar />
       <AnimatePresence initial={false} mode="wait">
         <motion.div
           key={location.pathname}
@@ -64,7 +59,6 @@ function App() {
       </AnimatePresence>
       <BottomBar onClickButton={cl} />
     </div>
-    // </Router>
   );
 }
 
