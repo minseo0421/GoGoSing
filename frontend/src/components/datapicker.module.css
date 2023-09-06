@@ -1,0 +1,51 @@
+.calender {
+  background-color: rgb(82, 92, 144);
+  position: absolute;
+  width: 100%;
+  height: 40%;
+  bottom: 0px;
+  border-radius: 1rem 1rem 2.5rem 2.5rem;
+}
+
+.input_calender {
+  background-color:rgba(5, 15, 51,0.3);
+  width:90%;
+  height: 80%;
+  display: flex;
+  margin:auto;
+  border-radius: 0.5rem;
+}
+
+.date_picker_container {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .scrollable_select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    overflow-y: auto; /* 세로 스크롤 바 표시 */
+    max-height: 150px; /* 스크롤 가능한 최대 높이 설정 */
+  }
+  
+  .scrollable_select option {
+    padding: 5px;
+  }
+  
+  /* 선택된 옵션의 배경색 변경 */
+  .scrollable_select option:checked {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  /* 스크롤 바 숨기기 */
+  .scrollable_select::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  .scrollable_select::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 5px;
+  }
