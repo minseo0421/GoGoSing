@@ -1,5 +1,4 @@
 // pageTransitions.ts
-
 export const pageVariants = {
   initial: (direction: boolean) => ({
     opacity: 0,

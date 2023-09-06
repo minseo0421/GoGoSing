@@ -1,5 +1,4 @@
 import React from "react";
-import NavBar from "../components/Bottombar";
 
 const MusicChart: React.FC = () => {
   return (

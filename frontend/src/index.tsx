@@ -13,7 +13,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <Provider store={store}>
     <BrowserRouter>
-      <App />
+      <div style={{width:'100vw', height:'100vh' ,display:'flex',alignItems:'center',justifyContent:'center'}}>
+        <App />
+      </div>
     </BrowserRouter>
   </Provider>
 );

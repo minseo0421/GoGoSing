@@ -30,14 +30,9 @@ function App() {
     setPageNumber(clickedNumber);
   };
 
-  const isMainRoute = location.pathname === "/";
-  const shouldDisplayTopBar =
-    isMainRoute || ["/chart", "/search", "/like"].includes(location.pathname);
-
   return (
-    // <Router>
     <div className="App" style={{ width: `${window.innerHeight / 2}px` }}>
-      <Topbar show={shouldDisplayTopBar} isMain={isMainRoute} />
+      <Topbar />
       <AnimatePresence initial={false} mode="wait">
         <motion.div
           key={location.pathname}
@@ -64,7 +59,6 @@ function App() {
       </AnimatePresence>
       <BottomBar onClickButton={cl} />
     </div>
-    // </Router>
   );
 }
 
