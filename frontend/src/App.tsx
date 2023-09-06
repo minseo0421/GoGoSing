@@ -15,7 +15,7 @@ import LocalLogin from "./pages/account/locallogin";
 import BottomBar from "./components/Bottombar";
 import Topbar from "./components/Topbar";
 import { AnimatePresence, motion } from "framer-motion";
-import { pageVariants, pageTransition } from "./components/pageTransition";
+import { PageVariants, PageTransition } from "./components/PageTransition";
 
 function App() {
   // BottomBar 관련 상태
@@ -39,8 +39,8 @@ function App() {
           initial="initial"
           animate="in"
           exit="out"
-          variants={pageVariants}
-          transition={pageTransition}
+          variants={PageVariants}
+          transition={PageTransition}
           custom={isForwardDirection}
         >
           <Routes location={location}>
