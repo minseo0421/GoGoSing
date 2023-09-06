@@ -1,5 +1,4 @@
 import React from "react";
-import NavBar from "../components/Bottombar";
 
 const MusicSearch: React.FC = () => {
   return (
