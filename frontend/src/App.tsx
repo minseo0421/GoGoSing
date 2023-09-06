@@ -15,7 +15,7 @@ import LocalLogin from "./pages/account/locallogin";
 import BottomBar from "./components/Bottombar";
 import Topbar from "./components/Topbar";
 import { AnimatePresence, motion } from "framer-motion";
-import { PageVariants, PageTransition } from "./components/PageTransition";
+import { PageVariants, PageTransition } from "./components/pageTransition";
 
 function App() {
   // BottomBar 관련 상태
