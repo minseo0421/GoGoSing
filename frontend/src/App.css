@@ -2,13 +2,13 @@
   position: relative;
   text-align: center;
   border: 5px solid black;
-  border-radius:3rem;
+  border-radius: 3rem;
 
   height: 100vh;
   box-sizing: border-box;
-  margin:auto;
-  background-color: #050F33;
-  color:white;
+  margin: auto;
+  background-color: #050f33;
+  color: white;
 }
 
 .Navbar {
@@ -21,11 +21,11 @@
 }
 
 .Navbar .icon {
-  width:80%;
+  width: 80%;
   display: flex;
   justify-content: space-between;
   margin: 50px auto;
-  color:white
+  color: white;
 }
 
 .App-logo {
@@ -54,6 +54,10 @@
   color: #61dafb;
 }
 
+.AlbumCardContainer::-webkit-scrollbar {
+  display: none;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -62,3 +66,4 @@
     transform: rotate(360deg);
   }
 }
+/* 앨범 컨테이너의 스크롤이 보이지 않게끔 만들어주는 거*/
