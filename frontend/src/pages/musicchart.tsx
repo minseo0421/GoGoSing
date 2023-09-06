@@ -1,10 +1,10 @@
 import React from "react";
-import NavBar from "../components/Bottombar";
+import AlbumCardContainer from "../components/AlbumCardContainer";
 
 const MusicChart: React.FC = () => {
   return (
     <div>
-      <h1>MusicChart 입니당</h1>
+      <AlbumCardContainer></AlbumCardContainer>
     </div>
   );
 };

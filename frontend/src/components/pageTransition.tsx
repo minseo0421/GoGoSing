@@ -1,6 +1,4 @@
-// pageTransitions.ts
-
-export const pageVariants = {
+export const PageVariants = {
   initial: (direction: boolean) => ({
     opacity: 0,
     x: direction ? "20%" : "-20%",
@@ -14,7 +12,7 @@ export const pageVariants = {
   }),
 };
 
-export const pageTransition = {
+export const PageTransition = {
   type: "tween",
   ease: "anticipate",
   duration: 0.15,
