@@ -9,23 +9,22 @@ const AlbumCardSmall: React.FC = () => {
     <div className={styles.container}>
       <img src="assets/sample1.svg" alt="" className={styles.image} />
       <div className={styles.infoContainer}>
-        <div>
-          <p className={styles.title}>Super Shy</p>
-          <p>NewJeans</p>
+        <div className={styles.musicinfo}>
+          <span className={styles.title}>Super 슈퍼슈퍼슈퍼 Shy</span>
+          <span>NewJeans</span>
         </div>
-        <div className={styles.iconContainer}>
-          {liked ? (
-            <AiFillHeart
-              className={styles.icon}
-              onClick={() => setLiked(false)}
-            />
-          ) : (
-            <AiOutlineHeart
-              className={styles.icon}
-              onClick={() => setLiked(true)}
-            />
-          )}
-        </div>
+        {liked ? (
+          <AiFillHeart
+            className={styles.icon}
+            onClick={() => setLiked(false)}
+          />
+        ) : (
+          <AiOutlineHeart
+            className={styles.icon}
+            onClick={() => setLiked(true)}
+          />
+        )}
+  
       </div>
     </div>
   );

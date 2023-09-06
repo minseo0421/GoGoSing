@@ -33,7 +33,7 @@ const validationSchema = Yup.object().shape({
 
 const SignUp: React.FC = () => {
     const navigate = useNavigate();
-    const [firstStep, setStep] = useState(false);
+    const [firstStep, setStep] = useState(true);
     const [isCheckEmail, setCheckEmail] = useState(false) //이메일 중복검사 체크변수
     const [isCheckNickname, setCheckNickname] = useState(false) //닉네임 중복검사 체크변수
     const [isCalender, setCalender] = useState(false);

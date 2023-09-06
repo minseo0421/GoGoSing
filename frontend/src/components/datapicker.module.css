@@ -1,5 +1,5 @@
 .calender {
-  background-color: #525C90;
+  background-color: rgb(82, 92, 144);
   position: absolute;
   width: 100%;
   height: 40%;
@@ -8,7 +8,7 @@
 }
 
 .input_calender {
-  background-color: blue;
+  background-color:rgba(5, 15, 51,0.3);
   width:90%;
   height: 80%;
   display: flex;
