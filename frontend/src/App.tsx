@@ -35,6 +35,7 @@ function App() {
       <Topbar />
       <AnimatePresence initial={false} mode="wait">
         <motion.div
+          style={{height:'100%'}}
           key={location.pathname}
           initial="initial"
           animate="in"

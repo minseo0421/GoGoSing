@@ -1,10 +1,12 @@
 import React from "react";
-import AlbumCardContainer from "../components/AlbumCardContainer";
+import CardLongContainer from "../components/CardLongContainer";
+import styles from "./ContainerBar.module.css";
 
 const MusicChart: React.FC = () => {
   return (
     <div>
-      <AlbumCardContainer />
+      <div className={styles.pitch}>🍪내가 만든 http only 쿠키 ~🍪</div>
+      <CardLongContainer></CardLongContainer>
     </div>
   );
 };
