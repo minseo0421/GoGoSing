@@ -1,5 +1,5 @@
 import React from "react";
-import CardLongContainer from "../components/CardLongContainer";
+import CardLongContainer from "../components/CardLong/CardLongContainer";
 import styles from "./ContainerBar.module.css";
 
 const MusicChart: React.FC = () => {

@@ -1,5 +1,5 @@
 import React from "react";
-import CardSmallContainer from "../components/CardSmallContainer";
+import CardSmallContainer from "../components/CardSmall/CardSmallContainer";
 import styles from "./ContainerBar.module.css";
 
 const MainHome: React.FC = () => {
