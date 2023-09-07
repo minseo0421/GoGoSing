@@ -2,8 +2,10 @@ package com.ssafy.gogosing.domain.user;
 
 import com.ssafy.gogosing.domain.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -59,4 +61,40 @@ public class User extends BaseTimeEntity {
     @Column(name = "vocal_range_lowest")
     private String vocalRangeLowest;
 
+    @Builder
+    public User(Long id, String email, String password, String nickname, Gender gender, LocalDate birth, String profileImg, Role role, SocialType socialType, String socialId, LocalDateTime deletedDate, String vocalRangeHighest, String vocalRangeLowest) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.gender = gender;
+        this.birth = birth;
+        this.profileImg = profileImg;
+        this.role = role;
+        this.socialType = socialType;
+        this.socialId = socialId;
+        this.deletedDate = deletedDate;
+        this.vocalRangeHighest = vocalRangeHighest;
+        this.vocalRangeLowest = vocalRangeLowest;
+    }
+
+    /**
+     * 권한 설정
+     */
+    public void authorizeUser() {
+        this.role = Role.USER;
+    }
+
+    /**
+     * 비밀번호 암호화
+    */
+    public void passwordEncode(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(this.password);
+    }
+
+    public Long updateProfileImage(String profileImg) {
+        this.profileImg = profileImg;
+
+        return this.id;
+    }
 }
