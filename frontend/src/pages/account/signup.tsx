@@ -98,7 +98,7 @@ const SignUp: React.FC = () => {
     
     return (
       <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', width:'100%'}}>
-        {isCalender ? <span style={{margin:'30px'}}></span>:<img src="assets/logo.png" alt="" style={{margin:'100px 0'}}/>}
+        {isCalender ? <span style={{margin:'30px'}}></span>:<img src="assets/logo.png" alt="" style={{margin:'25% 0 20% 0'}}/>}
         {/* 회원가입 form */}
         <form onSubmit={formik.handleSubmit} style={{width:'80%'}}>
             {firstStep ? 

@@ -18,6 +18,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { PageVariants, PageTransition } from "./components/pageTransition";
 import GenreSurvey from "./pages/account/genresurvey";
 import SocialSignUp from "./pages/account/socialsignup";
+import MyPage from "./pages/account/mypage";
 
 function App() {
   // BottomBar 관련 상태
@@ -78,6 +79,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/socialsignup" element={<SocialSignUp />} />
             <Route path="/genresurvey" element={<GenreSurvey />} />
+            <Route path="/mypage" element={<MyPage />} />
           </Routes>
         </motion.div>
       </AnimatePresence>

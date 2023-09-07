@@ -12,8 +12,8 @@
     bottom: 0px;
     width: 100%;
     background-color: #293858;
-    border-bottom-left-radius: 2.5rem;
-    border-bottom-right-radius: 2.5rem;
+    /* border-bottom-left-radius: 2.5rem;
+    border-bottom-right-radius: 2.5rem; */
 }
   
 .iconbar {
