@@ -86,10 +86,13 @@ const SignUp: React.FC = () => {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            // 회원가입 요청 로직
+            // 회원가입 요청 로직 -> 로그인 처리까지
             console.log({'email':values.email,
-            'password':values.password})
-            navigate('/locallogin')
+            'password':values.password,
+            'gender':values.gender,
+            'birthday':new Date(values.birthday!),
+            'nickname':values.nickname})
+            navigate('/genresurvey')
         },
     });
     
@@ -154,8 +157,13 @@ const SignUp: React.FC = () => {
                 {formik.values.gender === '' ? <span>　</span> : formik.errors.gender ? <span>{formik.errors.gender}</span> : formik.errors.gender ? <span>성별을 선택해주세요.</span>:<span style={{color:'green'}}>성별 선택완료</span>}
                 </p>
 
-                <button className={styled.input_account} type='button' onClick={()=>{setCalender(true)}}>
-                    {formik.values.birthday === null ? '연도. 월. 일.' : new Date(formik.values.birthday).toLocaleDateString('ko-KR', {
+                <button className={styled.input_account} type='button' onClick={()=>{setCalender(true)
+                    const divElement = document.getElementById('motiondiv');
+                    if (divElement) {
+                        divElement.style.transform = 'none';
+                    }
+                    }}>
+                    {formik.values.birthday === null ? '생년월일을 선택해주세요.' : new Date(formik.values.birthday).toLocaleDateString('ko-KR', {
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit',

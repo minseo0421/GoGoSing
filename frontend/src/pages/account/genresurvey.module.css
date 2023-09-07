@@ -1,0 +1,24 @@
+.container {
+
+    
+}
+
+.genrelist {
+    width: 80%;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.genre {
+    border-radius: 50%;
+    width: 75px;
+    height: 75px;
+    background-color: red;
+    margin:10px;
+    cursor: pointer;
+}
+
+.sel_genre {
+    background-color: blue;
+}
