@@ -1,19 +1,14 @@
 .App {
   position: relative;
   text-align: center;
-  border: 5px solid black;
-  border-radius: 3rem;
-
-  height: 98vh;
+  /* border: 5px solid black;
+  border-radius: 3rem; */
   box-sizing: border-box;
-  margin: auto;
+  /* margin: auto; */
   background-color: rgb(5, 15, 51);
   color: white;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+  min-width: 360px;
+  min-height: 612px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
