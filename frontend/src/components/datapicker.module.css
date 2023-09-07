@@ -16,36 +16,17 @@
   border-radius: 0.5rem;
 }
 
-.date_picker_container {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .scrollable_select {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #fff;
-    overflow-y: auto; /* 세로 스크롤 바 표시 */
-    max-height: 150px; /* 스크롤 가능한 최대 높이 설정 */
-  }
-  
-  .scrollable_select option {
-    padding: 5px;
-  }
-  
-  /* 선택된 옵션의 배경색 변경 */
-  .scrollable_select option:checked {
-    background-color: #007bff;
-    color: #fff;
-  }
-  
-  /* 스크롤 바 숨기기 */
-  .scrollable_select::-webkit-scrollbar {
-    width: 5px;
-  }
-  
-  .scrollable_select::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 5px;
-  }
+.selected {
+  background-color: rgba(204, 204, 204, 0.3);
+  margin:0 10px;
+}
+
+
+.scrollable_div p {
+  transition: transform 0.3s ease-in-out; /* Add a smooth transition for the transform property */
+}
+
+/* Add a CSS class to apply the animation */
+.scrollable_div.is-scrolling p {
+  transform: scale(1.2); /* You can customize the animation effect, e.g., scaling up */
+}
