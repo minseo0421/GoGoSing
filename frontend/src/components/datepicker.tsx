@@ -27,6 +27,8 @@ const DatePicker: React.FC<Props> = ({onCalender,birth,onBirth}) => {
       }
       const newYear = Math.min(2023, Math.max(1, year + (delta > 0 ? 1 : -1)));
       setYear(newYear);
+      setMonth(1)
+      setDay(1)
     } else if (type === 'month') {
       if (delta > 0 && month === 12) {
         // 가장 큰 값 이후로 스크롤 무시
@@ -50,6 +52,7 @@ const DatePicker: React.FC<Props> = ({onCalender,birth,onBirth}) => {
       } else {
         setMonth(newMonth);
       }
+      setDay(1)
     } else if (type === 'day') {
       const daysInSelectedMonth = getDaysInMonth(year, month);
       if (delta > 0 && day === daysInSelectedMonth) {
@@ -118,59 +121,69 @@ const DatePicker: React.FC<Props> = ({onCalender,birth,onBirth}) => {
      <div style={{height:'10%'}} onClick={()=>{onBirth(`${year}-${month}-${day}`); onCalender()}}>설정</div>
     <div className={styled.input_calender}>
 
-      <div className={styled.scrollable_div} style={{width:'50%'}} onWheel={(e) => handleScroll(e, 'year')} ref={yearRef}>
+      <div style={{width:'50%'}} onWheel={(e) => handleScroll(e, 'year')} ref={yearRef}>
         {generateValuesArray(year).map((value, index) => (
             <div key={index} className={`${value === year ? styled.selected : null}`}>
             {/* 범위 내에서만 출력 */}
-            <p>
-                {value === 1899 || value === 1898 ? '　':null}
-                {value >= 1900 && value <= 2023 && (
-                value
-                )}
-            </p>
+            <>
+              {value === 1899 || value === 1898 ? <p>　</p>:null}
+              {value >= 1900 && value <= 2023 && (
+                <p onClick={()=>{setYear(value)}}>
+                  {value}
+                </p>
+              )}
+            </>
           </div>
         ))}
       </div>
-      <div className={styled.scrollable_div} style={{width:'25%'}} onWheel={(e) => handleScroll(e, 'month')} ref={monthRef}>
+      <div style={{width:'25%'}} onWheel={(e) => handleScroll(e, 'month')} ref={monthRef}>
         {generateValuesArray(month).map((value, index) => (
-            <div key={index} className={`${value === month ? styled.selected : null}`}>
+            <div key={index} className={`${value===month ? styled.selected:null}`}>
             {/* 범위 내에서만 출력 */}
             {year === today.getFullYear() ? 
-            <p>
-                {value === 0 || value === -1 ? '　':null}
-                {value >= 1 && value <= today.getMonth()+1 && (
-                    value.toString().padStart(2, '0')
-                )}
-            </p>
+            <>
+              {value === 0 || value === -1 ? <p>　</p>:null}
+              {value >= 1 && value <= today.getMonth()+1 && (
+                <p onClick={()=>{setMonth(value)}} >
+                  {value.toString().padStart(2, '0')}
+                </p>
+              )}
+            </>
             :
-            <p>
-                {value === 0 || value === -1 ? '　':null}
-                {value >= 1 && value <= 12 && (
-                    value.toString().padStart(2, '0')
-                )}
-            </p>
+            <>
+              {value === 0 || value === -1 ? <p>　</p>:null}
+              {value >= 1 && value <= 12 && (
+                <p onClick={()=>{setMonth(value)}}>
+                  {value.toString().padStart(2, '0')}
+                </p>
+              )}
+            </>
             }
           </div>
         ))}
       </div>
-      <div className={styled.scrollable_div} style={{width:'25%'}} onWheel={(e) => handleScroll(e, 'day')} ref={dayRef}>
+      <div style={{width:'25%'}} onWheel={(e) => handleScroll(e, 'day')} ref={dayRef}>
         {generateValuesArray(day).map((value, index) => (
             <div key={index} className={`${value === day ? styled.selected : null}`}>
             {/* 범위 내에서만 출력 */}
             {year === today.getFullYear() && month === today.getMonth()+1 ?
-                <p>
-                    {value === 0 || value === -1 ? '　':null}
-                    {value >= 1 && value <= today.getDate() && (
-                    value.toString().padStart(2, '0')
-                    )}
-                </p>
+                <>
+                  {value === 0 || value === -1 ? <p>　</p>:null}
+                  {value >= 1 && value <= today.getDate() && (
+                    <p onClick={()=>{setDay(value)}}>
+                      {value.toString().padStart(2, '0')}
+                    </p>
+                  )}
+                </>
             :
-                <p>
-                    {value === 0 || value === -1 ? '　':null}
-                    {value >= 1 && value <= getDaysInMonth(year, month) && (
-                    value.toString().padStart(2, '0')
-                    )}
+            <>
+              {value === 0 || value === -1 ? <p>　</p>:null}
+              {value >= 1 && value <= getDaysInMonth(year, month) && (
+                <p onClick={()=>{setDay(value)}}>
+                  {value.toString().padStart(2, '0')}
                 </p>
+              )}
+            </>
             }
           </div>
         ))}
