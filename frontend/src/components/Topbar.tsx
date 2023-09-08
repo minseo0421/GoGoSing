@@ -14,7 +14,8 @@ const Topbar: React.FC = () => {
       location.pathname === "/like" ? 
       <div  className={styled.topbar}>
         <img src="assets/logo.png" alt="" style={{ width: "20%" }} />
-        {usertoken ? <Link style={{ color: "white" }} to="/login"><img src="assets/default_user.png" alt="" style={{ width: "80%"}} /></Link>
+        {usertoken ? 
+        <Link style={{ color: "white" }} to="/mypage"><img src="assets/default_user.png" alt="" style={{ width: "80%"}} /></Link>
         : <Link style={{ color: "white" }} to="/login">Login</Link>}
       </div>
       :null

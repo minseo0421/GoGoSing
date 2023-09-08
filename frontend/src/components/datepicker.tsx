@@ -171,7 +171,7 @@ const DatePicker: React.FC<Props> = ({onCalender,birth,onBirth}) => {
             {/* 범위 내에서만 출력 */}
             {year === today.getFullYear() && month === today.getMonth()+1 ?
                 <>
-                  {value === 0 || value === -1 || value === today.getDate()+1 || value === today.getDate()+2 ? <p>　</p>:null}
+                  {value === 0 || value === -1 ? <p>　</p>:null}
                   {value >= 1 && value <= today.getDate() && (
                     <p onClick={()=>{setDay(value)}}>
                       {value.toString().padStart(2, '0')}
@@ -180,7 +180,7 @@ const DatePicker: React.FC<Props> = ({onCalender,birth,onBirth}) => {
                 </>
             :
             <>
-              {value === 0 || value === -1 || value === today.getDate()+1 || value === today.getDate()+2 ? <p>　</p>:null}
+              {value === 0 || value === -1 ? <p>　</p>:null}
               {value >= 1 && value <= getDaysInMonth(year, month) && (
                 <p onClick={()=>{setDay(value)}}>
                   {value.toString().padStart(2, '0')}
