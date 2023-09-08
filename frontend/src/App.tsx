@@ -18,6 +18,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { PageVariants, PageTransition } from "./components/pageTransition";
 import GenreSurvey from "./pages/account/genresurvey";
 import SocialSignUp from "./pages/account/socialsignup";
+import MyPage from "./pages/account/mypage";
 
 function App() {
   // BottomBar 관련 상태
@@ -49,10 +50,10 @@ function App() {
 
   return (
     <div className="App" 
-    style={{height:`${windowHeight < 612 ? '612px': windowHeight / 1.7 >= windowWidth && windowWidth >= windowHeight/2.35 ? '100%': windowHeight*2.16}`, 
-            width:`${windowHeight / 1.7 >= windowWidth && windowWidth >= windowHeight/2.35 ? '100%' : windowWidth/2.16}`,
-            maxWidth:`${windowHeight/2.16}px`, maxHeight:`${windowWidth*2.16}px`}}>
-
+    style={{height:`${windowHeight >= windowWidth *1.7 && windowWidth*2.35 >= windowHeight ? '100vh' : 
+            windowHeight < windowWidth *1.7 ? '100vh': `${windowWidth*2.35}px`}`, 
+            width:`${windowHeight >= windowWidth *1.7 && windowWidth*2.35 >= windowHeight ? '100vw' : 
+            windowHeight < windowWidth *1.7 ? `${windowHeight/1.7}px`:'100vw'}`}}>
       <Topbar />
       <AnimatePresence initial={false} mode="wait">
         <motion.div
@@ -78,6 +79,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/socialsignup" element={<SocialSignUp />} />
             <Route path="/genresurvey" element={<GenreSurvey />} />
+            <Route path="/mypage" element={<MyPage />} />
           </Routes>
         </motion.div>
       </AnimatePresence>

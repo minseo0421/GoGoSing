@@ -8,6 +8,7 @@
     margin: auto;
     display: flex;
     flex-wrap: wrap;
+    margin-bottom: 30px;
 }
 
 .genre {
@@ -21,4 +22,13 @@
 
 .sel_genre {
     background-color: blue;
+}
+
+.btn {
+    border: 1px solid white;
+    width:40%;
+    height: 50px;
+    border-radius: 1rem;
+    background-color: rgba(255, 203, 203, 0.5);
+    color:white;
 }

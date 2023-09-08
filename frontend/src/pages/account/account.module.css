@@ -7,6 +7,7 @@
     height: 50px;
     padding:0 20px;
     box-sizing: border-box;
+    cursor: pointer;
 }
 
 .checkemail {
@@ -71,13 +72,14 @@
 }
 
 .sel_gender {
-    background-color: white;
+    background-color: darkgray;
     border:1px solid #D7D7D7;
     border-radius: 1rem;
     width: 100%;
     height: 50px;
     padding:0 20px;
     box-sizing: border-box;
+    cursor: pointer;
 }
 
 .unsel_gender {
@@ -88,6 +90,11 @@
     height: 50px;
     padding:0 20px;
     box-sizing: border-box;
+    cursor: pointer;
+}
+
+.sel_gender:hover, .unsel_gender:hover {
+    background-color: gray;
 }
 
 .calender {
@@ -105,4 +112,28 @@
     display: flex;
     margin:auto;
     border-radius: 0.5rem;
+}
+
+
+.myprofile {
+    width: 100%;
+    background-image: url('../../../public/assets/mypage_back.png');
+    background-size: cover;
+    display: flex;
+}
+
+.myinfo {
+    margin:10%;
+    display: flex;
+    width: 100%;
+}
+
+.myinfo img {
+    width:30%
+}
+.info {
+    padding: 0 5%;
+    box-sizing: border-box;
+    width: 70%;
+    text-align: start;
 }
