@@ -1,13 +1,7 @@
 import React from "react";
-import CardSmallContainer from "../components/CardSmall/CardSmallContainer";
-import styles from "./ContainerBar.module.css";
+import MainContainer from "../components/MainContainer/MainContainer";
 
 const MainHome: React.FC = () => {
-  return (
-    <div>
-      <div className={styles.pitch}>🍪내가 만든 http only 쿠키 ~🍪</div>
-      <CardSmallContainer></CardSmallContainer>
-    </div>
-  );
+  return <MainContainer></MainContainer>;
 };
 export default MainHome;
