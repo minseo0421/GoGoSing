@@ -12,6 +12,8 @@ import SignUp from "./pages/account/signup";
 import Login from "./pages/account/login";
 import LocalLogin from "./pages/account/locallogin";
 
+import MusicRecord from "./pages/musicrecord";
+
 import BottomBar from "./components/Bottombar";
 import Topbar from "./components/Topbar";
 import { AnimatePresence, motion } from "framer-motion";
@@ -80,6 +82,9 @@ function App() {
             <Route path="/socialsignup" element={<SocialSignUp />} />
             <Route path="/genresurvey" element={<GenreSurvey />} />
             <Route path="/mypage" element={<MyPage />} />
+
+            {/* Music Record */}
+            <Route path="/record" element={<MusicRecord />} />
           </Routes>
         </motion.div>
       </AnimatePresence>
