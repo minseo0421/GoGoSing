@@ -1,13 +1,17 @@
-import React from "react";
-import CardSmallContainer from "../components/CardSmall/CardSmallContainer";
-import styles from "./ContainerBar.module.css";
+import React, { useEffect } from "react";
+import MainContainer from "../components/MainContainer/MainContainer";
+
+import { setPage } from "../store/actions";
+import { useDispatch } from "react-redux";
+// import { useLocation } from "react-router-dom";
 
 const MainHome: React.FC = () => {
-  return (
-    <div>
-      <div className={styles.pitch}>🍪내가 만든 http only 쿠키 ~🍪</div>
-      <CardSmallContainer></CardSmallContainer>
-    </div>
-  );
+  // const location = useLocation();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setPage(1));
+  }, [dispatch]);
+
+  return <MainContainer></MainContainer>;
 };
 export default MainHome;
