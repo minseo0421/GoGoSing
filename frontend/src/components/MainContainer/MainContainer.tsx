@@ -1,6 +1,7 @@
-import CardLong from "./CardLong";
 import React, { useState, useRef } from "react";
-import styles from "./CardLongContainer.module.css";
+import Cardstyles from "../CardLong/CardLongContainer.module.css";
+import MainStyles from "../../pages/ContainerBar.module.css";
+import CardSmallContainer from "../CardSmall/CardSmallContainer";
 
 const CardLongContainer: React.FC = () => {
   const [startY, setStartY] = useState(0);
@@ -8,17 +9,13 @@ const CardLongContainer: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const [startX, setStartX] = useState(0);
-
   const handleStart = (
     e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>
   ) => {
     const y = "touches" in e ? e.touches[0].pageY : e.pageY;
-    const x = "touches" in e ? e.touches[0].pageX : e.pageX; // X 축 시작 지점 추가
 
     if (containerRef.current) {
       setStartY(y);
-      setStartX(x); // 저장
       setscrollTop(containerRef.current.scrollTop);
       setIsDragging(true);
     }
@@ -29,20 +26,8 @@ const CardLongContainer: React.FC = () => {
   ) => {
     if (!isDragging || !containerRef.current) return;
 
-    const currentY = "touches" in e ? e.touches[0].pageY : e.pageY;
-    const currentX = "touches" in e ? e.touches[0].pageX : e.pageX;
-
-    // 시작점과 현재 점 사이의 X, Y 차이 계산
-    const diffX = Math.abs(currentX - startX);
-    const diffY = Math.abs(currentY - startY);
-
-    if (diffX > diffY) {
-      return; // X축의 움직임이 더 클 경우 이벤트를 중지
-    }
-
-    e.preventDefault();
-
-    const walk = currentY - startY;
+    const y = "touches" in e ? e.touches[0].pageY : e.pageY;
+    const walk = y - startY;
     containerRef.current.scrollTop = scrollTop - walk;
   };
 
@@ -53,7 +38,7 @@ const CardLongContainer: React.FC = () => {
   /* onTouch 관련은 Mobile 환경에서 터치가 있을 때, onMouse는 Web 환경에서 Mobile 처럼 클릭하고 이동 할 때의 케이스 */
   return (
     <div
-      className={styles.container}
+      className={Cardstyles.container}
       ref={containerRef}
       onTouchStart={handleStart}
       onTouchMove={handleMove}
@@ -63,17 +48,12 @@ const CardLongContainer: React.FC = () => {
       onMouseUp={handleEnd}
       onMouseLeave={handleEnd}
     >
-      <CardLong />
-      <CardLong />
-      <CardLong />
-      <CardLong />
-      <CardLong />
-      <CardLong />
-      <CardLong />
-      <CardLong />
-      <CardLong />
-      <CardLong />
-      <CardLong />
+      <div className={MainStyles.pitch}>🍪내가 만든 http only 쿠키 ~🍪</div>
+      <CardSmallContainer></CardSmallContainer>
+      <div className={MainStyles.pitch}>🍪왓츠 유얼 ETA 왓챠 PPAP ~🍪</div>
+      <CardSmallContainer></CardSmallContainer>
+      {/* <div className={MainStyles.pitch}>🍪왓츠 유얼 ETA 왓챠 PPAP ~🍪</div>
+      <CardSmallContainer></CardSmallContainer> */}
     </div>
   );
 };
