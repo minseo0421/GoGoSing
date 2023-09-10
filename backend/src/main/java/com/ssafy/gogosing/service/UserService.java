@@ -3,6 +3,8 @@ package com.ssafy.gogosing.service;
 import com.ssafy.gogosing.domain.user.User;
 import com.ssafy.gogosing.dto.user.request.UserSignUpRequestDto;
 import com.ssafy.gogosing.dto.user.request.UserSingUpPlusRequestDto;
+import com.ssafy.gogosing.global.redis.service.RedisAccessTokenService;
+import com.ssafy.gogosing.global.redis.service.RedisRefreshTokenService;
 import com.ssafy.gogosing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -21,6 +23,10 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final RedisRefreshTokenService redisRefreshTokenService;
+
+    private final RedisAccessTokenService redisAccessTokenService;
 
     /**
      * 일반 회원 가입
@@ -77,5 +83,19 @@ public class UserService {
         User saveUser = userRepository.save(user);
 
         return saveUser.getId();
+    }
+
+    /**
+     * 로그아웃
+     * 성공 시 accessToken blacklist 추가 및 refreshToken 삭제
+     */
+    public Long logout(String accessToken, Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+        redisRefreshTokenService.deleteRefreshToken(user.getEmail());
+        redisAccessTokenService.setRedisAccessToken(accessToken.replace("Bearer ", ""), "LOGOUT");
+
+        return id;
     }
 }

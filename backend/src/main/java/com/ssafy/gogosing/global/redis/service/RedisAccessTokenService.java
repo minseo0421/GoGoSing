@@ -25,5 +25,18 @@ public class RedisAccessTokenService {
         valueOperations.set("[BlackList] : " + accessToken, type, Duration.ofMinutes(1440));
     }
 
+    /**
+     * Key로 Value 유무 조회
+     */
+    public boolean isBlackList(String accessToken) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        String blackList = valueOperations.get("[BlackList] : " + accessToken);
+
+        if (blackList == null) {
+            return false;
+        }
+
+        return true;
+    }
 
 }

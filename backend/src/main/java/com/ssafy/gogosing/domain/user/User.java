@@ -94,8 +94,8 @@ public class User extends BaseTimeEntity {
 
     public void updateSignupPlus(UserSingUpPlusRequestDto userSingUpPlusRequestDto) {
         this.nickname = userSingUpPlusRequestDto.getNickname();
-        this.gender = userSingUpPlusRequestDto.getGender();
-        this.birth = userSingUpPlusRequestDto.getBirth();
+        this.gender = Gender.valueOf(userSingUpPlusRequestDto.getGender());
+        this.birth = LocalDate.parse(userSingUpPlusRequestDto.getBirth());
         // 권한 수정
         this.role = Role.USER;
     }
