@@ -33,7 +33,14 @@ const PitchSmall: React.FC = () => {
             alt=""
           />
         </div>
-      ) : null}
+      ) : (
+        <img
+          className={RecordSmall.PitchIcon}
+          onClick={toggleShow}
+          src="assets/addButton.svg"
+          alt=""
+        />
+      )}
       {show && !pitch ? (
         <button onClick={pitchShow}>음역대 등록했다 치기</button>
       ) : null}
