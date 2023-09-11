@@ -1,6 +1,7 @@
 package com.ssafy.gogosing.domain.user;
 
 import com.ssafy.gogosing.domain.BaseTimeEntity;
+import com.ssafy.gogosing.dto.user.request.UserSingUpPlusRequestDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -79,13 +80,6 @@ public class User extends BaseTimeEntity {
     }
 
     /**
-     * 권한 설정
-     */
-    public void authorizeUser() {
-        this.role = Role.USER;
-    }
-
-    /**
      * 비밀번호 암호화
     */
     public void passwordEncode(PasswordEncoder passwordEncoder) {
@@ -96,5 +90,13 @@ public class User extends BaseTimeEntity {
         this.profileImg = profileImg;
 
         return this.id;
+    }
+
+    public void updateSignupPlus(UserSingUpPlusRequestDto userSingUpPlusRequestDto) {
+        this.nickname = userSingUpPlusRequestDto.getNickname();
+        this.gender = Gender.valueOf(userSingUpPlusRequestDto.getGender());
+        this.birth = LocalDate.parse(userSingUpPlusRequestDto.getBirth());
+        // 권한 수정
+        this.role = Role.USER;
     }
 }

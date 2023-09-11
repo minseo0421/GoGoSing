@@ -3,6 +3,7 @@ package com.ssafy.gogosing.global.jwt.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.ssafy.gogosing.domain.user.User;
+import com.ssafy.gogosing.global.redis.service.RedisAccessTokenService;
 import com.ssafy.gogosing.global.redis.service.RedisRefreshTokenService;
 import com.ssafy.gogosing.repository.UserRepository;
 import lombok.Getter;
@@ -36,6 +37,8 @@ public class JwtService {
 
     @Value("${jwt.refresh.header}")
     private String refreshHeader;
+
+    private final RedisAccessTokenService redisAccessTokenService;
 
     /**
     * JWT의 Subject, Claim으로 email 사용 -> 클레임 name "email"로
@@ -173,6 +176,10 @@ public class JwtService {
     */
     public boolean isTokenValid(String token) {
         try {
+            if(redisAccessTokenService.isBlackList(token)) {
+                return false;
+            }
+
             JWT.require(Algorithm.HMAC512(secretKey))
                     .build()
                     .verify(token);
