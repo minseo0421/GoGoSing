@@ -13,13 +13,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserSignUpRequestDto {
-
-    @NotBlank(message = "email은 빈값이 올 수 없습니다")
-    private String email;
-
-    @NotBlank(message = "password는 빈값이 올 수 없습니다")
-    private String password;
+public class UserSingUpPlusRequestDto {
 
     @NotBlank(message = "nickname은 빈값이 올 수 없습니다")
     private String nickname;
@@ -33,8 +27,6 @@ public class UserSignUpRequestDto {
     public User toEntity() {
 
         return User.builder()
-                .email(this.email)
-                .password(this.password)
                 .nickname(this.nickname)
                 .gender(Gender.valueOf(this.gender))
                 .birth(LocalDate.parse(this.birth))
