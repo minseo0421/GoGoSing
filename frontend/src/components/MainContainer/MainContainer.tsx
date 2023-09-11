@@ -1,9 +1,11 @@
 import React, { useState, useRef } from "react";
-import Cardstyles from "../CardLong/CardLongContainer.module.css";
+import Cardstyles from "../MainContainer/MainContainer.module.css";
 import MainStyles from "../../pages/ContainerBar.module.css";
 import CardSmallContainer from "../CardSmall/CardSmallContainer";
+import PitchLong from "../CardRecord/PitchLong";
+import VoiceLong from "../CardRecord/VoiceLong";
 
-const CardLongContainer: React.FC = () => {
+const MainContainer: React.FC = () => {
   const [startY, setStartY] = useState(0);
   const [scrollTop, setscrollTop] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -50,12 +52,18 @@ const CardLongContainer: React.FC = () => {
     >
       <div className={MainStyles.pitch}>🍪내가 만든 http only 쿠키 ~🍪</div>
       <CardSmallContainer></CardSmallContainer>
-      <div className={MainStyles.pitch}>🍪왓츠 유얼 ETA 왓챠 PPAP ~🍪</div>
+      <div className={MainStyles.pitch}>🕒왓츠 유얼 ETA 왓챠 PPAP ~🕒</div>
       <CardSmallContainer></CardSmallContainer>
-      {/* <div className={MainStyles.pitch}>🍪왓츠 유얼 ETA 왓챠 PPAP ~🍪</div>
-      <CardSmallContainer></CardSmallContainer> */}
+      <div className={MainStyles.pitch}>
+        🎼당신의 음역대에 맞는 노래입니다 !🎼
+      </div>
+      <PitchLong></PitchLong>
+      <div className={MainStyles.pitch}>
+        🎤당신의 목소리에 맞는 노래에요 !🎤
+      </div>
+      <VoiceLong></VoiceLong>
     </div>
   );
 };
 
-export default CardLongContainer;
+export default MainContainer;
