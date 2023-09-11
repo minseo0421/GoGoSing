@@ -3,8 +3,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import styled from './account.module.css'
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import DatePicker from '../../components/datepicker';
+import axiosInstance from '../../axiosinstance';
 
 const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -25,7 +25,7 @@ const validationSchema = Yup.object().shape({
       .max(10, '닉네임 최대글자는 50자 입니다')
       .required('닉네임을 입력해주세요'),
     gender: Yup.string()
-      .oneOf(['male', 'female'], '성별을 선택해주세요')
+      .oneOf(['MALE', 'FEMALE'], '성별을 선택해주세요')
       .required('성별을 선택해주세요'),
     birthday: Yup.string()
       .required('생년월일을 입력해주세요'),
@@ -37,18 +37,15 @@ const SignUp: React.FC = () => {
     const [isCheckEmail, setCheckEmail] = useState(false) //이메일 중복검사 체크변수
     const [isCheckNickname, setCheckNickname] = useState(false) //닉네임 중복검사 체크변수
     const [isCalender, setCalender] = useState(false);
-
+    
     const emailcheck = (email:string) => {
         // 지금은 지나가기위한 true 처리 나중에 지워야함
         setCheckEmail(true)
         
-        // 이메일 중복 체크 axios 작성
-        axios({
+        // 이메일 중복 체크 axiosInstance 작성
+        axiosInstance({
             method:'get',
-            url:'',
-            headers:{
-                Authorization:''
-            }
+            url:`${process.env.REACT_APP_URL}/api/user/signup`,
         }).then(res=>{
             console.log(res)
             setCheckEmail(true)
@@ -60,13 +57,10 @@ const SignUp: React.FC = () => {
         // 지금은 지나가기위한 true 처리 나중에 지워야함
         setCheckNickname(true)
         
-        // 닉네임 중복 체크 axios 작성
-        axios({
+        // 닉네임 중복 체크 axiosInstance 작성
+        axiosInstance({
             method:'get',
-            url:'',
-            headers:{
-                Authorization:''
-            }
+            url:`${process.env.REACT_APP_URL}/api/user/signup`,
         }).then(res=>{
             console.log(res)
             setCheckNickname(true)
@@ -87,12 +81,22 @@ const SignUp: React.FC = () => {
         validationSchema: validationSchema,
         onSubmit: (values) => {
             // 회원가입 요청 로직 -> 로그인 처리까지
-            console.log({'email':values.email,
-            'password':values.password,
-            'gender':values.gender,
-            'birthday':new Date(values.birthday!),
-            'nickname':values.nickname})
-            navigate('/genresurvey')
+            axiosInstance({
+                method:'post',
+                url:`${process.env.REACT_APP_URL}/api/user/signup`,
+                data:{'email':values.email,
+                'password':values.password,
+                'nickname':values.nickname,
+                'gender':values.gender,
+                'birth':values.birthday},
+            }).then(res=>{
+                console.log(res)
+                navigate('/')
+            }).catch(err=>{
+                console.log(err)
+                alert('회원가입 실패!')
+            })
+
         },
     });
     
@@ -105,7 +109,7 @@ const SignUp: React.FC = () => {
             <>
                 {/* 이메일 input */}
                 <div style={{display:'flex'}}>
-                    <input className={styled.input_account} type="text" placeholder="이메일을 입력해주세요." {...formik.getFieldProps('email')} onChange={(event) => { formik.handleChange(event); setCheckEmail(false); }}/>
+                    <input className={styled.input_account} type="text" placeholder="이메일을 입력해주세요." {...formik.getFieldProps('email')} onChange={(event) => { formik.handleChange(event); setCheckEmail(false); }} autoComplete='email'/>
                     {/* 올바른 이메일 입력시 인증버튼 활성화 */}
                     {formik.values.email==='' || formik.errors.email ? 
                     <button className={styled.checkemail} type="button" disabled>인증</button>
@@ -117,13 +121,13 @@ const SignUp: React.FC = () => {
                 </p>
 
                 {/* 패스워드 input */}
-                <input className={styled.input_account} type="password" placeholder="비밀번호" {...formik.getFieldProps('password')}/>
+                <input className={styled.input_account} type="password" placeholder="비밀번호" {...formik.getFieldProps('password')} autoComplete="new-password"/>
                 <p style={{fontSize:'8px', fontWeight:'bold', textAlign:'left'}}>
                     {formik.values.password === '' ? <span>　</span> : formik.errors.password ? <span style={{color:'red'}}>{formik.errors.password}</span> : <span style={{color:'green'}}>사용할 수 있는 비밀번호입니다.</span>}
                 </p>
                 
                 {/* 패스워드 확인 input */}
-                <input className={styled.input_account} type="password" placeholder="비밀번호 확인" {...formik.getFieldProps('confirmPassword')}/>
+                <input className={styled.input_account} type="password" placeholder="비밀번호 확인" {...formik.getFieldProps('confirmPassword')}  autoComplete="new-password"/>
                 <p style={{fontSize:'8px', fontWeight:'bold', textAlign:'left',  color:'red'}}>
                 {formik.values.confirmPassword === '' ? <span>　</span> : formik.errors.confirmPassword ? <span>{formik.errors.confirmPassword}</span> : formik.errors.password ? <span>비밀번호를 확인해주세요.</span>:<span style={{color:'green'}}>비밀번호가 일치합니다.</span>}
                 </p>
@@ -137,7 +141,7 @@ const SignUp: React.FC = () => {
             :<>
                 {/* 닉네임 input */}
                 <div style={{display:'flex'}}>
-                    <input className={styled.input_account} type="text" placeholder="닉네임을 입력해주세요." {...formik.getFieldProps('nickname')} onChange={(event) => { formik.handleChange(event); setCheckNickname(false); }}/>
+                    <input className={styled.input_account} type="text" placeholder="닉네임을 입력해주세요." {...formik.getFieldProps('nickname')} onChange={(event) => { formik.handleChange(event); setCheckNickname(false); }} autoComplete='username'/>
                     {/* 올바른 닉네임 입력시 인증버튼 활성화 */}
                     {formik.values.nickname==='' || formik.errors.nickname ? 
                     <button className={styled.checkemail} type="button" disabled>인증</button>
@@ -150,8 +154,8 @@ const SignUp: React.FC = () => {
 
                 {/* 성별 선택 input */}
                 <div style={{display:'flex'}}>
-                    <button className={`${formik.values.gender==='male' ? styled.sel_gender : styled.unsel_gender}`} type='button' onClick={()=>{formik.setFieldValue('gender', 'male');}} style={{marginRight:'5px'}}>남자</button>
-                    <button className={`${formik.values.gender==='female' ? styled.sel_gender : styled.unsel_gender}`} type='button' onClick={()=>{formik.setFieldValue('gender', 'female');}} style={{marginLeft:'5px'}}>여자</button>
+                    <button className={`${formik.values.gender==='MALE' ? styled.sel_gender : styled.unsel_gender}`} type='button' onClick={()=>{formik.setFieldValue('gender', 'MALE');}} style={{marginRight:'5px'}}>남자</button>
+                    <button className={`${formik.values.gender==='FEMALE' ? styled.sel_gender : styled.unsel_gender}`} type='button' onClick={()=>{formik.setFieldValue('gender', 'FEMALE');}} style={{marginLeft:'5px'}}>여자</button>
                 </div>
                 <p style={{fontSize:'8px', fontWeight:'bold', textAlign:'left',  color:'red'}}>
                 {formik.values.gender === '' ? <span>　</span> : formik.errors.gender ? <span>{formik.errors.gender}</span> : formik.errors.gender ? <span>성별을 선택해주세요.</span>:<span style={{color:'green'}}>성별 선택완료</span>}
@@ -184,7 +188,7 @@ const SignUp: React.FC = () => {
             }
         </form>
         {isCalender ? 
-            <DatePicker onCalender={()=>setCalender(false)} birth={formik.values.birthday} onBirth={(value)=>{formik.setFieldValue('birthday',value)}}/>
+            <DatePicker onCalendar={()=>setCalender(false)} birth={formik.values.birthday} onBirth={(value)=>{formik.setFieldValue('birthday',value)}}/>
         :null}
       </div>
     );

@@ -5,6 +5,7 @@ import styled from './account.module.css'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DatePicker from '../../components/datepicker';
+import axiosInstance from '../../axiosinstance';
 
 const validationSchema = Yup.object().shape({
     nickname: Yup.string()
@@ -12,7 +13,7 @@ const validationSchema = Yup.object().shape({
       .max(10, '닉네임 최대글자는 50자 입니다')
       .required('닉네임을 입력해주세요'),
     gender: Yup.string()
-      .oneOf(['male', 'female'], '성별을 선택해주세요')
+      .oneOf(['MALE', 'FEMALE'], '성별을 선택해주세요')
       .required('성별을 선택해주세요'),
     birthday: Yup.string()
       .required('생년월일을 입력해주세요'),
@@ -29,10 +30,7 @@ const SocialSignUp: React.FC = () => {
         // 닉네임 중복 체크 axios 작성
         axios({
             method:'get',
-            url:'',
-            headers:{
-                Authorization:''
-            }
+            url:`${process.env.REACT_APP_URL}/api/user/signup-plus`,
         }).then(res=>{
             console.log(res)
             setCheckNickname(true)
@@ -50,11 +48,19 @@ const SocialSignUp: React.FC = () => {
         validationSchema: validationSchema,
         onSubmit: (values) => {
             // 회원가입 요청 로직 -> 로그인 처리까지
-            console.log({
-            'gender':values.gender,
-            'birthday':new Date(values.birthday!),
-            'nickname':values.nickname})
-            navigate('/genresurvey')
+            axiosInstance({
+                method:'post',
+                url:`${process.env.REACT_APP_URL}/api/user/signup-plus`,
+                data:{'gender':values.gender,
+                    'birthday':values.birthday,
+                    'nickname':values.nickname}
+            }).then(res=>{
+                console.log(res)
+                navigate('/')
+            }).catch(err=>{
+                console.log(err)
+                alert('추가정보 기입 실패!')
+            })
         },
     });
     
@@ -78,8 +84,8 @@ const SocialSignUp: React.FC = () => {
 
             {/* 성별 선택 input */}
             <div style={{display:'flex'}}>
-                <button className={`${formik.values.gender==='male' ? styled.sel_gender : styled.unsel_gender}`} type='button' onClick={()=>{formik.setFieldValue('gender', 'male');}} style={{marginRight:'5px'}}>남자</button>
-                <button className={`${formik.values.gender==='female' ? styled.sel_gender : styled.unsel_gender}`} type='button' onClick={()=>{formik.setFieldValue('gender', 'female');}} style={{marginLeft:'5px'}}>여자</button>
+                <button className={`${formik.values.gender==='MALE' ? styled.sel_gender : styled.unsel_gender}`} type='button' onClick={()=>{formik.setFieldValue('gender', 'MALE');}} style={{marginRight:'5px'}}>남자</button>
+                <button className={`${formik.values.gender==='FEMALE' ? styled.sel_gender : styled.unsel_gender}`} type='button' onClick={()=>{formik.setFieldValue('gender', 'FEMALE');}} style={{marginLeft:'5px'}}>여자</button>
             </div>
             <p style={{fontSize:'8px', fontWeight:'bold', textAlign:'left',  color:'red'}}>
             {formik.values.gender === '' ? <span>　</span> : formik.errors.gender ? <span>{formik.errors.gender}</span> : formik.errors.gender ? <span>성별을 선택해주세요.</span>:<span style={{color:'green'}}>성별 선택완료</span>}
@@ -110,7 +116,7 @@ const SocialSignUp: React.FC = () => {
         
         </form>
         {isCalender ? 
-            <DatePicker onCalender={()=>setCalender(false)} birth={formik.values.birthday} onBirth={(value)=>{formik.setFieldValue('birthday',value)}}/>
+            <DatePicker onCalendar={()=>setCalender(false)} birth={formik.values.birthday} onBirth={(value)=>{formik.setFieldValue('birthday',value)}}/>
         :null}
       </div>
     );
