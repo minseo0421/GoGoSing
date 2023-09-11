@@ -1,6 +1,7 @@
 /* CardSmallContainer.module.css */
 
 .container {
+  /* max-width: 446px; */
   height: 180px;
   margin: 10px;
   display: flex;
