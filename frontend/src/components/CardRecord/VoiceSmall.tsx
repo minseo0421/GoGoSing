@@ -30,7 +30,14 @@ const VoiceSmall: React.FC = () => {
             alt=""
           />
         </div>
-      ) : null}
+      ) : (
+        <img
+          className={RecordSmall.PitchIcon}
+          onClick={toggleShow}
+          src="assets/addButton.svg"
+          alt=""
+        />
+      )}
       {show && !voice ? (
         <button onClick={voiceShow}>목소리 등록했다 치기</button>
       ) : null}
