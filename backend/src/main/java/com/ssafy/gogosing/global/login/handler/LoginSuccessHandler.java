@@ -1,10 +1,12 @@
 package com.ssafy.gogosing.global.login.handler;
 
+import com.ssafy.gogosing.domain.user.Role;
 import com.ssafy.gogosing.domain.user.User;
 import com.ssafy.gogosing.global.jwt.service.JwtService;
 import com.ssafy.gogosing.global.redis.service.RedisRefreshTokenService;
 import com.ssafy.gogosing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -12,6 +14,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -28,7 +31,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                        Authentication authentication) {
+                                        Authentication authentication) throws IOException {
 
         // 인증 정보에서 username(email) 추출
         String email = extractUsername(authentication);
@@ -49,11 +52,21 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         // response header에 AccessToken, RefreshToken 실어서 보내기
 //        jwtService.sendAccessAndRefreshToken(httpServletResponse, accessToken, refreshToken);
 
-        Optional<User> user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
 
-        // Redis에 RefreshToken 저장
-        if(user.isPresent())
+        if(user != null) {
+            // Redis에 RefreshToken 저장
             redisRefreshTokenService.setRedisRefreshToken(refreshToken, email);
+
+            // 첫 로그인일 시 설문페이지로 이동
+            httpServletResponse.sendRedirect("http://localhost:8081/");
+
+            if(user.getRole() == Role.FIRST) {
+                user.updateFirstRole();
+                userRepository.save(user);
+            }
+        }
         else
             throw new NullPointerException("해당 유저가 존재하지 않습니다.");
     }

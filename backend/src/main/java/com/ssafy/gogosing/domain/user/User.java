@@ -97,6 +97,13 @@ public class User extends BaseTimeEntity {
         this.gender = Gender.valueOf(userSingUpPlusRequestDto.getGender());
         this.birth = LocalDate.parse(userSingUpPlusRequestDto.getBirth());
         // 권한 수정
+        this.role = Role.FIRST;
+    }
+
+    /**
+     * 첫 로그인 이후 표시 변경
+     */
+    public void updateFirstRole() {
         this.role = Role.USER;
     }
 }

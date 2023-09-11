@@ -38,7 +38,7 @@ public class UserSignUpRequestDto {
                 .nickname(this.nickname)
                 .gender(Gender.valueOf(this.gender))
                 .birth(LocalDate.parse(this.birth))
-                .role(Role.USER)
+                .role(Role.FIRST)
                 .socialType(SocialType.X)
                 .build();
     }
