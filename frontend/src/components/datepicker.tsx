@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import styled from './datapicker.module.css'
 
 interface Props {
-    onCalender:()=>void,
+    onCalendar:()=>void,
     birth:string|null,
     onBirth:(value:string)=>void,
 }
-const DatePicker: React.FC<Props> = ({onCalender,birth,onBirth}) => {
+const DatePicker: React.FC<Props> = ({onCalendar,birth,onBirth}) => {
   const birthday = birth===null ? null :new Date(birth)
   const today = new Date()
   const [year, setYear] = useState<number>(birthday!==null ? birthday.getFullYear():today.getFullYear());
@@ -27,8 +27,17 @@ const DatePicker: React.FC<Props> = ({onCalender,birth,onBirth}) => {
       }
       const newYear = Math.min(2023, Math.max(1, year + (delta > 0 ? 1 : -1)));
       setYear(newYear);
-      setMonth(1)
-      setDay(1)
+      if (newYear===today.getFullYear()){
+        if (month > today.getMonth()+1) {
+          setMonth(1)
+          setDay(1)
+        }
+        else {
+          if (day > today.getDate()) {
+            setDay(1)
+          }
+        }
+      }
     } else if (type === 'month') {
       if (delta > 0 && month === 12) {
         // 가장 큰 값 이후로 스크롤 무시
@@ -45,14 +54,11 @@ const DatePicker: React.FC<Props> = ({onCalender,birth,onBirth}) => {
       const newMonth = month + (delta > 0 ? 1 : -1);
       if (newMonth < 1) {
         setYear((prevYear) => prevYear - 1);
-        setMonth(12);
       } else if (newMonth > 12) {
         setYear((prevYear) => prevYear + 1);
-        setMonth(1);
       } else {
         setMonth(newMonth);
       }
-      setDay(1)
     } else if (type === 'day') {
       const daysInSelectedMonth = getDaysInMonth(year, month);
       if (delta > 0 && day === daysInSelectedMonth) {
@@ -80,11 +86,11 @@ const DatePicker: React.FC<Props> = ({onCalender,birth,onBirth}) => {
       } else if (newDay > daysInSelectedMonth) {
         if (month === 12) {
           setYear((prevYear) => prevYear + 1);
-          setMonth(1);
-          setDay(1);
+          // setMonth(1);
+          // setDay(1);
         } else {
           setMonth((prevMonth) => prevMonth + 1);
-          setDay(1);
+          // setDay(1);
         }
       } else {
         setDay(newDay);
@@ -120,7 +126,7 @@ const DatePicker: React.FC<Props> = ({onCalender,birth,onBirth}) => {
     <div className={styled.calender}>
      <div style={{height:'10%', display:'flex', justifyContent:'space-between',margin:'10px 20px'}}>
       <span>생년월일</span>
-      <button style={{}} onClick={()=>{onBirth(`${year}-${month}-${day}`); onCalender()}}>완료</button>
+      <button style={{}} onClick={()=>{onBirth(`${year}-${month}-${day}`); onCalendar()}}>완료</button>
     </div>
     <div className={styled.input_calender}>
 
