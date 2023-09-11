@@ -7,6 +7,7 @@ import com.ssafy.gogosing.global.oauth2.CustomOAuth2User;
 import com.ssafy.gogosing.global.redis.service.RedisRefreshTokenService;
 import com.ssafy.gogosing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -136,8 +137,21 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 //        refreshTokenCookie.setSecure(true);
         httpServletResponse.addCookie(refreshTokenCookie);
 
-        // 프론트의 회원가입 추가 정보가 입력되어 있고 로그인 성공하면 메인페이지로
-        httpServletResponse.sendRedirect("http://localhost:3000");
+        if(oAuth2User.getRole() == Role.FIRST) {
+            // 첫 로그인일 시 설문페이지로 이동
+            httpServletResponse.sendRedirect("http://localhost:8081/");
+
+            User user = userRepository.findByEmail(oAuth2User.getEmail())
+                    .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
+
+            user.updateFirstRole();
+
+            userRepository.save(user);
+        }
+        else {
+            // 프론트의 회원가입 추가 정보가 입력되어 있고 첫번째 로그인이 아니고 로그인 성공하면 메인페이지로
+            httpServletResponse.sendRedirect("http://localhost:3000");
+        }
     }
 
     public Map<String, String> socialLoginSuccessAndSendTokenToFront() {
