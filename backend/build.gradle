@@ -49,6 +49,9 @@ dependencies {
 
 	// dto validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// spring mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 tasks.named('test') {

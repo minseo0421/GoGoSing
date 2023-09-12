@@ -84,7 +84,7 @@ public class SecurityConfig {
                 // URL 별 권한 관리
                 .authorizeRequests()
 
-                    .antMatchers("/", "/favicon.ico", "/api/oauth2/**","/api/sessions/**", "/api/user/checkbyemail/**", "/api/user/checkbynickname/**").permitAll()
+                    .antMatchers("/", "/favicon.ico", "/api/oauth2/**","/api/sessions/**", "/api/user/checkbyemail/**", "/api/user/checkbynickname/**", "/api/email/**").permitAll()
                 .antMatchers(PERMIT_URL_ARRAY).permitAll()
                 .antMatchers("/api/user/signup").permitAll() // 회원가입 접근 OK
                 .anyRequest().authenticated() // 그 외 경로는 모두 인증된 사용자만 접근 가능

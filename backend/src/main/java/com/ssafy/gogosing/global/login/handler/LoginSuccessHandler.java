@@ -59,10 +59,10 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
             // Redis에 RefreshToken 저장
             redisRefreshTokenService.setRedisRefreshToken(refreshToken, email);
 
-            // 첫 로그인일 시 설문페이지로 이동
-            httpServletResponse.sendRedirect("http://localhost:8081/");
-
             if(user.getRole() == Role.FIRST) {
+                // 첫 로그인일 시 설문페이지로 이동
+                httpServletResponse.sendRedirect("http://localhost:8081/");
+
                 user.updateFirstRole();
                 userRepository.save(user);
             }
