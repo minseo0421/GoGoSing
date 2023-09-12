@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 
 import { setPage } from "../store/actions";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import MainStyle from "../components/MainContainer/MainContainer.module.css";
+// import { useNavigate } from "react-router-dom";
+// import MainStyle from "../components/MainContainer/MainContainer.module.css";
 import RecordStyle from "../components/CardRecord/RecordSmall.module.css";
 import BarStyle from "./ContainerBar.module.css";
 import PitchSmall from "../components/CardRecord/PitchSmall";
@@ -16,11 +16,11 @@ const MusicLike: React.FC = () => {
     dispatch(setPage(4));
   }, [dispatch]);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const musicrecord = () => {
-    navigate("/record");
-  };
+  // const musicrecord = () => {
+  //   navigate("/record");
+  // };
 
   return (
     <div>

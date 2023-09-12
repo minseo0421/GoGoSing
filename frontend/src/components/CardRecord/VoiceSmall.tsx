@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import RecordSmall from "./RecordSmall.module.css";
+import { useNavigate } from "react-router-dom";
 
 const VoiceSmall: React.FC = () => {
   const [show, setShow] = useState(false);
@@ -14,6 +15,12 @@ const VoiceSmall: React.FC = () => {
     setVoice(true);
   };
 
+  const navigate = useNavigate();
+
+  const musicupload = () => {
+    navigate("/musicupload");
+  };
+
   useEffect(() => {
     console.log("Component updated with show:", show, " and voice:", voice);
   }, [show, voice]);
@@ -25,7 +32,7 @@ const VoiceSmall: React.FC = () => {
           <p>목소리 등록하러 가기</p>
           <img
             className={RecordSmall.PitchIcon}
-            onClick={toggleShow}
+            onClick={musicupload}
             src="assets/addButton.svg"
             alt=""
           />
