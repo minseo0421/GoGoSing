@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
 import RecordSmall from "./RecordSmall.module.css";
+import { useNavigate } from "react-router-dom";
 
 const PitchSmall: React.FC = () => {
   const [show, setShow] = useState(false);
   const [pitch, setPitch] = useState(false);
+
+  const navigate = useNavigate();
+
+  const musicrecord = () => {
+    navigate("/record");
+  };
 
   // 음역대 등록, 그 상태 저장이 생기면 toggleShow는 음역대 등록하는 페이지로 이동하는 걸로 수정
   const toggleShow = () => {
@@ -28,7 +35,7 @@ const PitchSmall: React.FC = () => {
           <p>음역대 등록하러 가기</p>
           <img
             className={RecordSmall.PitchIcon}
-            onClick={toggleShow}
+            onClick={musicrecord}
             src="assets/addButton.svg"
             alt=""
           />

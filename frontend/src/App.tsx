@@ -13,6 +13,7 @@ import Login from "./pages/account/login";
 import LocalLogin from "./pages/account/locallogin";
 
 import MusicRecord from "./pages/musicrecord";
+import MusicUpload from "./pages/musicupload";
 
 import BottomBar from "./components/Bottombar";
 import Topbar from "./components/Topbar";
@@ -85,6 +86,7 @@ function App() {
 
             {/* Music Record */}
             <Route path="/record" element={<MusicRecord />} />
+            <Route path="/musicupload" element={<MusicUpload />} />
           </Routes>
         </motion.div>
       </AnimatePresence>
