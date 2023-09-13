@@ -106,4 +106,12 @@ public class User extends BaseTimeEntity {
     public void updateFirstRole() {
         this.role = Role.USER;
     }
+
+    /**
+     * 비밀번호 변경후 암호화
+     */
+    public void updatePassword(String tempPassword, PasswordEncoder passwordEncoder) {
+        this.password = tempPassword;
+        passwordEncode(passwordEncoder);
+    }
 }

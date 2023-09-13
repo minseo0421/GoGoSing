@@ -18,6 +18,9 @@ public class UserSignUpRequestDto {
     @NotBlank(message = "email은 빈값이 올 수 없습니다")
     private String email;
 
+    @NotBlank(message = "emailCertificationNumber은 빈값이 올 수 없습니다")
+    private String emailCertificationNumber;
+
     @NotBlank(message = "password는 빈값이 올 수 없습니다")
     private String password;
 
