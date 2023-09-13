@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SpendEmailRequestDto {
+public class SpendCertificationNumberRequestDto {
 
     private String email;
 }

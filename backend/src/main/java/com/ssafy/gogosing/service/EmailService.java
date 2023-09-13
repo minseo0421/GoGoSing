@@ -125,14 +125,6 @@ public class EmailService {
     }
 
     public void sendMail(MailContentDto mailContentDto) throws MessagingException {
-//        // SimpleMailMessage 버전(간단한 텍스트 기반의 이메일을 생성, 전송)
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setTo(mailContentDto.getAddress());
-//        message.setFrom(this.senderEmail);
-//        message.setSubject(mailContentDto.getTitle());
-//        message.setText(mailContentDto.getMessage());
-//
-//        javaMailSender.send(message);
 
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);

@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TempPasswordRequestDto {
+public class SpendTempPasswordRequestDto {
 
     @NotBlank(message = "email은 빈값이 올 수 없습니다")
     private String email;
