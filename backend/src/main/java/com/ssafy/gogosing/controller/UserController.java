@@ -42,11 +42,12 @@ public class UserController {
     }
 
     @ApiOperation(value = "로그아웃")
-    @GetMapping("/logout/{id}")
-    public ResponseEntity<?> logout(HttpServletRequest httpServletRequest, @PathVariable Long id) {
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest httpServletRequest, 
+                                    @AuthenticationPrincipal UserDetails userDetails) {
 
         Long result = userService.logout(jwtService.extractAccessToken(httpServletRequest)
-                .orElseThrow(() -> new IllegalArgumentException("비정상적인 access token 입니다.")), id);
+                .orElseThrow(() -> new IllegalArgumentException("비정상적인 access token 입니다.")), userDetails);
 
         return ResponseEntity.ok().body(result);
     }
