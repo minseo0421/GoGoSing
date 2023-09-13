@@ -3,6 +3,7 @@ package com.ssafy.gogosing.service;
 import com.ssafy.gogosing.domain.user.User;
 import com.ssafy.gogosing.dto.user.request.UserSignUpRequestDto;
 import com.ssafy.gogosing.dto.user.request.UserSingUpPlusRequestDto;
+import com.ssafy.gogosing.global.redis.repository.CertificationNumberDao;
 import com.ssafy.gogosing.global.redis.service.RedisAccessTokenService;
 import com.ssafy.gogosing.global.redis.service.RedisRefreshTokenService;
 import com.ssafy.gogosing.repository.UserRepository;
@@ -28,6 +29,10 @@ public class UserService {
 
     private final RedisAccessTokenService redisAccessTokenService;
 
+    private final EmailService emailCertificationService;
+
+    private final CertificationNumberDao certificationNumberDao;
+
     /**
      * 일반 회원 가입
      */
@@ -44,6 +49,11 @@ public class UserService {
         if (!Pattern.matches("[0-9a-zA-Z]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$", userSignUpRequestDto.getEmail())) {
             throw new IllegalStateException("이메일 형식을 다시 맞춰주세요.");
         }
+
+        emailCertificationService.verifyEmail(userSignUpRequestDto.getEmailCertificationNumber(), userSignUpRequestDto.getEmail());
+
+        // 인증된 이메일로 가입을 시도하면 redis에 저장한 인증번호 삭제
+        certificationNumberDao.removeCertificationNumber(userSignUpRequestDto.getEmail());
 
         // 비밀번호 유효성 검사
         if (!Pattern.matches("^.*(?=^.{9,15}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$", userSignUpRequestDto.getPassword())) {
@@ -89,13 +99,14 @@ public class UserService {
      * 로그아웃
      * 성공 시 accessToken blacklist 추가 및 refreshToken 삭제
      */
-    public Long logout(String accessToken, Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+    public Long logout(String accessToken, UserDetails userDetails) {
+
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
 
         redisRefreshTokenService.deleteRefreshToken(user.getEmail());
         redisAccessTokenService.setRedisAccessToken(accessToken.replace("Bearer ", ""), "LOGOUT");
 
-        return id;
+        return user.getId();
     }
 }
