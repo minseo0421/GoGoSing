@@ -11,7 +11,7 @@ const MusicChart: React.FC = () => {
     dispatch(setPage(2));
   }, [dispatch]);
   return (
-    <div>
+    <div style={{height:'100%', overflow:'auto'}}>
       <div className={styles.pitch}>🍪내가 만든 http only 쿠키 ~🍪</div>
       <CardLongContainer></CardLongContainer>
     </div>

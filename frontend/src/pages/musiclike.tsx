@@ -23,7 +23,7 @@ const MusicLike: React.FC = () => {
   // };
 
   return (
-    <div>
+    <div style={{height:'100%', overflow:'scroll'}}>
       {/* <div className={MainStyle.container}> */}
       <div className={RecordStyle.largeContainer}>
         <PitchSmall></PitchSmall>

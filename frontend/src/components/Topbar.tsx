@@ -18,7 +18,9 @@ const Topbar: React.FC = () => {
         <Link style={{ color: "white" }} to="/mypage"><img src="assets/default_user.png" alt="" style={{ width: "80%"}} /></Link>
         : <Link style={{ color: "white" }} to="/login">Login</Link>}
       </div>
-      :null
+      :      
+      <div  className={styled.topbar}>
+      </div>
       }
     </>
   );
