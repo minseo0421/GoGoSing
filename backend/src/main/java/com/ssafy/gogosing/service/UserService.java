@@ -65,7 +65,7 @@ public class UserService {
 
         user.passwordEncode(passwordEncoder);
 
-        user.updateProfileImage("DefaultProfile.png");
+        user.updateProfileImage("https://gogosing.s3.ap-northeast-2.amazonaws.com/DefaultProfile.png");
 
         System.out.println(user.getEmail());
         User saveUser = userRepository.save(user);
@@ -86,7 +86,7 @@ public class UserService {
                 .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
 
         if(user.getProfileImg() == null) {
-            user.updateProfileImage("DefaultProfile.png");
+            user.updateProfileImage("https://gogosing.s3.ap-northeast-2.amazonaws.com/DefaultProfile.png");
         }
 
         user.updateSignupPlus(userSingUpPlusRequestDto);
@@ -112,9 +112,9 @@ public class UserService {
     }
 
     /**
-     * 마이페이지에 제공할 회원 정보 가져오기
+     * 마이페이지에 제공할 회원 상세정보 가져오기
      */
-    public UserMypageResponseDto getMypage(String userEmail) {
+    public UserMypageResponseDto getUserDetail(String userEmail) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 

@@ -3,14 +3,18 @@ package com.ssafy.gogosing.controller;
 import com.ssafy.gogosing.dto.user.request.UserSignUpRequestDto;
 import com.ssafy.gogosing.dto.user.request.UserSingUpPlusRequestDto;
 import com.ssafy.gogosing.global.jwt.service.JwtService;
+import com.ssafy.gogosing.global.s3upload.ImageService;
 import com.ssafy.gogosing.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.expression.AccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -24,6 +28,8 @@ public class UserController {
     private final UserService userService;
 
     private final JwtService jwtService;
+
+    private final ImageService imageService;
 
     @ApiOperation(value = "일반 회원 가입")
     @PostMapping("/signup")
@@ -52,12 +58,29 @@ public class UserController {
         return ResponseEntity.ok().body(result);
     }
 
-    @ApiOperation(value = "특정 유저 한명 조회")
-    @GetMapping("/mypage")
-    public ResponseEntity<?> getMypage(@AuthenticationPrincipal UserDetails userDetails) {
+    @ApiOperation(value = "사용자 프로필 이미지 변경")
+    @PostMapping("/update/profileImage")
+    public ResponseEntity<?> updateProfileImage(@RequestParam("s3upload") MultipartFile multipartFile,
+                                              @AuthenticationPrincipal UserDetails userDetails) throws Exception {
+
+        return ResponseEntity.ok().body(imageService.updateProfileImage(multipartFile, userDetails));
+    }
+
+    @ApiOperation(value = "사용자 프로필 이미지 삭제")
+    @DeleteMapping("/delete/profileImage")
+    public ResponseEntity<?> deleteProfileImage(@AuthenticationPrincipal UserDetails userDetails) throws AccessException {
+
+        imageService.deleteProfileImage(userDetails);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
+
+    }
+
+    @ApiOperation(value = "유저 상세정보 조회")
+    @GetMapping("/detail")
+    public ResponseEntity<?> getUserDetail(@AuthenticationPrincipal UserDetails userDetails) {
 
         return ResponseEntity.ok()
-                .body(userService.getMypage(userDetails.getUsername()));
+                .body(userService.getUserDetail(userDetails.getUsername()));
     }
 
     /**

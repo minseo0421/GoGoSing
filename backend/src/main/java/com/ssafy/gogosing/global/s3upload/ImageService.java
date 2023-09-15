@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.net.URLDecoder;
 
 @Service
 @Transactional(readOnly = true)
@@ -34,7 +35,7 @@ public class ImageService {
     private final UserRepository userRepository;
 
     @Transactional
-    public String saveImage(MultipartFile multipartFile, UserDetails userDetails) throws IOException {
+    public String saveProfileImage(MultipartFile multipartFile, UserDetails userDetails) throws IOException {
 
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
@@ -48,44 +49,19 @@ public class ImageService {
         byte[] imageBytes = multipartFile.getBytes();
 
         // S3에 업로드
-        uploadToS3(fileName, imageBytes, multipartFile.getContentType());
+        String imagePath = uploadToS3(fileName, imageBytes, multipartFile.getContentType());
 
         // db 저장
-        user.updateProfileImage(fileName);
+        user.updateProfileImage(imagePath);
         userRepository.save(user);
 
-        return fileName;
-    }
-
-    public MultipartFile getImageFromS3(String fileName) {
-        try {
-            // S3에서 이미지 객체를 가져옵니다.
-            S3Object s3Object = amazonS3Client.getObject(S3Bucket, fileName);
-
-            // S3 객체에서 이미지 데이터를 읽습니다.
-            byte[] imageBytes = IOUtils.toByteArray(s3Object.getObjectContent());
-
-            // 바이트 배열을 ByteArrayInputStream으로 변환
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(imageBytes);
-
-            // 임시 파일로 이미지를 저장합니다.
-            File tempFile = File.createTempFile("tempImage", null);
-            try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-                fos.write(imageBytes);
-            }
-            // 임시 파일을 MultipartFile로 변환합니다.
-                MultipartFile multipartFile = new MockMultipartFile(fileName, fileName, null, new FileInputStream(tempFile));
-
-            return multipartFile;
-        } catch (Exception e) {
-            throw new RuntimeException("이미지를 가져오지 못했습니다.");
-        }
+        return imagePath;
     }
 
     /**
      * S3 업로드 메서드
      */
-    private void uploadToS3(String fileName, byte[] imageBytes, String contentType) {
+    private String uploadToS3(String fileName, byte[] imageBytes, String contentType) {
         ObjectMetadata objectMetaData = new ObjectMetadata();
         objectMetaData.setContentType(contentType);
         objectMetaData.setContentLength(imageBytes.length);
@@ -97,13 +73,13 @@ public class ImageService {
                             .withCannedAcl(CannedAccessControlList.PublicRead)
             );
 
-//            String imagePath = amazonS3Client.getUrl(S3Bucket, fileName).toString(); // 접근 가능한 URL 가져오기
+            String imagePath = amazonS3Client.getUrl(S3Bucket, fileName).toString(); // 접근 가능한 URL 가져오기
 
-//            if (imagePath == null) {
-//                throw new IllegalArgumentException("이미지 경로를 가져오지 못하였습니다.");
-//            }
+            if (imagePath == null) {
+                throw new IllegalArgumentException("이미지 경로를 가져오지 못하였습니다.");
+            }
 
-//            return imagePath;
+            return imagePath;
         } catch (AmazonClientException e) {
             throw new RuntimeException("S3에 이미지를 업로드하는데 실패했습니다.", e);
         }
@@ -128,6 +104,49 @@ public class ImageService {
         }
 
         throw new IllegalArgumentException("해당 파일의 확장자를 확인할 수 없습니다.");
+    }
+
+    @Transactional
+    public String updateProfileImage(MultipartFile multipartFile, UserDetails userDetails) throws IOException {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
+
+        if(!extractFileNameFromUrl(user.getProfileImg()).equals("DefaultProfile.png")) {
+            deleteImage(user.getProfileImg());
+        }
+
+        return saveProfileImage(multipartFile, userDetails);
+    }
+
+    @Transactional
+    public void deleteProfileImage(UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
+
+        if(!extractFileNameFromUrl(user.getProfileImg()).equals("DefaultProfile.png")) {
+            deleteImage(user.getProfileImg());
+        }
+
+        user.updateProfileImage("https://gogosing.s3.ap-northeast-2.amazonaws.com/DefaultProfile.png");
+        userRepository.save(user);
+    }
+
+    public void deleteImage(String imageUrl) {
+        // 이미지가 존재하면 버킷에서 해당 이미지를 삭제
+        String existFile = extractFileNameFromUrl(imageUrl);
+        System.out.println(existFile);
+        try {
+            String decodedFileName = URLDecoder.decode(existFile, "UTF-8");
+            amazonS3Client.deleteObject(S3Bucket, decodedFileName);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // URL에서 파일 이름 추출
+    private String extractFileNameFromUrl(String imageUrl) {
+        // URL의 마지막 슬래시 이후의 문자열
+        return imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
     }
 
 }

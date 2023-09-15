@@ -29,5 +29,6 @@ public class UserMypageResponseDto {
         this.nickname = user.getNickname();
         this.gender = user.getGender();
         this.birth = user.getBirth();
+        this.profileImg = user.getProfileImg();
     }
 }
