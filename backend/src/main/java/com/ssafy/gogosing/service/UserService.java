@@ -3,6 +3,7 @@ package com.ssafy.gogosing.service;
 import com.ssafy.gogosing.domain.user.User;
 import com.ssafy.gogosing.dto.user.request.UserSignUpRequestDto;
 import com.ssafy.gogosing.dto.user.request.UserSingUpPlusRequestDto;
+import com.ssafy.gogosing.dto.user.response.UserMypageResponseDto;
 import com.ssafy.gogosing.global.redis.repository.CertificationNumberDao;
 import com.ssafy.gogosing.global.redis.service.RedisAccessTokenService;
 import com.ssafy.gogosing.global.redis.service.RedisRefreshTokenService;
@@ -108,5 +109,15 @@ public class UserService {
         redisAccessTokenService.setRedisAccessToken(accessToken.replace("Bearer ", ""), "LOGOUT");
 
         return user.getId();
+    }
+
+    /**
+     * 마이페이지에 제공할 회원 정보 가져오기
+     */
+    public UserMypageResponseDto getMypage(String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+        return new UserMypageResponseDto(user);
     }
 }

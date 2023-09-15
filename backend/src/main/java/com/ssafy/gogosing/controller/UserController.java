@@ -52,6 +52,14 @@ public class UserController {
         return ResponseEntity.ok().body(result);
     }
 
+    @ApiOperation(value = "특정 유저 한명 조회")
+    @GetMapping("/mypage")
+    public ResponseEntity<?> getMypage(@AuthenticationPrincipal UserDetails userDetails) {
+
+        return ResponseEntity.ok()
+                .body(userService.getMypage(userDetails.getUsername()));
+    }
+
     /**
      * 테스트용 추후 삭제하기
      */
