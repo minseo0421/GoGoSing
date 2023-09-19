@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import MusicPlay from '../components/musicrecord/musicplay';
 
@@ -27,61 +28,66 @@ const MusicRecord: React.FC = () => {
             });
     };
 
-    const onRecordingComplete = (blob: Blob) => {
+    const addAudio = (blob: Blob) => {
         setIsRecording(true);
         const url = URL.createObjectURL(blob);
-        // console.log(blob);
         setAudioSourceURL(url);
+        console.log(url)
     };
 
     const handleRestartRecording = () => {
-        setAudioSourceURL("");
-        setIsRecording(!isRecording);
-        console.log(audioSourceURL)
-        console.log(isRecording)
+      setAudioSourceURL("");
+      setIsRecording(!isRecording);
+      console.log(audioSourceURL)
+      console.log(isRecording)
+    };
+
+    const navigate = useNavigate();
+
+    const recordresult = () => {
+        navigate("/recordresult");
     };
 
     return (
         <>
-        <h1>당신의 음역대</h1>
-        <h1>입력해!</h1>
-          <div style={{ display: 'flex', flexDirection:'column',justifyContent: 'center', marginBottom: 24 }}>
-            <div style={{ margin: 'auto', marginBottom: '10px' }}>
-            {audioSourceURL==="" && !isRecording &&(
-                <button onClick={handleStartRecording} style={{ width: '100px', height: '40px', borderRadius: '10px', backgroundColor: 'lightblue', border: 'none', cursor: 'pointer' }}>
-                녹음 시작
-                </button>
-            )}
-            {/* {isRecording &&( */}
-            {isRecording && (
+        <div>
+            <div style={{ display: 'none' }}>
                     <AudioRecorder
-                        onRecordingComplete={onRecordingComplete}
-                        recorderControls={recorderControls}
+                    onRecordingComplete={addAudio}
+                    recorderControls={recorderControls}
+                    // showVisualizer={true}
+                    // downloadOnSavePress={true}
                     />
-                )}
             </div>
-          </div>
-          <div>
-            {isRecording && audioSourceURL&& (
-            <MusicPlay audioSourceURL= {audioSourceURL}/>
-             )} 
-            <div>
-            {isRecording && audioSourceURL&& (
-                <button onClick={
-                    handleRestartRecording
-                    } style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>
-                        다시하기
-                </button>
+            <h1>당신의 음역대</h1>
+            <h1>입력해!</h1>
+            <div style={{ display: 'flex', flexDirection:'column',justifyContent: 'center', marginBottom: 24 }}>
+                {!isRecording && audioSourceURL==="" && (
+                <div style={{ margin: 'auto', marginBottom: '10px' }}>
+                    <img src="assets/microphone.png" alt="" style={{width: '50%', height:'60%'}} onClick={handleStartRecording}/>
+                </div>
                 )}
-            {isRecording && audioSourceURL&&(
-                <button onClick={recorderControls.stopRecording} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>
-                    다음으로
-                </button>
+                {isRecording && audioSourceURL==="" && (
+                <div>
+                    <p>{recorderControls.recordingTime}</p>
+                    <p onClick={recorderControls.stopRecording}>녹음 멈춰!!</p>
+                </div>
                 )}
+                {audioSourceURL && (
+                    <MusicPlay audioSourceURL= {audioSourceURL}/>
+                    )}
+                    {isRecording && audioSourceURL && (
+                    <button onClick={handleRestartRecording} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>다시하기</button>
+                    )}
+                    {isRecording && audioSourceURL&&(
+                    <button onClick={recordresult} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>
+                        다음으로
+                    </button>
+                    )}
             </div>
-            
-           </div>
+        </div>
         </>
+
       );
 }
 export default MusicRecord;

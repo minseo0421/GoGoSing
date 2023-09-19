@@ -40,6 +40,7 @@ const MusicUpload: React.FC = () => {
             {file===null && (
                 <input
                 type="file"
+                accept='audio/*'
                 onChange={({ target: { files } }) => files && files[0] && setFile(files[0])}
                  />
             )}
