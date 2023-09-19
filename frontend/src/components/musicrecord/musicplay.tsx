@@ -63,7 +63,9 @@ const MusicPlay: React.FC<MusicPlayProps> = ({ audioSourceURL }) => {
     return (
         <div style={{ width: '100%', height: '100%' }}>
             {/* <div style={{ width: '100%', height: '50vh' }}> */}
+            {audioSourceURL && (
             <canvas ref={canvasRef} height={260}></canvas>
+            )}
             {audioSourceURL && (
                 <audio
                 ref={audioRef}
