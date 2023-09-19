@@ -1,0 +1,251 @@
+/* input 상자 css */
+.input_account {
+    background-color: #D7D7D7;
+    border:1px solid white;
+    border-radius: 1rem;
+    width: 100%;
+    height: 50px;
+    padding:0 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.checkemail {
+    background-color: white;
+    border:1px solid black;
+    border-radius: 1rem;
+    color:black;
+    margin-left: 10px;
+    box-sizing: border-box;
+    width:25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkemail:enabled:hover {
+    cursor:pointer;
+    background-color: #D7D7D7;
+}
+
+.checkemail:disabled {
+    background-color: #D7D7D7;
+    border:1px solid white;
+    color:gray;
+}
+
+.signup_btn {
+    border: 1px solid white;
+    width:40%;
+    height: 50px;
+    border-radius: 1rem;
+    background-color: rgba(255, 203, 203, 0.5);
+    color:white;
+}
+.signup_btn:enabled:hover {
+    cursor:pointer;
+    background-color: rgba(255, 203, 203, 0.8);
+}
+.signup_btn:disabled {
+    background-color: rgba(255, 203, 203, 0.3);
+    border:none;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.link {
+    color:white;
+    margin:10px 0;
+    font-size: 12px;
+}
+
+.sociallogin_btn {
+    display: flex;
+    align-items: center;
+    background-color: rgba(215,215,215,0.8);
+    color:rgb(82,82,82);
+    border:1px solid white;
+    border-radius: 1rem;
+    height: 50px;
+    padding:0 50px;
+    margin:10px;
+    box-sizing: border-box;
+}
+
+.sel_gender {
+    background-color: darkgray;
+    border:1px solid #D7D7D7;
+    border-radius: 1rem;
+    width: 100%;
+    height: 50px;
+    padding:0 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.unsel_gender {
+    background-color: #D7D7D7;
+    border:1px solid white;
+    border-radius: 1rem;
+    width: 100%;
+    height: 50px;
+    padding:0 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.sel_gender:hover, .unsel_gender:hover {
+    background-color: gray;
+}
+
+.calender {
+    background-color: red;
+    position: absolute;
+    width: 100%;
+    height: 40%;
+    bottom: 0px;
+    border-radius: 1rem 1rem 2.5rem 2.5rem;
+}
+.input_calender {
+    background-color: blue;
+    width:90%;
+    height: 80%;
+    display: flex;
+    margin:auto;
+    border-radius: 0.5rem;
+}
+
+
+.myprofile {
+    width: 100%;
+    background-image: url('../../../public/assets/mypage_back.png');
+    background-size: cover;
+}
+
+
+.myinfo {
+    display: flex;
+    width: 80%;
+    margin: auto;
+}
+.imgcontainer {
+    position: relative;
+    display: inline-block;
+    width:35%;
+    box-sizing: border-box;
+    margin: auto;
+    border-radius: 50%;
+}
+.myimg {
+    width:100%;
+    height: 100%;
+    border-radius: 50%;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); /* X-Offset, Y-Offset, 흐림 정도, 그림자 색상 */
+}
+
+.imgcontainer:hover .myimg {
+    opacity: 0.3;
+}
+.info {
+    box-sizing: border-box;
+    /* padding: 0 5%; */
+    margin: 3%;
+    box-sizing: border-box;
+    width: 65%;
+    text-align: start;
+}
+
+.info p {
+    margin:5px;
+    font-size: 20px;
+    text-justify:auto;
+}
+
+.mybtn {
+    width: 95%;
+    margin:auto
+}
+.mybtn button {
+    width: 40%;
+    margin:5%;
+    height: 50px;
+    border-radius: 2rem;
+    cursor: pointer;
+    border:none;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); /* X-Offset, Y-Offset, 흐림 정도, 그림자 색상 */
+    transition: opacity 0.3s;
+
+}
+
+.mybtn button:hover {
+    opacity: 0.7;
+}
+
+.btn1 {
+    background-color: #7290FA;
+}
+
+.btn2 {
+    background-color: #F27474;
+}
+
+.list {
+    display: flex;
+    margin:0 5%;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+
+.genrelist {
+    width: 80%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.genre {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    background-color: red;
+    margin:5px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.databox {
+    background-color: rgba(217, 217, 217,0.2);
+    width: 48%;
+
+    border-radius: 1rem; 
+    text-align: center;
+}
+
+.resign {
+    position: absolute;
+    bottom: 0;
+    right:20px;
+    cursor: pointer;
+    color:red;
+    font-weight:bolder;
+}
+
+.imghover {
+    background-color: #744ACD;
+    box-sizing: border-box;
+    width: 80%;
+    height: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s ease-in-out;
+}
