@@ -22,6 +22,7 @@ import { PageVariants, PageTransition } from "./components/pageTransition";
 import GenreSurvey from "./pages/account/genresurvey";
 import SocialSignUp from "./pages/account/socialsignup";
 import MyPage from "./pages/account/mypage";
+import FindPassWord from "./pages/account/findpw";
 
 function App() {
   // BottomBar 관련 상태
@@ -57,7 +58,7 @@ function App() {
             windowHeight < windowWidth *1.7 ? '100vh': `${windowWidth*2.35}px`}`, 
             width:`${windowHeight >= windowWidth *1.7 && windowWidth*2.35 >= windowHeight ? '100vw' : 
             windowHeight < windowWidth *1.7 ? `${windowHeight/1.7}px`:'100vw'}`}}>
-      <Topbar />
+      <Topbar/>
       <AnimatePresence initial={false} mode="wait">
         <motion.div
           key={location.pathname}
@@ -68,6 +69,7 @@ function App() {
           transition={PageTransition}
           custom={isForwardDirection}
           id='motiondiv'
+          style={{height:'75%'}}
         >
           <Routes location={location}>
             {/* Bottom Bar */}
@@ -83,6 +85,7 @@ function App() {
             <Route path="/socialsignup" element={<SocialSignUp />} />
             <Route path="/genresurvey" element={<GenreSurvey />} />
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/findpw" element={<FindPassWord />} />
 
             {/* Music Record */}
             <Route path="/record" element={<MusicRecord />} />

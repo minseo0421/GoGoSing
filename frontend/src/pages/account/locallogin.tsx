@@ -22,7 +22,7 @@ const LocalLogin: React.FC = () => {
 
     return (
       <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', width:'100%'}}>
-        <img src="assets/logo.png" alt="" style={{margin:'25% 0 30% 0'}}/>
+        <img src="assets/logo.png" alt="" style={{margin:'10% 0 30% 0'}}/>
         <form onSubmit={login} style={{width:'80%'}}>
             <input className={styled.input_account} type="text" placeholder="이메일" value={email} onChange={(e)=>setEmail(e.target.value)}/>
             <p></p>
@@ -30,7 +30,7 @@ const LocalLogin: React.FC = () => {
             <p></p>
             <button type='submit' className={styled.signup_btn}>로그인</button>
         </form>
-        <Link className={styled.link} to='/find'>비밀번호 찾기</Link>
+        <Link className={styled.link} to='/findpw'>비밀번호 찾기</Link>
         <Link className={styled.link} to='/signup'>회원가입</Link>
       </div>
     );
