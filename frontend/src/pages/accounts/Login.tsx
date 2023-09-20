@@ -1,59 +1,76 @@
 import React from 'react';
 import { Image, ImageBackground, View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
 
-const LoginModal = ({ visible, toggleModal } : any) => {
+function Login () {
+  const kakaologin = () => {
+    const CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID;
+    const REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
+    // 여기에서 웹 브라우저를 열거나 카카오 네이티브 SDK를 사용하여 로그인을 처리합니다.
+  }
+
+  // 네이버 로그인 반응
+  const naverlogin = () => {
+      const CLIENT_ID = process.env.REACT_APP_NAVER_CLIENT_ID;
+      const REDIRECT_URI = process.env.REACT_APP_NAVER_REDIRECT_URI;
+      // 여기에서 웹 브라우저를 열거나 네이버 네이티브 SDK를 사용하여 로그인을 처리합니다.
+  }
+
+  // 구글 로그인 반응
+  const googlelogin = () => {
+      const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+      const REDIRECT_URI = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
+      // 여기에서 웹 브라우저를 열거나 구글 네이티브 SDK를 사용하여 로그인을 처리합니다.
+  }
   return (
-    <Modal
-      transparent={true}
-      animationType="slide"
-      visible={visible}
-      onRequestClose={toggleModal}
-    >
-       <ImageBackground
-      source={require('../../../assets/background.png')}
-      style={styles.background}>
-      <View style={styles.closebtn}>
-
+    <View style={styles.container}>
+        <TouchableOpacity style={styles.sociallogin_btn} onPress={kakaologin}>
+            <Image source={require('../../../assets/kakao_logo.png')} style={styles.social_img} />
+            <Text style={{ marginLeft: 20 }}>카카오로 로그인하기</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.sociallogin_btn} onPress={naverlogin}>
+            <Image source={require('../../../assets/naver_logo.png')} style={styles.social_img}/>
+            <Text style={{ marginLeft: 20 }}>네이버로 로그인하기</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.sociallogin_btn} onPress={googlelogin}>
+            <Image source={require('../../../assets/google_logo.png')} style={styles.social_img}/>
+            <Text style={{ marginLeft: 20 }}>구글로 로그인하기</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={googlelogin}>
+            <Text style={styles.locallogin}>일반 로그인하러가기!</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={toggleModal}>
-        <Text style={styles.closeText}>닫기</Text>
-      </TouchableOpacity>
-      <View style={styles.logobox}>
-        <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
-
-      </View>
-      <View style={styles.modalContainer}>
-
-      </View>
-      </ImageBackground>
-    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  closebtn:{
-    flex:0.025,
-  },
-  closeText:{
-    color:'white',
-    textAlign:'right',
-    marginRight:25
-  },
-  background: {
-    flex: 1, // 화면 전체를 차지하도록 합니다.
-    resizeMode: 'cover', // 이미지 크기 조절 옵션 (다른 옵션도 가능)
-  },
-  logobox:{
-    flex:0.3
-  },
-  logo:{
-    
-  },
-  modalContainer: {
+  container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  sociallogin_btn:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(215, 215, 215, 0.8)',
+    color: 'rgb(82, 82, 82)',
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 10, 
+    width: 275,
+    height: 50,
+    paddingHorizontal: 50, // padding 속성도 paddingHorizontal와 같이 사용합니다.
+    marginVertical: 10, // margin 속성도 marginVertical과 같이 사용합니다.
+  },
+  social_img:{
+    width:30,
+    resizeMode: 'contain',
+  },
+  locallogin:{
+    color:'white',
+    textDecorationLine:'underline',
+    marginTop:50
+
+  }
 });
 
-export default LoginModal;
+export default Login;

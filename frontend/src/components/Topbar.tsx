@@ -1,6 +1,6 @@
 import React,{useState} from "react";
 import { StyleSheet,View,Text,Image, TouchableOpacity } from "react-native";
-import LoginModal from "../pages/accounts/Login";
+import LoginModal from "../pages/loginmodal";
 
 function Topbar({navigation}:any) {
   const [isModalVisible, setModalVisible] = useState(false);
