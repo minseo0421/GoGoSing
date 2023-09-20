@@ -1,11 +1,13 @@
+// MainHome.js
 import React from 'react';
+import { View, Text, Button } from 'react-native';
 
-const MusicLike: React.FC = () => {
-    return (
-      <div>
-        <h1>MusicLike 입니당</h1>
-      </div>
-    );
-}
+const MusicLike = () => {
+  return (
+    <View>
+      <Text>Like</Text>
+    </View>
+  );
+};
+
 export default MusicLike;
-  
