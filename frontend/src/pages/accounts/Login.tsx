@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, ImageBackground, View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
 
-function Login () {
+function Login ({onModal}:any) {
   const kakaologin = () => {
     const CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID;
     const REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
@@ -35,7 +35,7 @@ function Login () {
             <Image source={require('../../../assets/google_logo.png')} style={styles.social_img}/>
             <Text style={{ marginLeft: 20 }}>구글로 로그인하기</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={googlelogin}>
+        <TouchableOpacity onPress={onModal}>
             <Text style={styles.locallogin}>일반 로그인하러가기!</Text>
         </TouchableOpacity>
       </View>

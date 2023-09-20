@@ -4,7 +4,7 @@ import React from 'react';
 function MainHome() {
   return (
     <View style={styles.container}>
-      
+      <Text>테스트입니다</Text>
     </View>
   );
 }

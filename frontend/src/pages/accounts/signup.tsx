@@ -11,6 +11,8 @@ const validationSchema = Yup.object().shape({
       .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,}$/, '이메일은 형식에 맞춰 입력해주세요.')
       .max(50, '이메일의 글자 수는 50자 이내로 설정해주세요')
       .required('이메일을 입력해주세요'),
+    certificationNumber:Yup.string()
+      .required('인증번호를 입력해주세요'),
     password: Yup.string()
       .min(9, '9 자 이상, 영문/숫자/특수문자 1개 이상 포함')
       .max(15, '15 자 이하의 패스워드를 입력해주세요')
@@ -31,32 +33,47 @@ const validationSchema = Yup.object().shape({
 });
 
 function SignUp() {
+
     const [firstStep, setStep] = useState(true);
     const [isCheckEmail, setCheckEmail] = useState(false); // 이메일 중복검사 체크변수
+    const [isCheckAuth, setCheckAuth] = useState(false); // 이메일 중복검사 체크변수
     const [isCheckNickname, setCheckNickname] = useState(false); // 닉네임 중복검사 체크변수
     const [date, setDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
-  
   
     const showMode = () => {
       setShowDatePicker(true);
     };
   
-    const hideMode = () => {
-      setShowDatePicker(false);
-    };
-  
-    const pickDate = () => {
-      // 여기에서 선택한 날짜(date)를 사용하면 됩니다.
-      console.log('Selected Date:', date);
-      hideMode();
-    };
-  
+
     const emailcheck = (email:string) => {
-        // 이메일 중복 체크 로직 작성
+        // 이메일 인증번호 발송 로직
         // axiosInstance를 사용하는 부분도 변경이 필요할 수 있습니다.
-        setCheckEmail(true);
+        axiosInstance({
+          method:'post',
+          url:`${process.env.EXPO_PUBLIC_API_URL}/email/send-certification`,
+          data:{email:email}
+        }).then(res=>{
+          setCheckEmail(true);
+        }).catch(err=>{
+          // alert('인증번호 전송에 실패했습니다.')
+          alert(err)
+        })
       };
+    
+    const emailauth = (email:string,num:string) =>{
+      // 인증번호 확인
+      axiosInstance({
+        method:'post',
+        url:`${process.env.EXPO_PUBLIC_API_URL}/email/verify`,
+        data:{email:email,
+          certificationNumber:num}
+      }).then(res=>{
+        setCheckAuth(true);
+      }).catch(err=>{
+        alert('인증에 실패했습니다. 다시 확인해주세요')
+      })
+    }
     
     const nicknamecheck = (nickname:string) => {
         // 닉네임 중복 체크 로직 작성
@@ -71,15 +88,17 @@ function SignUp() {
                     email: '',
                     password: '',
                     confirmPassword: '',
+                    certificationNumber:'',
                     nickname: '',
                     gender: '',
                     birthday: null}}
                 validationSchema={validationSchema}
                 onSubmit={(values) => {
-                // 회원가입 요청 로직 -> 로그인 처리까지
+                  // print(process.env.API_BASE_URL)
+                    // 회원가입 요청 로직 -> 로그인 처리까지
                     axiosInstance({
                         method: 'post',
-                        url: `${process.env.REACT_APP_URL}/api/user/signup`,
+                        url: `${process.env.EXPO_PUBLIC_API_URL}/user/signup`,
                         data: {
                         email: values.email,
                         password: values.password,
@@ -89,6 +108,7 @@ function SignUp() {
                         },
                     }).then((res) => {
                         console.log(res);
+                        alert('성공')
                     }).catch((err) => {
                         console.log(err);
                         alert('회원가입 실패!');});}}>
@@ -114,17 +134,37 @@ function SignUp() {
                              <Text>인증</Text>
                            </TouchableOpacity> }
                          </View>
+
+                        {isCheckEmail ? 
+                         <View style={{ flexDirection: 'row', width:'80%'}}>
+                         <TextInput
+                           style={styles.input_account}
+                           placeholder="인증번호를 입력해주세요."
+                           onChangeText={(text) => {
+                             handleChange('certificationNumber')(text);}}/>
+                         {/* 올바른 이메일 입력시 인증버튼 활성화 */}
+                         {values.certificationNumber === '' || errors.certificationNumber ? 
+                         <TouchableOpacity style={styles.unchk} disabled>
+                          <Text>인증</Text>
+                        </TouchableOpacity>
+                  
+                           :<TouchableOpacity style={styles.chk} onPress={() => emailauth(values.email,values.certificationNumber)} >
+                           <Text>인증</Text>
+                         </TouchableOpacity> }
+                       </View>:null}
+                         
                          <Text>
                            {values.email === '' ? (
                             <></>
                            ) : errors.email ? (
                              errors.email
                            ) : !isCheckEmail ? (
-                             '이메일 중복체크를 진행해주세요.'
-                           ) : (
-                             '사용가능한 이메일입니다.'
-                           )}
+                             '이메일 인증을 진행해주세요.'
+                           ) : isCheckAuth ? (
+                             '인증완료'
+                           ): '인증번호가 발송되었습니다.'}
                          </Text>    
+
                          {/* 패스워드 input */}
                          <TextInput
                            style={styles.input_account}
@@ -260,13 +300,8 @@ function SignUp() {
            
 
                          <Text>
-                           {values.birthday === null ? (
-                             <></>
-                           ) : errors.birthday ? (
-                             errors.birthday
-                           ) : (
-                             '생년월일 입력완료'
-                           )}
+                           {values.birthday === null ? null : errors.birthday ? 
+                             `${errors.birthday}` :  '생년월일 입력완료'}
                          </Text>
          
                          {/* 정상적으로 모든 입력이 되었을때 버튼 활성화 */}

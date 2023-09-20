@@ -2,7 +2,7 @@ import React,{useState} from 'react';
 import { Button, TextInput, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import axiosInstance from '../../axiosinstance';
 
-function LocalLogin () {
+function LocalLogin (onModal:any) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
   
@@ -35,7 +35,7 @@ function LocalLogin () {
             <TouchableOpacity>
                 <Text style={styles.link}>비밀번호 찾기</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>onModal}>
                 <Text style={styles.link}>회원가입</Text>
             </TouchableOpacity>
             

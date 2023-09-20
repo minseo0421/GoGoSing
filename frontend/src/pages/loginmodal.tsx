@@ -1,20 +1,17 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { Image, ImageBackground, View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-// import { createStackNavigator } from '@react-navigation/stack';
 import Login from './accounts/login';
 import SignUp from './accounts/signup';
 import LocalLogin from './accounts/locallogin';
-// const Stack = createStackNavigator();
 
 const LoginModal = ({ visible, toggleModal } : any) => {
-
+  const [isModal,setModal]=useState(1)
   return (
     <Modal
-      transparent={true}
-      animationType="slide"
-      visible={visible}
-      onRequestClose={toggleModal}
+    transparent={true}
+    animationType="slide"
+    visible={visible}
+    onRequestClose={toggleModal}
     >
        <ImageBackground
       source={require('../../assets/background.png')}
@@ -28,22 +25,20 @@ const LoginModal = ({ visible, toggleModal } : any) => {
       <View style={styles.logobox}>
         <Image source={require('../../assets/logo.png')} style={styles.logo}/>
       </View>
+
       <View style={styles.modalContainer}>
-
-        <Login></Login>
-        {/* <SignUp></SignUp> */}
-
-        {/* <LocalLogin></LocalLogin> */}
-      </View>
-      {/* <NavigationContainer>
-        <View style={styles.modalContainer}>
-          <Stack.Navigator initialRouteName='login'>
-            <Stack.Screen name="login" component={Login} />
-            <Stack.Screen name="signup" component={SignUp} />
+        {isModal === 1 ? <Login onModal={setModal(2)} /> :
+        isModal === 2 ? <LocalLogin onModal={setModal(3)}/> :
+        isModal === 3 ? <SignUp/> :
+        null}
+        {/* <NavigationContainer>
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen name='login' component={Login} />
+            <Stack.Screen name='locallogin' component={LocalLogin} />
+            <Stack.Screen name='signup' component={SignUp} />
           </Stack.Navigator>
-
-        </View>
-      </NavigationContainer> */}
+        </NavigationContainer> */}
+      </View>
       </ImageBackground>
     </Modal>
   );
