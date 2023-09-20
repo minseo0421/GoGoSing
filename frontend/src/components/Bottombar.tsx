@@ -53,6 +53,7 @@ const BottomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigat
             accessibilityLabel={options.tabBarAccessibilityLabel}
             testID={options.tabBarTestID}
             onPress={onPress}
+            style={styles.btn}
           >
             
             <Image source={iconSource} style={{ width: 24, height: 24}} />
@@ -70,7 +71,11 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     height: 90, 
     borderTopColor:'#90FFF8',
-    borderTopWidth:2 }
+    borderTopWidth:2 },
+  btn:{
+    justifyContent:'center',
+    alignItems:'center',
+  }
 });
 
 export default BottomTabBar;

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View,ImageBackground } from 'react-native';
+import { StyleSheet, Text, View,ImageBackground,TouchableOpacity } from 'react-native';
 
 import store from './store/store'
 import { Provider } from 'react-redux';
 // BottomBar 관련
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import MainHome from './src/pages/mainhome';
@@ -28,7 +27,6 @@ import BottomBar from './src/components/Bottombar'; // 하단 바 컴포넌트 �
 // import MusicRecord from './pages/musicrecord';
 // import MusicUpload from './pages/musicupload';
 
-const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const MyTheme = {
@@ -45,13 +43,10 @@ const App:React.FC = () => {
       <ImageBackground
       source={require('./assets/background.png')}
       style={styles.background}>
+        <View style={styles.topbar}>
+          <Topbar />
+        </View>
         <NavigationContainer theme={MyTheme}>
-          {/* <Stack.Navigator>
-            <Stack.Screen name='login' component={Login} />
-          </Stack.Navigator> */}
-          <View style={styles.topbar}>
-            <Topbar />
-          </View>
           <View style={styles.container}>
             <Tab.Navigator tabBar={(props) => <BottomBar {...props} />} >
               <Tab.Screen name="home" component={MainHome} options={{tabBarLabel:'홈', headerShown:false}}/>

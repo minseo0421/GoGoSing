@@ -1,16 +1,22 @@
-import React from "react";
+import React,{useState} from "react";
 import { StyleSheet,View,Text,Image, TouchableOpacity } from "react-native";
+import LoginModal from "../pages/accounts/Login";
 
 function Topbar({navigation}:any) {
-  // const usertoken = localStorage.getItem('usertoken')
-  // const location = useLocation();
-  // isMain 프로퍼티도 구조 분해 할당으로 가져옴
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
   return (
     <View style={styles.container}>
       <Image source={require('../../assets/logo.png')} style={styles.logo}/>
-      <TouchableOpacity onPress={()=>{navigation.navigate("chart")}}>
-        <Text>Login</Text>
+      <TouchableOpacity onPress={toggleModal}>
+        <Text style={styles.login}>Login</Text>
       </TouchableOpacity>
+      <LoginModal visible={isModalVisible} toggleModal={toggleModal} />
+        
     </View>
   );
 };
@@ -27,7 +33,10 @@ const styles = StyleSheet.create({
     width: 80, // 이미지의 너비 설정
     resizeMode: 'contain',
   },
-
+  login: {
+    textDecorationLine:'underline',
+    color:'white'
+  }
 });
 
 export default Topbar;
