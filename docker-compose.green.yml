@@ -1,0 +1,23 @@
+version: "3"
+services:
+  backend:
+    container_name: gogosing-springboot
+    build:
+      context: ./backend
+      args:
+        SERVER_MODE: dev
+    ports:
+      - 8081:8081
+  frontend:
+    container_name: gogosing-react
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 3001:3001
+    volumes:
+      - /usr/src/app/node_modules
+      - ./frontend:/usr/src/app
+    stdin_open: true
+    depends_on:
+	      - backend
