@@ -1,29 +1,42 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import styled from './bar.module.css';
+import React,{useState} from "react";
+import { StyleSheet,View,Text,Image, TouchableOpacity } from "react-native";
+import LoginModal from "../pages/accounts/Login";
 
-const Topbar: React.FC = () => {
-  const usertoken = localStorage.getItem('usertoken')
-  const location = useLocation();
-  // isMain 프로퍼티도 구조 분해 할당으로 가져옴
+function Topbar({navigation}:any) {
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
   return (
-    <>
-      {location.pathname === "/" ||
-      location.pathname === "/chart" ||
-      location.pathname === "/search" ||
-      location.pathname === "/like" ? 
-      <div  className={styled.topbar}>
-        <img src="assets/logo.png" alt="" style={{ width: "20%" }} />
-        {usertoken ? 
-        <Link style={{ color: "white" }} to="/mypage"><img src="assets/default_user.png" alt="" style={{ width: "80%"}} /></Link>
-        : <Link style={{ color: "white" }} to="/login">Login</Link>}
-      </div>
-      :      
-      <div  className={styled.topbar}>
-      </div>
-      }
-    </>
+    <View style={styles.container}>
+      <Image source={require('../../assets/logo.png')} style={styles.logo}/>
+      <TouchableOpacity onPress={toggleModal}>
+        <Text style={styles.login}>Login</Text>
+      </TouchableOpacity>
+      <LoginModal visible={isModalVisible} toggleModal={toggleModal} />
+        
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container:{
+    marginTop:20,
+    flexDirection: 'row', // 가로 방향으로 자식 요소 정렬
+    justifyContent: 'space-between', // 주 축을 따라 공간을 동일하게 분배
+    alignItems: 'center', // 교차 축을 따라 중앙 정렬
+    paddingHorizontal: 16, // 가로 간격 추가 (원하는 만큼 조절)
+  },
+  logo: {
+    width: 80, // 이미지의 너비 설정
+    resizeMode: 'contain',
+  },
+  login: {
+    textDecorationLine:'underline',
+    color:'white'
+  }
+});
 
 export default Topbar;
