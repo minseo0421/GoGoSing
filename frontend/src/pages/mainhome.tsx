@@ -1,17 +1,17 @@
-import React, { useEffect } from "react";
-import MainContainer from "../components/MainContainer/MainContainer";
+import { StyleSheet, View, Text, Button } from "react-native";
+import React from 'react';
 
-import { setPage } from "../store/actions";
-import { useDispatch } from "react-redux";
-// import { useLocation } from "react-router-dom";
-
-const MainHome: React.FC = () => {
-  // const location = useLocation();
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(setPage(1));
-  }, [dispatch]);
-
-  return <MainContainer></MainContainer>;
-};
+function MainHome() {
+  return (
+    <View style={styles.container}>
+      
+    </View>
+  );
+}
+const styles = StyleSheet.create({
+  container:{
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 export default MainHome;

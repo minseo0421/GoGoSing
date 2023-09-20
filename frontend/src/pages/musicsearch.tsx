@@ -1,17 +1,13 @@
-import React, { useEffect } from "react";
+// MainHome.js
+import React from 'react';
+import { View, Text, Button } from 'react-native';
 
-import { setPage } from "../store/actions";
-import { useDispatch } from "react-redux";
-
-const MusicSearch: React.FC = () => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(setPage(3));
-  }, [dispatch]);
+const MusicSearch = () => {
   return (
-    <div>
-      <h1>MusicSearch 입니당</h1>
-    </div>
+    <View>
+      <Text>Search</Text>
+    </View>
   );
 };
+
 export default MusicSearch;
