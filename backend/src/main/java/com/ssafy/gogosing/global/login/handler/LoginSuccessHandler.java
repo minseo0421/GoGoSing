@@ -60,8 +60,8 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
             redisRefreshTokenService.setRedisRefreshToken(refreshToken, email);
 
             if(user.getRole() == Role.FIRST) {
-                // 첫 로그인일 시 설문페이지로 이동
-                httpServletResponse.sendRedirect("http://localhost:8081/");
+                // 첫 로그인 이라는 역할 함께 넣어줌
+                httpServletResponse.addHeader("user_role", "first");
 
                 user.updateFirstRole();
                 userRepository.save(user);
