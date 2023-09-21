@@ -77,9 +77,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 //                refreshTokenCookie.setSecure(true);
                 httpServletResponse.addCookie(refreshTokenCookie);
 
-                // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
-//                httpServletResponse.sendRedirect("http://localhost:3000/auth2/sign-up");
-                httpServletResponse.sendRedirect("oauth2/sign-up");
+                // guest : 해당 계정으로 소셜 첫 로그인이므로 추가정보 받아야하는 상태
+                httpServletResponse.addHeader("user_role", "guest");
 
                 Optional<User> findUser = userRepository.findByEmail(oAuth2User.getEmail());
 
@@ -138,8 +137,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         httpServletResponse.addCookie(refreshTokenCookie);
 
         if(oAuth2User.getRole() == Role.FIRST) {
-            // 첫 로그인일 시 설문페이지로 이동
-            httpServletResponse.sendRedirect("http://localhost:8081/");
+            // first : 해당 계정으로 추가정보를 받고 소셜 첫 로그인인 상태
+            httpServletResponse.addHeader("user_role", "first");
 
             User user = userRepository.findByEmail(oAuth2User.getEmail())
                     .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
@@ -149,8 +148,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             userRepository.save(user);
         }
         else {
-            // 프론트의 회원가입 추가 정보가 입력되어 있고 첫번째 로그인이 아니고 로그인 성공하면 메인페이지로
-            httpServletResponse.sendRedirect("http://localhost:3000");
+            // user : 회원가입 추가 정보가 입력되어 있고 첫번째 로그인이 아니고 로그인 성공 상태
+            httpServletResponse.addHeader("user_role", "user");
         }
     }
 
