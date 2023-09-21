@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { TextInput, View, Text, TouchableOpacity, StyleSheet,Button,Platform } from 'react-native';
+import { TextInput, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import axiosInstance from '../../axiosinstance';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import axios from 'axios';
 
 const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -32,7 +32,7 @@ const validationSchema = Yup.object().shape({
       .required('생년월일을 입력해주세요'),
 });
 
-function SignUp() {
+function SignUp({setCurrentPage}:any) {
 
     const [firstStep, setStep] = useState(true);
     const [isCheckEmail, setCheckEmail] = useState(false); // 이메일 중복검사 체크변수
@@ -42,37 +42,40 @@ function SignUp() {
     const [showDatePicker, setShowDatePicker] = useState(false);
   
     const showMode = () => {
-      setShowDatePicker(true);
+      setShowDatePicker(true); // Show the modal date picker
     };
   
-
+    const hideDatePicker = () => {
+      setShowDatePicker(false); // Hide the modal date picker
+    };
+  
     const emailcheck = (email:string) => {
+      setCheckEmail(true);
         // 이메일 인증번호 발송 로직
-        // axiosInstance를 사용하는 부분도 변경이 필요할 수 있습니다.
-        axiosInstance({
-          method:'post',
-          url:`${process.env.EXPO_PUBLIC_API_URL}/email/send-certification`,
-          data:{email:email}
-        }).then(res=>{
-          setCheckEmail(true);
-        }).catch(err=>{
-          // alert('인증번호 전송에 실패했습니다.')
-          alert(err)
-        })
+        // axiosInstance({
+        //   method:'post',
+        //   url:process.env.EXPO_PUBLIC_API_URL+'/email/send-certification',
+        //   data:{email:email}
+        // }).then(res=>{ 
+        //   setCheckEmail(true);
+        // }).catch(err=>{
+        //   alert('인증번호 전송에 실패했습니다.')
+        // })
       };
     
     const emailauth = (email:string,num:string) =>{
       // 인증번호 확인
-      axiosInstance({
-        method:'post',
-        url:`${process.env.EXPO_PUBLIC_API_URL}/email/verify`,
-        data:{email:email,
-          certificationNumber:num}
-      }).then(res=>{
-        setCheckAuth(true);
-      }).catch(err=>{
-        alert('인증에 실패했습니다. 다시 확인해주세요')
-      })
+      setCheckAuth(true);
+      // axiosInstance({
+      //   method:'post',
+      //   url:process.env.EXPO_PUBLIC_API_URL+'/email/verify',
+      //   data:{email:email,
+      //     certificationNumber:num}
+      // }).then(res=>{
+      //   setCheckAuth(true);
+      // }).catch(err=>{
+      //   alert('인증에 실패했습니다. 다시 확인해주세요')
+      // })
     }
     
     const nicknamecheck = (nickname:string) => {
@@ -94,23 +97,21 @@ function SignUp() {
                     birthday: null}}
                 validationSchema={validationSchema}
                 onSubmit={(values) => {
-                  // print(process.env.API_BASE_URL)
                     // 회원가입 요청 로직 -> 로그인 처리까지
-                    axiosInstance({
+                    axios({
                         method: 'post',
-                        url: `${process.env.EXPO_PUBLIC_API_URL}/user/signup`,
+                        url: process.env.EXPO_PUBLIC_API_URL+`/user/signup`,
                         data: {
-                        email: values.email,
-                        password: values.password,
-                        nickname: values.nickname,
-                        gender: values.gender,
-                        birth: values.birthday,
+                          email: values.email,
+                          emailCertificationNumber:values.certificationNumber,
+                          password: values.password,
+                          nickname: values.nickname,
+                          gender: values.gender,
+                          birth: values.birthday,
                         },
                     }).then((res) => {
-                        console.log(res);
-                        alert('성공')
+                        setCurrentPage('locallogin')
                     }).catch((err) => {
-                        console.log(err);
                         alert('회원가입 실패!');});}}>
                 {({ handleChange, handleSubmit, values, errors }) => (
                      <View style={{flex:1, width:290}}>
@@ -279,25 +280,25 @@ function SignUp() {
                           <TouchableOpacity style={styles.birth} onPress={showMode} >
                             <Text>{values.birthday === null ? '생년월일을 입력해주세요':values.birthday}</Text>
                           </TouchableOpacity>
-                          {showDatePicker && (
-                            <DateTimePicker
-                              value={date}
-                              mode="date"
-                              display="spinner"
-                              onChange={(e)=>{
-                                const selectedTimestamp = e.nativeEvent.timestamp || date.getTime(); // 선택된 타임스탬프 또는 기존 날짜의 타임스탬프를 얻습니다.
-                                const selectedDate = new Date(selectedTimestamp); // 선택된 타임스탬프를 JavaScript Date 객체로 변환합니다.
-                                setShowDatePicker(Platform.OS === 'ios');
-                                setDate(selectedDate);
-                                handleChange('birthday')(selectedDate.toLocaleDateString('ko-KR', {
-                                  year: 'numeric',
-                                  month: '2-digit',
-                                  day: '2-digit'}))
-                              }}
-                              locale='ko-kr'
-                              minimumDate={new Date('1990-01-01')}
-                              maximumDate={new Date()}/>)}
-           
+                          <DateTimePickerModal
+                            isVisible={showDatePicker}
+                            mode="date"
+                            display='spinner'
+                            locale='ko-kr'
+                            minimumDate={new Date('1990-01-01')}
+                            maximumDate={new Date()}
+                            onConfirm={(e)=>{
+                              const selectedTimestamp = e.toDateString() || date.toDateString(); // 선택된 타임스탬프 또는 기존 날짜의 타임스탬프를 얻습니다.
+                              const selectedDate = new Date(selectedTimestamp); // 선택된 타임스탬프를 JavaScript Date 객체로 변환합니다
+                              const year = selectedDate.getFullYear();
+                              const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+                              const day = String(selectedDate.getDate()).padStart(2, '0');
+                              const formattedDate = `${year}-${month}-${day}`;
+                              
+                              hideDatePicker(); // Hide the modal date picker when the date is confirmed
+                              handleChange('birthday')(formattedDate);
+                            }}
+                            onCancel={hideDatePicker} />
 
                          <Text>
                            {values.birthday === null ? null : errors.birthday ? 
@@ -310,7 +311,7 @@ function SignUp() {
                          values.birthday !== null &&
                          !errors.gender &&
                          !errors.birthday ? (
-                          <TouchableOpacity style={styles.next} onPress={()=>handleSubmit}>
+                          <TouchableOpacity style={styles.next} onPress={()=>handleSubmit()}>
                             <Text>가입완료</Text>
                           </TouchableOpacity>) 
                           : (<TouchableOpacity style={styles.unnext} disabled>

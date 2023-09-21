@@ -1,35 +1,49 @@
 import React,{useState} from 'react';
-import { Image, ImageBackground, View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
+import { ImageBackground, View, Text, Modal, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import Login from './accounts/login';
 import SignUp from './accounts/signup';
 import LocalLogin from './accounts/locallogin';
+import FindPW from './accounts/findpw';
 
 const LoginModal = ({ visible, toggleModal } : any) => {
-  const [isModal,setModal]=useState(1)
+  const [currentPage,setCurrentPage]=useState('login')
   return (
     <Modal
     transparent={true}
     animationType="slide"
     visible={visible}
-    onRequestClose={toggleModal}
+    onRequestClose={()=>{
+      if (currentPage==='login') {
+        toggleModal()
+      } else if (currentPage==='locallogin') {
+        setCurrentPage('login')
+      } else if (currentPage==='signup') {
+        setCurrentPage('locallogin')
+      } else if (currentPage==='findpw') {
+        setCurrentPage('locallogin')
+      }
+    }}
+    
     >
        <ImageBackground
       source={require('../../assets/background.png')}
       style={styles.background}>
-      <View style={styles.closebtn}>
 
-      </View>
-      <TouchableOpacity onPress={toggleModal}>
+      {Platform.OS==='ios' ? (<View style={{flex:0.025,marginTop:40}} />):<View style={{flex:0.025}} />}
+      
+      <TouchableOpacity onPress={()=>{toggleModal();setCurrentPage('login')}}>
         <Text style={styles.closeText}>닫기</Text>
       </TouchableOpacity>
+    
       <View style={styles.logobox}>
-        <Image source={require('../../assets/logo.png')} style={styles.logo}/>
+        <Text style={styles.logo}>GOGO    SING</Text>
       </View>
 
       <View style={styles.modalContainer}>
-        {isModal === 1 ? <Login onModal={setModal(2)} /> :
-        isModal === 2 ? <LocalLogin onModal={setModal(3)}/> :
-        isModal === 3 ? <SignUp/> :
+        {currentPage === 'login' ? <Login setCurrentPage={(value:string)=>setCurrentPage(value)} /> :
+        currentPage === 'locallogin' ? <LocalLogin setCurrentPage={(value:string)=>setCurrentPage(value)} /> :
+        currentPage === 'signup' ? <SignUp setCurrentPage={(value:string)=>setCurrentPage(value)} /> :
+        currentPage === 'findpw' ? <FindPW setCurrentPage={(value:string)=>setCurrentPage(value)} /> :
         null}
         {/* <NavigationContainer>
           <Stack.Navigator initialRouteName="Home">
@@ -51,7 +65,7 @@ const styles = StyleSheet.create({
   closeText:{
     color:'white',
     textAlign:'right',
-    marginRight:25
+    marginRight:25,
   },
   background: {
     flex: 1, // 화면 전체를 차지하도록 합니다.
@@ -63,9 +77,10 @@ const styles = StyleSheet.create({
     alignItems:'center',
   },
   logo:{
-    width:250,
-    height:120,
-    resizeMode: 'contain',
+    fontFamily:'logo-font',
+    color:'white',
+    fontSize:65,
+    textAlign:'center'
   },
   modalContainer: {
     flex: 0.675,

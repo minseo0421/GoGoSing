@@ -1,11 +1,10 @@
 import React,{useState} from 'react';
-import { Button, TextInput, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { TextInput, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import axiosInstance from '../../axiosinstance';
 
-function LocalLogin (onModal:any) {
+function LocalLogin ({setCurrentPage}:any) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-  
     const login = () => {
       // Your login logic here
       axiosInstance({
@@ -19,6 +18,7 @@ function LocalLogin (onModal:any) {
     };
     return (
         <View style={styles.container}>
+          <Text style={{color:'white',fontSize:20,margin:20,fontWeight:'bold'}}>일반 로그인</Text>
             <TextInput style={styles.input_account}
                 placeholder="이메일"
                 value={email}
@@ -32,10 +32,10 @@ function LocalLogin (onModal:any) {
             <TouchableOpacity style={styles.loginButton} onPress={login}>
                 <Text>로그인</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>setCurrentPage('findpw')}>
                 <Text style={styles.link}>비밀번호 찾기</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=>onModal}>
+            <TouchableOpacity onPress={()=>setCurrentPage('signup')}>
                 <Text style={styles.link}>회원가입</Text>
             </TouchableOpacity>
             
@@ -46,7 +46,8 @@ function LocalLogin (onModal:any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    // justifyContent: 'center',
+    marginTop:70,
     alignItems: 'center',
   },
   input_account: {

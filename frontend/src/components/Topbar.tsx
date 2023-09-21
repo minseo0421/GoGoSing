@@ -12,9 +12,11 @@ function Topbar({navigation}:any) {
   return (
     <View style={styles.container}>
       <Image source={require('../../assets/logo.png')} style={styles.logo}/>
+      
       <TouchableOpacity onPress={toggleModal}>
         <Text style={styles.login}>Login</Text>
       </TouchableOpacity>
+    
       <LoginModal visible={isModalVisible} toggleModal={toggleModal} />
         
     </View>

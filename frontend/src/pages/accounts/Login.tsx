@@ -1,25 +1,38 @@
 import React from 'react';
-import { Image, ImageBackground, View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
+import { Image, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import axios from 'axios';
 
-function Login ({onModal}:any) {
-  const kakaologin = () => {
-    const CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID;
-    const REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
-    // 여기에서 웹 브라우저를 열거나 카카오 네이티브 SDK를 사용하여 로그인을 처리합니다.
+function Login ({setCurrentPage}:any) {
+  const goToPage = () => {
+    setCurrentPage('locallogin');
+  };
+  const kakaologin = async () => {
+    axios({
+      method:'get',
+      url:process.env.EXPO_PUBLIC_KAKAO_REDIRECT_URI,
+    }).then(res=>{
+      console.log(res.headers)
+    }).catch(err=>{console.log(err)})
   }
 
   // 네이버 로그인 반응
   const naverlogin = () => {
-      const CLIENT_ID = process.env.REACT_APP_NAVER_CLIENT_ID;
-      const REDIRECT_URI = process.env.REACT_APP_NAVER_REDIRECT_URI;
-      // 여기에서 웹 브라우저를 열거나 네이버 네이티브 SDK를 사용하여 로그인을 처리합니다.
+    axios({
+      method:'get',
+      url:process.env.EXPO_PUBLIC_NAVER_REDIRECT_URI,
+    }).then(res=>{
+      console.log(res.headers)
+    }).catch(err=>{console.log(err)})
   }
 
   // 구글 로그인 반응
   const googlelogin = () => {
-      const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-      const REDIRECT_URI = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
-      // 여기에서 웹 브라우저를 열거나 구글 네이티브 SDK를 사용하여 로그인을 처리합니다.
+    axios({
+      method:'get',
+      url:process.env.EXPO_PUBLIC_GOOGLE_REDIRECT_URI,
+    }).then(res=>{
+      console.log(res.headers)
+    }).catch(err=>{console.log(err)})
   }
   return (
     <View style={styles.container}>
@@ -35,7 +48,7 @@ function Login ({onModal}:any) {
             <Image source={require('../../../assets/google_logo.png')} style={styles.social_img}/>
             <Text style={{ marginLeft: 20 }}>구글로 로그인하기</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={onModal}>
+        <TouchableOpacity onPress={goToPage}>
             <Text style={styles.locallogin}>일반 로그인하러가기!</Text>
         </TouchableOpacity>
       </View>
