@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View,ImageBackground,TouchableOpacity } from 'react-native';
+import { BackHandler, StyleSheet, ToastAndroid, View,ImageBackground,TouchableOpacity } from 'react-native';
+
+import { loadFonts } from './font';
 
 import store from './store/store'
 import { Provider } from 'react-redux';
@@ -38,6 +40,29 @@ const MyTheme = {
 };
 
 const App:React.FC = () => {
+  const [backPressedOnce, setBackPressedOnce] = useState(false);
+  useEffect(() => {
+    loadFonts();
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (!backPressedOnce) {
+        ToastAndroid.show('Press back again to exit', ToastAndroid.SHORT);
+        setBackPressedOnce(true);
+
+        setTimeout(() => {
+          setBackPressedOnce(false);
+        }, 2000); // 2 seconds timeout to reset the backPressedOnce state
+      } else {
+        BackHandler.exitApp(); // If back is pressed again within 2 seconds, exit the app
+      }
+
+      return true;
+    });
+
+    return () => {
+      backHandler.remove();
+    };
+  }, []);
+
   return (
     <Provider store={store}>
       <ImageBackground
@@ -55,7 +80,6 @@ const App:React.FC = () => {
               <Tab.Screen name="like" component={MusicLike} options={{tabBarLabel:'보관함', headerShown:false}}/>
             </Tab.Navigator>
           </View>
-
         </NavigationContainer>
       </ImageBackground>
     </Provider>

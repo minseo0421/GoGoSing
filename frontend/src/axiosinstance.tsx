@@ -1,6 +1,7 @@
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const TOKEN = localStorage.getItem('ACCESS_TOKEN');
+const TOKEN = AsyncStorage.getItem('ACCESS_TOKEN');
 const axiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
@@ -21,8 +22,8 @@ axiosInstance.interceptors.response.use(
     const originalRequest = config;
 
     if (status === 403) {
-      const accessToken = localStorage.getItem('ACCESS_TOKEN');
-      const refreshToken = localStorage.getItem('REFRESH_TOKEN');
+      const accessToken = AsyncStorage.getItem('ACCESS_TOKEN');
+      const refreshToken = AsyncStorage.getItem('REFRESH_TOKEN');
 
       try {
         const { data } = await axios({
@@ -36,8 +37,8 @@ axiosInstance.interceptors.response.use(
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + newAccessToken,
         };
-        localStorage.setItem('ACCESS_TOKEN', newAccessToken);
-        localStorage.setItem('REFRESH_TOKEN', newRefreshToken);
+        AsyncStorage.setItem('ACCESS_TOKEN', newAccessToken);
+        AsyncStorage.setItem('REFRESH_TOKEN', newRefreshToken);
         return await axios(originalRequest);
       } catch (err) {
         console.log(err);
