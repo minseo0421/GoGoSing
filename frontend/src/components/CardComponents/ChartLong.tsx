@@ -7,21 +7,29 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
-import { AntDesign } from "@expo/vector-icons"; // We use Expo's AntDesign for icons
+import { AntDesign } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
-const CardLong: React.FC = () => {
+
+interface AlbumProps {
+  album: {
+    id: number;
+    title: string;
+    singer: string;
+    image: any;
+  };
+}
+
+const ChartLong: React.FC<AlbumProps> = ({ album }) => {
   const [liked, setLiked] = useState(false);
 
   return (
     <View style={styles.container}>
       <View style={styles.infoContainer}>
-        <Image source={require("./assets/sample1.png")} style={styles.image} />
+        <Image source={album.image} style={styles.image} />
         <View style={styles.musicInfo}>
-          <Text style={[styles.text, styles.title]}>
-            Super 슈퍼슈퍼슈퍼 Shy
-          </Text>
-          <Text style={styles.text}>NewJeans</Text>
+          <Text style={[styles.text, styles.title]}>{album.title}</Text>
+          <Text style={styles.text}>{album.singer}</Text>
         </View>
         <TouchableOpacity onPress={() => setLiked(!liked)}>
           {liked ? (
@@ -34,7 +42,8 @@ const CardLong: React.FC = () => {
     </View>
   );
 };
-export default CardLong;
+
+export default ChartLong;
 
 const styles = StyleSheet.create({
   container: {
@@ -72,6 +81,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "bold",
+    fontSize: 18,
   },
   icon: {
     fontSize: 24,

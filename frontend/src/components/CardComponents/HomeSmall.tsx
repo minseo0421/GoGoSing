@@ -8,29 +8,37 @@ import {
   Dimensions,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import { ImageSourcePropType } from "react-native";
 const { width, height } = Dimensions.get("window");
 
-const CardSmall: React.FC = () => {
+const HomeSmall: React.FC<{
+  album: { title: string; singer: string; image: any };
+}> = ({
+  album = { title: "", singer: "", image: require("./assets/sample1.png") },
+}) => {
   const [liked, setLiked] = useState(false);
 
   return (
     <View style={styles.container}>
       <View style={styles.infoContainer}>
-        <Image source={require("./assets/sample1.png")} style={styles.image} />
+        <Image source={album.image} style={styles.image} />
         <View style={styles.musicinfo}>
           <View style={styles.musictext}>
             <Text
               style={[styles.text, styles.title]}
               numberOfLines={1}
-              ellipsizeMode="clip"
+              ellipsizeMode="tail"
             >
-              Super 슈퍼슈퍼슈퍼 Shy
+              {album.title}
             </Text>
             <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
-              NewJeans
+              {album.singer}
             </Text>
           </View>
-          <TouchableOpacity onPress={() => setLiked(!liked)}>
+          <TouchableOpacity
+            style={styles.iconbox}
+            onPress={() => setLiked(!liked)}
+          >
             {liked ? (
               <AntDesign name="heart" style={styles.icon} />
             ) : (
@@ -43,55 +51,58 @@ const CardSmall: React.FC = () => {
   );
 };
 
-export default CardSmall;
+export default HomeSmall;
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
-    width: width * 0.35,
+    width: width * 0.3,
     height: "100%",
+    marginHorizontal: 3,
   },
   image: {
-    flex: 8,
-    // height: "100%",
+    flex: 1,
     width: "100%",
-    // margin: 10,
-    borderRadius: 10,
+    height: "100%",
+    borderRadius: 20,
+    resizeMode: "contain",
   },
   infoContainer: {
-    flex: 2,
+    flex: 1,
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "space-between",
-    marginHorizontal: 10,
+    // marginHorizontal: "5%",
   },
   musicinfo: {
-    // flex: "1",
+    marginTop: "3%",
+    flex: 0.3,
     flexDirection: "row",
     // maxWidth: "50%",
   },
   musictext: {
     flex: 1,
-    maxWidth: "75%",
+    Width: "70%",
   },
   text: {
     width: "100%",
-    fontSize: 14,
+    fontSize: 15,
     overflow: "hidden",
     color: "white",
   },
   title: {
+    marginBottom: 1,
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 14,
   },
-  singer: {
-    fontSize: 16,
+  iconbox: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    Width: "30%",
   },
   icon: {
-    fontSize: 24,
+    fontSize: 20,
     color: "red",
-    marginTop: 5,
-    marginLeft: 5,
-    // width: "20%",
   },
 });
