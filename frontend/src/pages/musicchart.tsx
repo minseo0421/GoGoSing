@@ -1,11 +1,11 @@
 import React from "react";
 import { View, Text, Button } from "react-native";
-import CardLongContainer from "../components/CardComponents/CardLongContainer";
+import ChartLongContainer from "../components/CardComponents/ChartLongContainer";
 
 const MusicChart = () => {
   return (
     <View>
-      <CardLongContainer></CardLongContainer>
+      <ChartLongContainer></ChartLongContainer>
     </View>
   );
 };

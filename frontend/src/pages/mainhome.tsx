@@ -1,12 +1,11 @@
 import { StyleSheet, View, Text, Button } from "react-native";
 import React from "react";
-import CardLongContainer from "../components/CardComponents/CardLongContainer";
-import CardSmallContainer from "../components/CardComponents/CardSmallContainer";
+import HomeSmallContainer from "../components/CardComponents/HomeSmallContainer";
 
 function MainHome() {
   return (
     <View style={styles.container}>
-      <CardSmallContainer></CardSmallContainer>
+      <HomeSmallContainer></HomeSmallContainer>
     </View>
   );
 }
