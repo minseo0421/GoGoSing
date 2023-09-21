@@ -1,14 +1,11 @@
-import React, { useState, useRef } from "react";
-import {
-  View,
-  ScrollView,
-  Dimensions,
-  StyleSheet,
-  PanResponder,
-} from "react-native";
-import CardSmall from "./CardSmall";
+import React, { useRef } from "react";
+import { View, ScrollView, Dimensions, StyleSheet } from "react-native";
+import HomeSmall from "./HomeSmall";
+import albums from "../CardComponents/album";
+
 const { width, height } = Dimensions.get("window");
-const CardSmallContainer: React.FC = () => {
+
+const HomeSmallContainer: React.FC = () => {
   const scrollRef = useRef<ScrollView | null>(null);
 
   return (
@@ -19,21 +16,18 @@ const CardSmallContainer: React.FC = () => {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
-      <CardSmall />
-      <CardSmall />
-      <CardSmall />
-      <CardSmall />
-      <CardSmall />
-      <CardSmall />
+      {albums.map((album) => {
+        return <HomeSmall key={album.id} album={album} />;
+      })}
     </ScrollView>
   );
 };
 
-export default CardSmallContainer;
+export default HomeSmallContainer;
 
 const styles = StyleSheet.create({
   container: {
-    height: height * 0.175, // 180 for content height and 20 for margin
+    height: height * 0.175,
     margin: 10,
   },
   contentContainer: {
