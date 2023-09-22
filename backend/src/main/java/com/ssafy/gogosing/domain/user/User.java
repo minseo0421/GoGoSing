@@ -62,6 +62,9 @@ public class User extends BaseTimeEntity {
     @Column(name = "vocal_range_lowest")
     private String vocalRangeLowest;
 
+    @Column(name = "voice_file")
+    private String voiceFile;
+
     @Builder
     public User(Long id, String email, String password, String nickname, Gender gender, LocalDate birth, String profileImg, Role role, SocialType socialType, String socialId, LocalDateTime deletedDate, String vocalRangeHighest, String vocalRangeLowest) {
         this.id = id;
@@ -113,5 +116,14 @@ public class User extends BaseTimeEntity {
     public void updatePassword(String tempPassword, PasswordEncoder passwordEncoder) {
         this.password = tempPassword;
         passwordEncode(passwordEncoder);
+    }
+
+    /**
+     * 내 목소리 파일 변경
+     */
+    public Long updateVoiceFile(String voiceFile) {
+        this.voiceFile = voiceFile;
+
+        return this.id;
     }
 }
