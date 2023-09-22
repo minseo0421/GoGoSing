@@ -4,6 +4,7 @@ import Login from './accounts/login';
 import SignUp from './accounts/signup';
 import LocalLogin from './accounts/locallogin';
 import FindPW from './accounts/findpw';
+import KakaoLogin from './accounts/sociallogin/kakao';
 
 const LoginModal = ({ visible, toggleModal } : any) => {
   const [currentPage,setCurrentPage]=useState('login')
@@ -21,7 +22,7 @@ const LoginModal = ({ visible, toggleModal } : any) => {
         setCurrentPage('locallogin')
       } else if (currentPage==='findpw') {
         setCurrentPage('locallogin')
-      }
+      } 
     }}
     
     >
