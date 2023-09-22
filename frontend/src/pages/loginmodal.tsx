@@ -4,24 +4,25 @@ import Login from './accounts/login';
 import SignUp from './accounts/signup';
 import LocalLogin from './accounts/locallogin';
 import FindPW from './accounts/findpw';
+import KakaoLogin from './accounts/sociallogin/kakao';
 
-const LoginModal = ({ visible, toggleModal } : any) => {
+const LoginModal = ({ toggleModal } : any) => {
   const [currentPage,setCurrentPage]=useState('login')
   return (
     <Modal
     transparent={true}
     animationType="slide"
-    visible={visible}
+    // visible={toggleModal}
     onRequestClose={()=>{
       if (currentPage==='login') {
-        toggleModal()
+        toggleModal('')
       } else if (currentPage==='locallogin') {
         setCurrentPage('login')
       } else if (currentPage==='signup') {
         setCurrentPage('locallogin')
       } else if (currentPage==='findpw') {
         setCurrentPage('locallogin')
-      }
+      } 
     }}
     
     >
@@ -31,7 +32,7 @@ const LoginModal = ({ visible, toggleModal } : any) => {
 
       {Platform.OS==='ios' ? (<View style={{flex:0.025,marginTop:40}} />):<View style={{flex:0.025}} />}
       
-      <TouchableOpacity onPress={()=>{toggleModal();setCurrentPage('login')}}>
+      <TouchableOpacity onPress={()=>{toggleModal('');setCurrentPage('login')}}>
         <Text style={styles.closeText}>닫기</Text>
       </TouchableOpacity>
     

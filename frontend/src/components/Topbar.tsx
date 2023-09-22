@@ -1,24 +1,27 @@
 import React,{useState} from "react";
-import { StyleSheet,View,Text,Image, TouchableOpacity } from "react-native";
+import { StyleSheet,View,Text,Image, TouchableOpacity, StatusBar, Platform } from "react-native";
 import LoginModal from "../pages/loginmodal";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import MyPage from "../pages/accounts/mypage";
 
 function Topbar({navigation}:any) {
-  const [isModalVisible, setModalVisible] = useState(false);
-
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
-
+  const TOKEN = AsyncStorage.getItem('ACCESS_TOKEN');
+  const [isModalVisible, setModalVisible] = useState('');
   return (
-    <View style={styles.container}>
-      <Image source={require('../../assets/logo.png')} style={styles.logo}/>
-      
-      <TouchableOpacity onPress={toggleModal}>
-        <Text style={styles.login}>Login</Text>
-      </TouchableOpacity>
-    
-      <LoginModal visible={isModalVisible} toggleModal={toggleModal} />
-        
+    <View>
+      <View style={styles.container}>
+        <Image source={require('../../assets/logo.png')} style={styles.logo}/>
+        {TOKEN!==null ? 
+        <TouchableOpacity onPress={()=>setModalVisible('mypage')}>
+          <Image source={require('../../assets/default_user.png')} style={styles.profile_img}/>
+        </TouchableOpacity>
+        :
+        <TouchableOpacity onPress={()=>setModalVisible('login')}>
+          <Text style={styles.login}>Login</Text>
+        </TouchableOpacity>}
+      </View>
+    {isModalVisible=='login' ? <LoginModal toggleModal={(value:string)=>setModalVisible(value)} />:
+     isModalVisible == 'mypage' ? <MyPage toggleModal={(value:string)=>setModalVisible(value)} />:null}
     </View>
   );
 };
@@ -33,6 +36,10 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 80, // 이미지의 너비 설정
+    resizeMode: 'contain',
+  },
+  profile_img:{
+    width: 50, // 이미지의 너비 설정
     resizeMode: 'contain',
   },
   login: {
