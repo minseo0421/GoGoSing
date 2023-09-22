@@ -35,16 +35,13 @@ public class Music {
     @Column(name = "release_date")
     private String releaseDate;
 
-    @Column(name = "genre")
-    private int genre;
-
     @Column(name = "lyric", columnDefinition = "TEXT")
     private String lyric;
 
     @Column(name = "mr_url")
     private String mrUrl;
 
-    @Column(name = "music_Url")
+    @Column(name = "music_url")
     private String musicUrl;
 
     @Column(name = "music_play_time")
