@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { BackHandler, StyleSheet, ToastAndroid, View,ImageBackground,TouchableOpacity } from 'react-native';
+import { BackHandler, StyleSheet, ToastAndroid, View,ImageBackground } from 'react-native';
 
 import { loadFonts } from './font';
 
@@ -18,16 +17,8 @@ import MusicLike from './src/pages/musiclike';
 import Topbar from './src/components/Topbar';
 import BottomBar from './src/components/Bottombar'; // 하단 바 컴포넌트 임포트
 
-// import MusicChart from './pages/musicchart';
-// import MusicSearch from './pages/musicsearch';
-// import MusicLike from './pages/musiclike';
-
-// import SignUp from './pages/account/signup';
-// import Login from './pages/account/login';
-// import LocalLogin from './pages/account/locallogin';
-
-// import MusicRecord from './pages/musicrecord';
-// import MusicUpload from './pages/musicupload';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { LinearGradient } from 'expo-linear-gradient';
 
 const Tab = createBottomTabNavigator();
 
@@ -43,6 +34,7 @@ const App:React.FC = () => {
   const [backPressedOnce, setBackPressedOnce] = useState(false);
   useEffect(() => {
     loadFonts();
+    AsyncStorage.removeItem('ACCESS_TOKEN');
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       if (!backPressedOnce) {
         ToastAndroid.show('Press back again to exit', ToastAndroid.SHORT);
@@ -62,9 +54,9 @@ const App:React.FC = () => {
       backHandler.remove();
     };
   }, []);
-
   return (
     <Provider store={store}>
+      {/* {Platform.OS==='android' ? <StatusBar backgroundColor={'white'} />:null} */}
       <ImageBackground
       source={require('./assets/background.png')}
       style={styles.background}>
