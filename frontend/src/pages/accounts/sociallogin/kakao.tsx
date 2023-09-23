@@ -2,24 +2,15 @@ import axios from 'axios';
 import React, { useRef } from 'react';
 import { Modal,TouchableOpacity,Text } from 'react-native';
 import WebView from 'react-native-webview';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux';
+import { setLogin, setModal } from '../../../../store/actions';
 
 const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage('message from webView')`;
 
-function KakaoLogin ({toggleModal}:any) {
+function KakaoLogin ({toggleModal,toogleSignUp}:any) {
   const webViewRef = useRef<any>(null); // WebView 컴포넌트의 ref
-  
-    const login = (code:string) => {
-      toggleModal('')
-        axios({
-            method:'post',
-            url:'',
-            data:{code:code},
-        }).then(res=>{
-            console.log(res)
-        }).catch(err=>{
-            console.log(err)
-        })
-    }
+  const dispatch=useDispatch()
   const handleCloseModal = () => {
     // 모달이 닫힐 때 WebView를 초기화하고 모달을 닫음
     if (webViewRef.current) {
@@ -53,25 +44,29 @@ function KakaoLogin ({toggleModal}:any) {
         javaScriptEnabled
         onMessage={event => {
           const data = event.nativeEvent.url;
-          console.log(data)
-          if (data.startsWith('http://j9b305.p.ssafy.io:8081/')) {
-            const startIndex = data.indexOf('code='); // "code=" 문자열의 시작 인덱스 찾기
-            if (startIndex !== -1) {
-              // "code=" 이후의 값 추출
-              const code = data.slice(startIndex + 5); // 5는 "code=" 문자열의 길이입니다.
-              if (code) {
-                login(code)
+          if (data.startsWith(`${process.env.EXPO_PUBLIC_KAKAO_RES}`)) {
+            axios({
+              method:'get',
+              url:`${process.env.EXPO_PUBLIC_KAKAO_URI}`
+            }).then(async res=>{
+              await AsyncStorage.setItem('ACCESS_TOKEN',res.headers['authorization']);
+              await AsyncStorage.setItem('REFRESH_TOKEN',res.headers['authorization-refresh']);
+              handleCloseModal()
+              if (res.headers['user_role']==='guest') {
+                alert('첫 로그인입니다. 추가회원정보 입력을 진행해주세요')
+                toogleSignUp()
+              } else {
+                alert('로그인 성공!')
+                dispatch(setModal(null))
+                dispatch(setLogin(true))
               }
-            }  else {
-              alert('로그인실패')
-              toggleModal('');
-          }
+            }).catch(err=>{
+              console.log(err)
+            })
           }
         }}
         />
     </Modal>
- 
-        
   );
 };
 export default KakaoLogin;

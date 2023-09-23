@@ -8,9 +8,9 @@ function Login ({setCurrentPage}:any) {
   const [isLoginModal, setLoginModal] = useState('');
   return (
     <View style={styles.container}>
-      {isLoginModal==='kakao' ? <KakaoLogin toggleModal={(value:string)=>{setLoginModal(value);}} /> : 
-      isLoginModal==='google' ? <GoogleLogin toggleModal={(value:string)=>{setLoginModal(value);}} /> :
-      isLoginModal==='naver' ? <NaverLogin toggleModal={(value:string)=>{setLoginModal(value);}} /> :null}
+      {isLoginModal==='kakao' ? <KakaoLogin toggleModal={(value:string)=>{setLoginModal(value);}} toogleSignUp={()=>setCurrentPage('socialsignup')}/> : 
+      isLoginModal==='google' ? <GoogleLogin toggleModal={(value:string)=>{setLoginModal(value);}}  toogleSignUp={()=>setCurrentPage('socialsignup')}/> :
+      isLoginModal==='naver' ? <NaverLogin toggleModal={(value:string)=>{setLoginModal(value);}}  toogleSignUp={()=>setCurrentPage('socialsignup')}/> :null}
         <TouchableOpacity style={styles.sociallogin_btn} onPress={()=>{setLoginModal('kakao')}}>
             <Image source={require('../../../assets/kakao_logo.png')} style={styles.social_img} />
             <Text style={{ marginLeft: 20 }}>카카오로 로그인하기</Text>

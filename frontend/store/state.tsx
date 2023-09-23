@@ -1,4 +1,6 @@
 export interface AppState {
-  isPage:number;
+  isModalOpen:string|null;
+  isGenreSel:boolean;
+  isLogin:boolean;
 }
   

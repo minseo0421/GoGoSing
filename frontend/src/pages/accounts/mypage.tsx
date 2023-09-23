@@ -1,10 +1,16 @@
 import React,{useEffect, useState} from 'react';
 import { Modal, ImageBackground, View, Text, TouchableOpacity, StyleSheet,Platform, Image } from 'react-native';
 import axiosInstance from '../../axiosinstance';
+import GenreSelect from '../genreselect';
+import { useDispatch } from 'react-redux';
+import { setGenreSel, setLogin, setModal } from '../../../store/actions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-function MyPage ({toggleModal}:any) {
+function MyPage () {
     const [userdata,setuserdata] = useState()
+    const [isModalVisible, setModalVisible] = useState('');
+    const dispatch = useDispatch()
     useEffect(()=>{
         axiosInstance({
             method:''
@@ -19,7 +25,7 @@ function MyPage ({toggleModal}:any) {
     <Modal
         transparent={true}
         animationType="slide"
-        onRequestClose={()=>{toggleModal('')}}
+        onRequestClose={()=>{dispatch(setModal(null))}}
         >
        <ImageBackground
       source={require('../../../assets/background.png')}
@@ -28,7 +34,7 @@ function MyPage ({toggleModal}:any) {
         <ImageBackground source={require('../../../assets/mypage_back.png')} style={styles.mypage_back}>
             {Platform.OS==='ios' ? (<View style={{flex:0.025,marginTop:40}} />):<View style={{flex:0.1}} />}
             {/* <Text>마이페이지</Text> */}
-            <TouchableOpacity onPress={()=>{toggleModal('')}} style={{position:'absolute',top:20,right:20, width:30,height:30, backgroundColor:'rgba(217,217,217,0.2)',borderRadius:50,
+            <TouchableOpacity onPress={()=>{dispatch(setModal(null))}} style={{position:'absolute',top:20,right:20, width:30,height:30, backgroundColor:'rgba(217,217,217,0.2)',borderRadius:50,
         alignItems:'center',justifyContent:'center'}}>
                 <Text style={styles.closeText}>X</Text>
             </TouchableOpacity> 
@@ -58,7 +64,12 @@ function MyPage ({toggleModal}:any) {
                 <TouchableOpacity style={[styles.btn,styles.btn1]}>
                     <Text style={styles.btntext}>비밀번호 변경</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.btn,styles.btn2]}>
+                <TouchableOpacity style={[styles.btn,styles.btn2]} onPress={async ()=>{
+                    dispatch(setLogin(false))
+                    await AsyncStorage.removeItem('ACCESS_TOKEN')
+                    await AsyncStorage.removeItem('REFRESH_TOKEN')
+                    dispatch(setModal(null))
+                    }}>
                     <Text style={styles.btntext}>로그아웃</Text>
                 </TouchableOpacity>
             </View>
@@ -68,14 +79,14 @@ function MyPage ({toggleModal}:any) {
          
             <View style={{flexDirection:'row', justifyContent:'space-between', marginTop:20, alignItems:'center'}}>
                 <Text style={{color:'white', fontSize:20, fontWeight:'900'}}>내가 좋아하는 장르</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=>dispatch(setGenreSel(true))}>
                     <Text style={{color:'white',fontWeight:'bold'}}>수정하기</Text>
                 </TouchableOpacity>
             </View>
             <View style={{flexDirection:'row', justifyContent:'space-between', marginTop:20,paddingBottom:20,borderBottomColor:'white',borderBottomWidth:2}} >
                 <Image source={require('../../../assets/genre_img.png')} style={{width:80,height:80}} />
                 <Image source={require('../../../assets/genre_img.png')} style={{width:80,height:80}} />
-                <TouchableOpacity style={{borderRadius:50, width:80, height:80, justifyContent:'center',alignItems:'center'}}>
+                <TouchableOpacity style={{borderRadius:50, width:80, height:80, justifyContent:'center',alignItems:'center'}}  onPress={()=>dispatch(setGenreSel(true))}>
                     <Image source={require('../../../assets/plus_icon.png')} style={{width:50,height:50}} />
                     <Text style={{color:'#C0CEFF'}}>추가하기</Text>
                 </TouchableOpacity>

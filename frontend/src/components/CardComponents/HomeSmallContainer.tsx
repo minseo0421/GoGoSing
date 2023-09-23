@@ -9,17 +9,20 @@ const HomeSmallContainer: React.FC = () => {
   const scrollRef = useRef<ScrollView | null>(null);
 
   return (
-    <ScrollView
-      ref={scrollRef}
-      horizontal={true}
-      showsHorizontalScrollIndicator={false}
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-    >
-      {albums.map((album) => {
-        return <HomeSmall key={album.id} album={album} />;
-      })}
-    </ScrollView>
+    <View style={styles.container}>
+
+      <ScrollView
+        ref={scrollRef}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        style={styles.scroolcontainer}
+        contentContainerStyle={styles.contentContainer}
+        >
+        {albums.map((album) => {
+          return <HomeSmall key={album.id} album={album} />;
+        })}
+      </ScrollView>
+    </View>
   );
 };
 
@@ -27,6 +30,10 @@ export default HomeSmallContainer;
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  scroolcontainer: {
     height: 170,
     margin: 10,
   },
