@@ -14,11 +14,11 @@ import MusicChart from './src/pages/musicchart';
 import MusicSearch from './src/pages/musicsearch';
 import MusicLike from './src/pages/musiclike';
 
-import Topbar from './src/components/Topbar';
 import BottomBar from './src/components/Bottombar'; // 하단 바 컴포넌트 임포트
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import ModalOpen from './src/components/modalopen';
 // import { LinearGradient } from 'expo-linear-gradient';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -34,7 +34,6 @@ const App:React.FC = () => {
   const [backPressedOnce, setBackPressedOnce] = useState(false);
   useEffect(() => {
     loadFonts();
-    AsyncStorage.removeItem('ACCESS_TOKEN');
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       if (!backPressedOnce) {
         ToastAndroid.show('Press back again to exit', ToastAndroid.SHORT);
@@ -60,9 +59,7 @@ const App:React.FC = () => {
       <ImageBackground
       source={require('./assets/background.png')}
       style={styles.background}>
-        <View style={styles.topbar}>
-          <Topbar />
-        </View>
+        <ModalOpen/>
         <NavigationContainer theme={MyTheme}>
           <View style={styles.container}>
             <Tab.Navigator tabBar={(props) => <BottomBar {...props} />} >
@@ -82,10 +79,6 @@ const styles = StyleSheet.create({
   background: {
     flex: 1, // 화면 전체를 차지하도록 합니다.
     resizeMode: 'cover', // 이미지 크기 조절 옵션 (다른 옵션도 가능)
-  },
-  topbar :{
-    flex:0.2,
-    width:'100%',
   },
   container: {
     flex: 1, // 이 부분이 화면 전체 영역을 차지하도록 하는 핵심입니다.
