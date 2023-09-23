@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import { ImageBackground, View, Text, Modal, TouchableOpacity, StyleSheet, Platform } from 'react-native';
-import Login from './accounts/login';
+import Login from './accounts/Login';
 import SignUp from './accounts/signup';
 import LocalLogin from './accounts/locallogin';
 import FindPW from './accounts/findpw';
@@ -46,13 +46,6 @@ const LoginModal = ({ toggleModal } : any) => {
         currentPage === 'signup' ? <SignUp setCurrentPage={(value:string)=>setCurrentPage(value)} /> :
         currentPage === 'findpw' ? <FindPW setCurrentPage={(value:string)=>setCurrentPage(value)} /> :
         null}
-        {/* <NavigationContainer>
-          <Stack.Navigator initialRouteName="Home">
-            <Stack.Screen name='login' component={Login} />
-            <Stack.Screen name='locallogin' component={LocalLogin} />
-            <Stack.Screen name='signup' component={SignUp} />
-          </Stack.Navigator>
-        </NavigationContainer> */}
       </View>
       </ImageBackground>
     </Modal>

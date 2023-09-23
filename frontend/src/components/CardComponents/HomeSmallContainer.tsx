@@ -27,7 +27,7 @@ export default HomeSmallContainer;
 
 const styles = StyleSheet.create({
   container: {
-    height: height * 0.175,
+    height: 170,
     margin: 10,
   },
   contentContainer: {
