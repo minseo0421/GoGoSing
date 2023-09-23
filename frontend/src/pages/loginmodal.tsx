@@ -1,27 +1,46 @@
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 import { ImageBackground, View, Text, Modal, TouchableOpacity, StyleSheet, Platform } from 'react-native';
-import Login from './accounts/login';
+import Login from './accounts/Login';
 import SignUp from './accounts/signup';
 import LocalLogin from './accounts/locallogin';
 import FindPW from './accounts/findpw';
-import KakaoLogin from './accounts/sociallogin/kakao';
+import SocialSignUp from './accounts/socialsignup';
 
-const LoginModal = ({ toggleModal } : any) => {
+import { useDispatch } from 'react-redux';
+import { setLogin, setModal } from '../../store/actions';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const LoginModal = () => {
   const [currentPage,setCurrentPage]=useState('login')
+  const dispatch=useDispatch()
+  useEffect(()=>{
+    const loaddata = async () => {
+      const token = await AsyncStorage.getItem('ACCESS_TOKEN')
+      if (token) {
+        dispatch(setModal(null))
+        dispatch(setLogin(true))
+      }} 
+    loaddata()
+  },[])
   return (
     <Modal
     transparent={true}
     animationType="slide"
     // visible={toggleModal}
-    onRequestClose={()=>{
+    onRequestClose={async ()=>{
       if (currentPage==='login') {
-        toggleModal('')
+        dispatch(setModal(null))
       } else if (currentPage==='locallogin') {
         setCurrentPage('login')
       } else if (currentPage==='signup') {
         setCurrentPage('locallogin')
       } else if (currentPage==='findpw') {
         setCurrentPage('locallogin')
+      } else if (currentPage==='socialsignup') {
+        await AsyncStorage.removeItem('ACCESS_TOKEN')
+        await AsyncStorage.removeItem('REFRESH_TOKEN');
+        setCurrentPage('login')
       } 
     }}
     
@@ -32,7 +51,10 @@ const LoginModal = ({ toggleModal } : any) => {
 
       {Platform.OS==='ios' ? (<View style={{flex:0.025,marginTop:40}} />):<View style={{flex:0.025}} />}
       
-      <TouchableOpacity onPress={()=>{toggleModal('');setCurrentPage('login')}}>
+      <TouchableOpacity onPress={async ()=>{if (currentPage==='socialsignup') {
+        await AsyncStorage.removeItem('ACCESS_TOKEN')
+        await AsyncStorage.removeItem('REFRESH_TOKEN');}
+        dispatch(setModal(null));setCurrentPage('login') }}>
         <Text style={styles.closeText}>닫기</Text>
       </TouchableOpacity>
     
@@ -45,14 +67,8 @@ const LoginModal = ({ toggleModal } : any) => {
         currentPage === 'locallogin' ? <LocalLogin setCurrentPage={(value:string)=>setCurrentPage(value)} /> :
         currentPage === 'signup' ? <SignUp setCurrentPage={(value:string)=>setCurrentPage(value)} /> :
         currentPage === 'findpw' ? <FindPW setCurrentPage={(value:string)=>setCurrentPage(value)} /> :
+        currentPage === 'socialsignup' ? <SocialSignUp setCurrentPage={(value:string)=>setCurrentPage(value)} /> :
         null}
-        {/* <NavigationContainer>
-          <Stack.Navigator initialRouteName="Home">
-            <Stack.Screen name='login' component={Login} />
-            <Stack.Screen name='locallogin' component={LocalLogin} />
-            <Stack.Screen name='signup' component={SignUp} />
-          </Stack.Navigator>
-        </NavigationContainer> */}
       </View>
       </ImageBackground>
     </Modal>

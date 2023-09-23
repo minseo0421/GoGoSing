@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextInput, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axiosInstance from '../../axiosinstance';
+import { useDispatch } from 'react-redux';
+import { setGenreSel, setLogin, setModal } from '../../../store/actions';
 
 const validationSchema = Yup.object().shape({
     nickname: Yup.string()
@@ -17,7 +20,8 @@ const validationSchema = Yup.object().shape({
       .required('생년월일을 입력해주세요'),
 });
 
-function SignUp({setCurrentPage}:any) {
+function SocialSignUp({setCurrentPage}:any) {
+  const dispatch = useDispatch()
     const [isCheckNickname, setCheckNickname] = useState(false); // 닉네임 중복검사 체크변수
     const [showDatePicker, setShowDatePicker] = useState(false);
   
@@ -43,18 +47,26 @@ function SignUp({setCurrentPage}:any) {
                     gender: '',
                     birthday: null}}
                 validationSchema={validationSchema}
-                onSubmit={(values) => {
+                onSubmit={async (values) => {
                     // 회원가입 요청 로직 -> 로그인 처리까지
-                    axios({
+                    const token = await AsyncStorage.getItem('ACCESS_TOKEN')
+                    console.log(token)
+                    axiosInstance({
                         method: 'post',
-                        url: process.env.EXPO_PUBLIC_API_URL+`/user/signup`,
+                        url: process.env.EXPO_PUBLIC_API_URL+`/api/user/signup-plus`,
                         data: {
                           nickname: values.nickname,
                           gender: values.gender,
                           birth: values.birthday,
                         },
-                    }).then((res) => {
-                        setCurrentPage('locallogin')
+                        headers:{
+                          Authorization: `Bearer ${token}`
+                        }
+                    }).then(async (res) => {
+                        // await AsyncStorage.setItem('userId',res.data)
+                        dispatch(setLogin(true))
+                        alert('회원가입 완료')
+                        dispatch(setModal(null))
                     }).catch((err) => {
                         alert('회원가입 실패!');});}}>
                 {({ handleChange, handleSubmit, values, errors }) => (
@@ -245,4 +257,4 @@ const styles = StyleSheet.create({
  
 });
 
-export default SignUp;
+export default SocialSignUp;
