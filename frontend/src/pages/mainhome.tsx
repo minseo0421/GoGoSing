@@ -9,6 +9,7 @@ import { AppState } from "../../store/state";
 function MainHome() {
   const dispatch = useDispatch()
   const isLogin = useSelector((state: AppState) => state.isLogin);
+
   return (
     <View style={{flex:1}}>
       <View style={styles.topbar}>
@@ -16,7 +17,7 @@ function MainHome() {
           <Image source={require('../../assets/logo.png')} style={styles.logo}/>
           {isLogin ? 
           <TouchableOpacity onPress={()=>dispatch(setModal('mypage'))}>
-            <Image source={require('../../assets/default_user.png')} style={styles.profile_img}/>
+            <Image source={isLogin.profileImg ? {uri:`${isLogin.profileImg}`, width:50, height:50} : require('../../assets/default_user.png')} style={styles.profile_img}/>
           </TouchableOpacity>
           :
           <TouchableOpacity onPress={()=>dispatch(setModal('login'))}>
@@ -54,6 +55,7 @@ const styles = StyleSheet.create({
   profile_img:{
     width: 50, // 이미지의 너비 설정
     resizeMode: 'contain',
+    borderRadius:50
   },
   login: {
     textDecorationLine:'underline',

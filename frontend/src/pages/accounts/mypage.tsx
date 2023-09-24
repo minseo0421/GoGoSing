@@ -2,25 +2,35 @@ import React,{useEffect, useState} from 'react';
 import { Modal, ImageBackground, View, Text, TouchableOpacity, StyleSheet,Platform, Image } from 'react-native';
 import axiosInstance from '../../axiosinstance';
 import GenreSelect from '../genreselect';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setGenreSel, setLogin, setModal } from '../../../store/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AppState } from '../../../store/state';
+import WithDraw from './withdraw';
 
 
 function MyPage () {
-    const [userdata,setuserdata] = useState()
-    const [isModalVisible, setModalVisible] = useState('');
     const dispatch = useDispatch()
-    useEffect(()=>{
+    const isLogin = useSelector((state: AppState) => state.isLogin);
+    const [isWithdraw, setWithdraw] = useState(false)
+    const logout = async () => {
+        const token = await AsyncStorage.getItem('ACCESS_TOKEN')
         axiosInstance({
-            method:''
-        }).then(res=>{
-            console.log(res)
+            method:'get',
+            url:`${process.env.EXPO_PUBLIC_URI}/user/logout`,
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        }).then(async ()=>{
+            await AsyncStorage.removeItem('ACCESS_TOKEN')
+            await AsyncStorage.removeItem('REFRESH_TOKEN')
+            dispatch(setLogin(null))
+            dispatch(setModal(null))
+            alert('로그아웃 완료')
         }).catch(err=>{
             console.log(err)
         })
-    },[])
-
+    }
     return (
     <Modal
         transparent={true}
@@ -30,6 +40,7 @@ function MyPage () {
        <ImageBackground
       source={require('../../../assets/background.png')}
       style={styles.background}>
+        {isWithdraw && <WithDraw closeWithdraw={()=>setWithdraw(false)} />}
 
         <ImageBackground source={require('../../../assets/mypage_back.png')} style={styles.mypage_back}>
             {Platform.OS==='ios' ? (<View style={{flex:0.025,marginTop:40}} />):<View style={{flex:0.1}} />}
@@ -41,22 +52,22 @@ function MyPage () {
 
             <View style={{flex:0.6 ,width:'80%', flexDirection:'row', justifyContent:'space-between'}}>
                 <View style={{flex:0.3, justifyContent:'center'}}>
-                    <Image source={require('../../../assets/default_user.png')} style={{resizeMode:'contain'}} />
+                    <Image source={isLogin?.profileImg ? {uri:`${isLogin.profileImg}`, width:100, height:100} : require('../../../assets/kakao_logo.png')}  style={{resizeMode:'contain', borderRadius:50}} />
                     <TouchableOpacity style={{backgroundColor:'purple',borderRadius:100, marginTop:5}}>
                         <Text style={{fontSize:10, color:'white',textAlign:'center'}}>프로필 사진 변경</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.infobox}>
                     <View style={{flexDirection:'row'}}>
-                        <Image source={require('../../../assets/kakao_logo.png')} style={{borderRadius:50, marginRight:10}}/>
-                        <Text style={styles.name}>주토끼 님</Text>
+                        <Image source={isLogin?.socialType==='KAKAO' ? require('../../../assets/kakao_logo.png'): isLogin?.socialType==='GOOGLE' ? require('../../../assets/google_logo.png'):require('../../../assets/naver_logo.png')} style={{borderRadius:50, marginRight:10, width:30, height:30}}/>
+                        <Text style={styles.name}>{isLogin?.nickname} 님</Text>
                         <TouchableOpacity>
                             <Image source={require('../../../assets/account_edit.png')} style={{marginRight:10}}/>
                         </TouchableOpacity>
                     </View>
                     <View style={{marginTop:20}}>
-                        <Text style={styles.gender}>성　　별 : 남자</Text>
-                        <Text style={styles.gender}>생년월일 : 1995.11.14</Text>
+                        <Text style={styles.gender}>성　　별 : {isLogin?.gender ==='MALE' ? '남성': '여성'}</Text>
+                        <Text style={styles.gender}>생년월일 : {isLogin?.birth.slice(0,4)}.{isLogin?.birth.slice(5,7)}.{isLogin?.birth.slice(8,10)}</Text>
                     </View>
                 </View>
             </View>
@@ -64,12 +75,7 @@ function MyPage () {
                 <TouchableOpacity style={[styles.btn,styles.btn1]}>
                     <Text style={styles.btntext}>비밀번호 변경</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.btn,styles.btn2]} onPress={async ()=>{
-                    dispatch(setLogin(false))
-                    await AsyncStorage.removeItem('ACCESS_TOKEN')
-                    await AsyncStorage.removeItem('REFRESH_TOKEN')
-                    dispatch(setModal(null))
-                    }}>
+                <TouchableOpacity style={[styles.btn,styles.btn2]} onPress={()=>logout()}>
                     <Text style={styles.btntext}>로그아웃</Text>
                 </TouchableOpacity>
             </View>
@@ -97,17 +103,17 @@ function MyPage () {
             </View>
             <View style={{flexDirection:'row', justifyContent:'space-around', marginTop:20,paddingBottom:20,borderBottomColor:'white',borderBottomWidth:2}} >
                 <TouchableOpacity style={{width:'48%', backgroundColor:'rgba(217,217,217,0.2)', borderRadius:10, height:130, justifyContent:'center',alignItems:'center'}}>
-                    <Text style={{color:'#C0CEFF',fontSize:12}}>주토끼님의</Text>
+                    <Text style={{color:'#C0CEFF',fontSize:12}}>{isLogin?.nickname}님의</Text>
                     <Text style={{color:'#C0CEFF',fontSize:12}}>음역대는 레3 ~ 도4 입니다.</Text>
                     <Text style={{color:'white', marginTop:10}}>음역대 수정하기 →</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{width:'48%', backgroundColor:'rgba(217,217,217,0.2)', borderRadius:10, height:130, justifyContent:'center',alignItems:'center'}}>
-                    <Text style={{color:'#C0CEFF',fontSize:12}}>나의 음색</Text>
-                    <Text style={{color:'#C0CEFF',fontSize:12}}>주토끼 울음소리.mp3</Text>
+                    <Text style={{color:'#C0CEFF',fontSize:12}}>{isLogin?.nickname}님의 음색</Text>
+                    <Text style={{color:'#C0CEFF',fontSize:12}}>{isLogin?.nickname}이 부른 노래.mp3</Text>
                     <Text style={{color:'white', marginTop:10}}>목소리 수정하기 →</Text>
                 </TouchableOpacity>
             </View>
-               <TouchableOpacity style={{ width:'100%', alignItems:'flex-end', marginTop:30}}>
+               <TouchableOpacity style={{ width:'100%', alignItems:'flex-end', marginTop:30}} onPress={()=>{setWithdraw(true)}}>
                     <Text style={{color:'red',fontWeight:'bold'}}>회원탈퇴</Text>
                 </TouchableOpacity>
         </View>
