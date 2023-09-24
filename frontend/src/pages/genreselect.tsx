@@ -14,7 +14,7 @@ const GenreSelect = () => {
     } 
     else {
       if (isSelGenres.length >= 3){
-        alert('이미 3개임')
+        alert('최대 3개까지 선택할 수 있어요')
       }
       else {setSelGenres([...isSelGenres, value]);}
     }

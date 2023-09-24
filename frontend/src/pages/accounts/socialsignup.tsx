@@ -38,6 +38,24 @@ function SocialSignUp({setCurrentPage}:any) {
         // axiosInstance를 사용하는 부분도 변경이 필요할 수 있습니다.
         setCheckNickname(true);
     };
+
+    const getuserdata = (token:string) => {
+      axiosInstance({
+        method:'get',
+        url:`${process.env.EXPO_PUBLIC_URI}/user/detail`,
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      }).then(res=>{
+          dispatch(setLogin(res.data))
+          // alert('로그인 성공!')
+          dispatch(setModal(null))
+          dispatch(setGenreSel(true))
+      }).catch(err=>{
+        console.log(err)
+        alert('유저 데이터 로딩 실패')
+      })
+    }
     return (
         <View style={styles.container}>
             {/* 회원가입 form */}
@@ -50,10 +68,9 @@ function SocialSignUp({setCurrentPage}:any) {
                 onSubmit={async (values) => {
                     // 회원가입 요청 로직 -> 로그인 처리까지
                     const token = await AsyncStorage.getItem('ACCESS_TOKEN')
-                    console.log(token)
                     axiosInstance({
                         method: 'post',
-                        url: process.env.EXPO_PUBLIC_API_URL+`/api/user/signup-plus`,
+                        url: `${process.env.EXPO_PUBLIC_URI}/user/signup-plus`,
                         data: {
                           nickname: values.nickname,
                           gender: values.gender,
@@ -63,11 +80,10 @@ function SocialSignUp({setCurrentPage}:any) {
                           Authorization: `Bearer ${token}`
                         }
                     }).then(async (res) => {
-                        // await AsyncStorage.setItem('userId',res.data)
-                        dispatch(setLogin(true))
                         alert('회원가입 완료')
-                        dispatch(setModal(null))
+                        getuserdata(token!)
                     }).catch((err) => {
+                        console.log(err)
                         alert('회원가입 실패!');});}}>
                 {({ handleChange, handleSubmit, values, errors }) => (
                      <View style={{flex:1, width:290}}>
