@@ -4,6 +4,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import axios from 'axios';
+import EmailAuth from './emailauth';
 
 const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -39,7 +40,7 @@ function SignUp({setCurrentPage}:any) {
     const [isCheckAuth, setCheckAuth] = useState(false); // 이메일 중복검사 체크변수
     const [isCheckNickname, setCheckNickname] = useState(false); // 닉네임 중복검사 체크변수
     const [showDatePicker, setShowDatePicker] = useState(false);
-  
+
     const showMode = () => {
       setShowDatePicker(true); // Show the modal date picker
     };
@@ -49,37 +50,21 @@ function SignUp({setCurrentPage}:any) {
     };
   
     const emailcheck = (email:string) => {
-      setCheckEmail(true);
-        // 이메일 인증번호 발송 로직
-        // axios({
-        //   method:'post',
-        //   url:process.env.EXPO_PUBLIC_API_URL+'/email/send-certification',
-        //   data:{email:email}
-        // }).then(res=>{ 
-        //   setCheckEmail(true);
-        // }).catch(err=>{
-        //   alert('인증번호 전송에 실패했습니다.')
-        // })
-      };
-    
-    const emailauth = (email:string,num:string) =>{
-      // 인증번호 확인
-      setCheckAuth(true);
+      // 이메일 인증번호 발송 로직
       // axios({
       //   method:'post',
-      //   url:process.env.EXPO_PUBLIC_API_URL+'/email/verify',
-      //   data:{email:email,
-      //     certificationNumber:num}
-      // }).then(res=>{
+      //   url:`${process.env.EXPO_PUBLIC_URI}/email/send-certification`,
+      //   data:{email:email}
+      // }).then(res=>{ 
       //   setCheckAuth(true);
       // }).catch(err=>{
-      //   alert('인증에 실패했습니다. 다시 확인해주세요')
+      //   alert('인증번호 전송에 실패했습니다.')
       // })
-    }
+      setCheckAuth(true);
+      };
     
     const nicknamecheck = (nickname:string) => {
         // 닉네임 중복 체크 로직 작성
-        // axiosInstance를 사용하는 부분도 변경이 필요할 수 있습니다.
         setCheckNickname(true);
     };
     return (
@@ -95,11 +80,11 @@ function SignUp({setCurrentPage}:any) {
                     gender: '',
                     birthday: null}}
                 validationSchema={validationSchema}
-                onSubmit={(values) => {
+                onSubmit={async (values) => {
                     // 회원가입 요청 로직 -> 로그인 처리까지
                     axios({
                         method: 'post',
-                        url: process.env.EXPO_PUBLIC_API_URL+`/user/signup`,
+                        url: `${process.env.EXPO_PUBLIC_URI}/user/signup`,
                         data: {
                           email: values.email,
                           emailCertificationNumber:values.certificationNumber,
@@ -109,7 +94,7 @@ function SignUp({setCurrentPage}:any) {
                           birth: values.birthday,
                         },
                     }).then((res) => {
-                        setCurrentPage('locallogin')
+                        setCurrentPage('login')
                     }).catch((err) => {
                         alert('회원가입 실패!');});}}>
                 {({ handleChange, handleSubmit, values, errors }) => (
@@ -123,46 +108,33 @@ function SignUp({setCurrentPage}:any) {
                              placeholder="이메일을 입력해주세요."
                              onChangeText={(text) => {
                                handleChange('email')(text);
-                               setCheckEmail(false);}}/>
+                               setCheckEmail(false);}}
+                               editable={isCheckEmail ? false : true}
+                               />
                            {/* 올바른 이메일 입력시 인증버튼 활성화 */}
                            {values.email === '' || errors.email ? 
                            <TouchableOpacity style={styles.unchk} disabled>
                             <Text>인증</Text>
                           </TouchableOpacity>
                     
-                             :<TouchableOpacity style={styles.chk} onPress={() => emailcheck(values.email)} >
+                             : isCheckEmail ? 
+                            <TouchableOpacity style={styles.unchk} disabled>
+                             <Text>완료</Text>
+                           </TouchableOpacity> : 
+                           <TouchableOpacity style={styles.chk} onPress={() => emailcheck(values.email)} >
                              <Text>인증</Text>
-                           </TouchableOpacity> }
+                           </TouchableOpacity>}
                          </View>
-
-                        {isCheckEmail ? 
-                         <View style={{ flexDirection: 'row', width:'80%'}}>
-                         <TextInput
-                           style={styles.input_account}
-                           placeholder="인증번호를 입력해주세요."
-                           onChangeText={(text) => {
-                             handleChange('certificationNumber')(text);}}/>
-                         {/* 올바른 이메일 입력시 인증버튼 활성화 */}
-                         {values.certificationNumber === '' || errors.certificationNumber ? 
-                         <TouchableOpacity style={styles.unchk} disabled>
-                          <Text>인증</Text>
-                        </TouchableOpacity>
-                  
-                           :<TouchableOpacity style={styles.chk} onPress={() => emailauth(values.email,values.certificationNumber)} >
-                           <Text>인증</Text>
-                         </TouchableOpacity> }
-                       </View>:null}
+                         {isCheckAuth && <EmailAuth email={values.email} closeCheckAuth={()=>setCheckAuth(false)} authsuccess={(text:string)=>{handleChange('certificationNumber')(text); setCheckEmail(true);setCheckAuth(false)}}  />}
                          
-                         <Text>
+                         <Text style={{marginBottom:10,marginTop:-5}}>
                            {values.email === '' ? (
                             <></>
                            ) : errors.email ? (
                              errors.email
                            ) : !isCheckEmail ? (
                              '이메일 인증을 진행해주세요.'
-                           ) : isCheckAuth ? (
-                             '인증완료'
-                           ): '인증번호가 발송되었습니다.'}
+                           ) :  '인증완료'}
                          </Text>    
 
                          {/* 패스워드 input */}
@@ -172,7 +144,7 @@ function SignUp({setCurrentPage}:any) {
                            onChangeText={(text) => handleChange('password')(text)}
                            secureTextEntry
                          />
-                         <Text>
+                         <Text style={{marginBottom:10,marginTop:-5}}>
                            {values.password === '' ? (
                              <></>
                            ) : errors.password ? (
@@ -189,7 +161,7 @@ function SignUp({setCurrentPage}:any) {
                            onChangeText={(text) => handleChange('confirmPassword')(text)}
                            secureTextEntry
                          />
-                         <Text>
+                         <Text style={{marginBottom:10,marginTop:-5}}>
                            {values.confirmPassword === '' ? (
                              <></>
                            ) : errors.confirmPassword ? (
@@ -237,7 +209,7 @@ function SignUp({setCurrentPage}:any) {
                               <Text>인증</Text>
                             </TouchableOpacity> }
                          </View>
-                         <Text>
+                         <Text style={{marginBottom:10,marginTop:-5}}>
                            {values.nickname === '' ? (
                              null
                            ) : errors.nickname ? (
@@ -263,7 +235,7 @@ function SignUp({setCurrentPage}:any) {
                             </TouchableOpacity>
                          
                          </View>
-                         <Text>
+                         <Text style={{marginBottom:5,marginTop:5}}>
                            {values.gender === '' ? (
                              <></>
                            ) : errors.gender ? (
@@ -299,7 +271,7 @@ function SignUp({setCurrentPage}:any) {
                             }}
                             onCancel={hideDatePicker} />
 
-                         <Text>
+                         <Text style={{marginBottom:5,marginTop:5}}>
                            {values.birthday === null ? null : errors.birthday ? 
                              `${errors.birthday}` :  '생년월일 입력완료'}
                          </Text>

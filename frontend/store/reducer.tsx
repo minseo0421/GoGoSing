@@ -1,9 +1,9 @@
 import { AppState } from "./state";
 
 const initialState: AppState = {
-  isModalOpen: null,
-  isGenreSel: false,
-  isLogin: false,
+isModalOpen : null,
+isGenreSel : false,
+isLogin:null,
   album: {
     id: 1,
     title: "",
