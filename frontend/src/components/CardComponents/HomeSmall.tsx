@@ -8,46 +8,65 @@ import {
   Dimensions,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { ImageSourcePropType } from "react-native";
+import { setModal, selectAlbum } from "../../../store/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { AppState } from "../../../store/state";
 const { width, height } = Dimensions.get("window");
 
-const HomeSmall: React.FC<{
-  album: { title: string; singer: string; image: any };
-}> = ({
-  album = { title: "", singer: "", image: require("./assets/sample1.png") },
-}) => {
+interface AlbumProps {
+  album: {
+    id: number;
+    title: string;
+    singer: string;
+    image: any;
+    url: string;
+    lyrics: string;
+  };
+}
+
+const HomeSmall: React.FC<AlbumProps> = ({ album }) => {
   const [liked, setLiked] = useState(false);
+  const dispatch = useDispatch(); // 이 위치로 변경
+
+  const handleAlbumClick = () => {
+    dispatch(setModal("musicDetail")); // 모달 표시 액션
+    dispatch(selectAlbum(album)); // 선택된 앨범 데이터 저장 액션
+  };
+
+  const selectedAlbum = useSelector((state: AppState) => state.album);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.infoContainer}>
-        <Image source={album.image} style={styles.image} />
-        <View style={styles.musicinfo}>
-          <View style={styles.musictext}>
-            <Text
-              style={[styles.text, styles.title]}
-              numberOfLines={1}
-              ellipsizeMode="tail"
+    <TouchableOpacity onPress={handleAlbumClick}>
+      <View style={styles.container}>
+        <View style={styles.infoContainer}>
+          <Image source={album.image} style={styles.image} />
+          <View style={styles.musicinfo}>
+            <View style={styles.musictext}>
+              <Text
+                style={[styles.text, styles.title]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {album.title}
+              </Text>
+              <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+                {album.singer}
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={styles.iconbox}
+              onPress={() => setLiked(!liked)}
             >
-              {album.title}
-            </Text>
-            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
-              {album.singer}
-            </Text>
+              {liked ? (
+                <AntDesign name="heart" style={styles.icon} />
+              ) : (
+                <AntDesign name="hearto" style={styles.icon} />
+              )}
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={styles.iconbox}
-            onPress={() => setLiked(!liked)}
-          >
-            {liked ? (
-              <AntDesign name="heart" style={styles.icon} />
-            ) : (
-              <AntDesign name="hearto" style={styles.icon} />
-            )}
-          </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

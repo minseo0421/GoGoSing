@@ -1,24 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { BackHandler, StyleSheet, ToastAndroid, View,ImageBackground } from 'react-native';
+import React, { useState, useEffect } from "react";
+import {
+  BackHandler,
+  StyleSheet,
+  ToastAndroid,
+  View,
+  ImageBackground,
+} from "react-native";
 
-import { loadFonts } from './font';
+import { loadFonts } from "./font";
 
-import store from './store/store'
-import { Provider } from 'react-redux';
+import store from "./store/store";
+import { Provider } from "react-redux";
 // BottomBar 관련
-import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import MainHome from './src/pages/mainhome';
-import MusicChart from './src/pages/musicchart';
-import MusicSearch from './src/pages/musicsearch';
-import MusicLike from './src/pages/musiclike';
+import MainHome from "./src/pages/mainhome";
+import MusicChart from "./src/pages/musicchart";
+import MusicSearch from "./src/pages/musicsearch";
+import MusicLike from "./src/pages/musiclike";
 
-import BottomBar from './src/components/Bottombar'; // 하단 바 컴포넌트 임포트
+import BottomBar from "./src/components/Bottombar"; // 하단 바 컴포넌트 임포트
 
-import ModalOpen from './src/components/modalopen';
+import ModalOpen from "./src/components/modalopen";
+
 // import { LinearGradient } from 'expo-linear-gradient';
-
 
 const Tab = createBottomTabNavigator();
 
@@ -26,28 +32,31 @@ const MyTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: 'transparent', // 배경을 투명하게 설정
+    background: "transparent", // 배경을 투명하게 설정
   },
 };
 
-const App:React.FC = () => {
+const App: React.FC = () => {
   const [backPressedOnce, setBackPressedOnce] = useState(false);
   useEffect(() => {
     loadFonts();
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      if (!backPressedOnce) {
-        ToastAndroid.show('Press back again to exit', ToastAndroid.SHORT);
-        setBackPressedOnce(true);
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        if (!backPressedOnce) {
+          ToastAndroid.show("Press back again to exit", ToastAndroid.SHORT);
+          setBackPressedOnce(true);
 
-        setTimeout(() => {
-          setBackPressedOnce(false);
-        }, 2000); // 2 seconds timeout to reset the backPressedOnce state
-      } else {
-        BackHandler.exitApp(); // If back is pressed again within 2 seconds, exit the app
+          setTimeout(() => {
+            setBackPressedOnce(false);
+          }, 2000); // 2 seconds timeout to reset the backPressedOnce state
+        } else {
+          BackHandler.exitApp(); // If back is pressed again within 2 seconds, exit the app
+        }
+
+        return true;
       }
-
-      return true;
-    });
+    );
 
     return () => {
       backHandler.remove();
@@ -57,16 +66,33 @@ const App:React.FC = () => {
     <Provider store={store}>
       {/* {Platform.OS==='android' ? <StatusBar backgroundColor={'white'} />:null} */}
       <ImageBackground
-      source={require('./assets/background.png')}
-      style={styles.background}>
-        <ModalOpen/>
+        source={require("./assets/background.png")}
+        style={styles.background}
+      >
+        <ModalOpen />
         <NavigationContainer theme={MyTheme}>
           <View style={styles.container}>
-            <Tab.Navigator tabBar={(props) => <BottomBar {...props} />} >
-              <Tab.Screen name="home" component={MainHome} options={{tabBarLabel:'홈', headerShown:false}}/>
-              <Tab.Screen name="chart" component={MusicChart} options={{tabBarLabel:'차트', headerShown:false}} />
-              <Tab.Screen name="search" component={MusicSearch} options={{tabBarLabel:'검색', headerShown:false}}/>
-              <Tab.Screen name="like" component={MusicLike} options={{tabBarLabel:'보관함', headerShown:false}}/>
+            <Tab.Navigator tabBar={(props) => <BottomBar {...props} />}>
+              <Tab.Screen
+                name="home"
+                component={MainHome}
+                options={{ tabBarLabel: "홈", headerShown: false }}
+              />
+              <Tab.Screen
+                name="chart"
+                component={MusicChart}
+                options={{ tabBarLabel: "차트", headerShown: false }}
+              />
+              <Tab.Screen
+                name="search"
+                component={MusicSearch}
+                options={{ tabBarLabel: "검색", headerShown: false }}
+              />
+              <Tab.Screen
+                name="like"
+                component={MusicLike}
+                options={{ tabBarLabel: "보관함", headerShown: false }}
+              />
             </Tab.Navigator>
           </View>
         </NavigationContainer>
@@ -78,15 +104,15 @@ const App:React.FC = () => {
 const styles = StyleSheet.create({
   background: {
     flex: 1, // 화면 전체를 차지하도록 합니다.
-    resizeMode: 'cover', // 이미지 크기 조절 옵션 (다른 옵션도 가능)
+    resizeMode: "cover", // 이미지 크기 조절 옵션 (다른 옵션도 가능)
   },
   container: {
     flex: 1, // 이 부분이 화면 전체 영역을 차지하도록 하는 핵심입니다.
   },
   text: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white",
   },
 });
 

@@ -8,7 +8,9 @@ import {
   Dimensions,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-
+import { setModal, selectAlbum } from "../../../store/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { AppState } from "../../../store/state";
 const { width, height } = Dimensions.get("window");
 
 interface AlbumProps {
@@ -17,29 +19,41 @@ interface AlbumProps {
     title: string;
     singer: string;
     image: any;
+    url: string;
+    lyrics: string;
   };
 }
 
 const ChartLong: React.FC<AlbumProps> = ({ album }) => {
   const [liked, setLiked] = useState(false);
+  const dispatch = useDispatch(); // 이 위치로 변경
+
+  const handleAlbumClick = () => {
+    dispatch(setModal("musicDetail")); // 모달 표시 액션
+    dispatch(selectAlbum(album)); // 선택된 앨범 데이터 저장 액션
+  };
+
+  const selectedAlbum = useSelector((state: AppState) => state.album);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.infoContainer}>
-        <Image source={album.image} style={styles.image} />
-        <View style={styles.musicInfo}>
-          <Text style={[styles.text, styles.title]}>{album.title}</Text>
-          <Text style={styles.text}>{album.singer}</Text>
+    <TouchableOpacity onPress={handleAlbumClick}>
+      <View style={styles.container}>
+        <View style={styles.infoContainer}>
+          <Image source={album.image} style={styles.image} />
+          <View style={styles.musicInfo}>
+            <Text style={[styles.text, styles.title]}>{album.title}</Text>
+            <Text style={styles.text}>{album.singer}</Text>
+          </View>
+          <TouchableOpacity onPress={() => setLiked(!liked)}>
+            {liked ? (
+              <AntDesign name="heart" style={styles.icon} />
+            ) : (
+              <AntDesign name="hearto" style={styles.icon} />
+            )}
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => setLiked(!liked)}>
-          {liked ? (
-            <AntDesign name="heart" style={styles.icon} />
-          ) : (
-            <AntDesign name="hearto" style={styles.icon} />
-          )}
-        </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
