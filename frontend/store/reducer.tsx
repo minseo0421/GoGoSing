@@ -3,7 +3,7 @@ import { AppState } from './state';
 const initialState: AppState = {
     isModalOpen : null,
     isGenreSel : false,
-    isLogin:false,
+    isLogin:null,
 };
 
 const reducer = (state: AppState = initialState, action: { type: string; payload: any }) => {

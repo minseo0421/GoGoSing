@@ -17,6 +17,8 @@ const ModalOpen = () => {
             null}
 
             {isGenreSel && <GenreSelect/> }  
+
+            
         </View>
     );
 };

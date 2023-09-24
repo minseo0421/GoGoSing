@@ -1,46 +1,54 @@
 import React,{useEffect, useState} from 'react';
-import { ImageBackground, View, Text, Modal, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { ImageBackground, View, Text, Modal, TouchableOpacity, StyleSheet, Platform, Keyboard } from 'react-native';
 import Login from './accounts/Login';
 import SignUp from './accounts/signup';
-import LocalLogin from './accounts/locallogin';
 import FindPW from './accounts/findpw';
 import SocialSignUp from './accounts/socialsignup';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setLogin, setModal } from '../../store/actions';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AppState } from '../../store/state';
 
 const LoginModal = () => {
   const [currentPage,setCurrentPage]=useState('login')
   const dispatch=useDispatch()
+  const isLogin = useSelector((state: AppState) => state.isLogin);
   useEffect(()=>{
-    const loaddata = async () => {
-      const token = await AsyncStorage.getItem('ACCESS_TOKEN')
-      if (token) {
-        dispatch(setModal(null))
-        dispatch(setLogin(true))
-      }} 
-    loaddata()
+    if (isLogin) {
+      dispatch(setModal(null))
+    }
   },[])
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setIsKeyboardOpen(true);
+    });
+
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setIsKeyboardOpen(false);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
   return (
     <Modal
     transparent={true}
     animationType="slide"
-    // visible={toggleModal}
     onRequestClose={async ()=>{
       if (currentPage==='login') {
         dispatch(setModal(null))
-      } else if (currentPage==='locallogin') {
+      } else {
         setCurrentPage('login')
-      } else if (currentPage==='signup') {
-        setCurrentPage('locallogin')
-      } else if (currentPage==='findpw') {
-        setCurrentPage('locallogin')
-      } else if (currentPage==='socialsignup') {
+      } 
+      
+      if (currentPage==='socialsignup') {
         await AsyncStorage.removeItem('ACCESS_TOKEN')
         await AsyncStorage.removeItem('REFRESH_TOKEN');
-        setCurrentPage('login')
       } 
     }}
     
@@ -51,20 +59,29 @@ const LoginModal = () => {
 
       {Platform.OS==='ios' ? (<View style={{flex:0.025,marginTop:40}} />):<View style={{flex:0.025}} />}
       
-      <TouchableOpacity onPress={async ()=>{if (currentPage==='socialsignup') {
-        await AsyncStorage.removeItem('ACCESS_TOKEN')
-        await AsyncStorage.removeItem('REFRESH_TOKEN');}
-        dispatch(setModal(null));setCurrentPage('login') }}>
-        <Text style={styles.closeText}>닫기</Text>
-      </TouchableOpacity>
-    
-      <View style={styles.logobox}>
-        <Text style={styles.logo}>GOGO    SING</Text>
+      <View style={{marginLeft:'5%',width:'90%', justifyContent:'space-between',flexDirection:'row'}}>
+        {currentPage==='login' ? <Text></Text>:
+        <TouchableOpacity onPress={()=>{setCurrentPage('login')}}>
+            <Text style={styles.closeText}>뒤로가기</Text>
+        </TouchableOpacity>
+        }
+        <TouchableOpacity onPress={async ()=>{if (currentPage==='socialsignup') {
+          await AsyncStorage.removeItem('ACCESS_TOKEN')
+          await AsyncStorage.removeItem('REFRESH_TOKEN');}
+          dispatch(setModal(null));setCurrentPage('login') }}>
+          <Text style={styles.closeText}>닫기</Text>
+        </TouchableOpacity>
       </View>
+      
+      {isKeyboardOpen ? 
+        null
+      :<View style={styles.logobox}>
+          <Text style={styles.logo}>GOGO    SING</Text>
+      </View>}
+
 
       <View style={styles.modalContainer}>
         {currentPage === 'login' ? <Login setCurrentPage={(value:string)=>setCurrentPage(value)} /> :
-        currentPage === 'locallogin' ? <LocalLogin setCurrentPage={(value:string)=>setCurrentPage(value)} /> :
         currentPage === 'signup' ? <SignUp setCurrentPage={(value:string)=>setCurrentPage(value)} /> :
         currentPage === 'findpw' ? <FindPW setCurrentPage={(value:string)=>setCurrentPage(value)} /> :
         currentPage === 'socialsignup' ? <SocialSignUp setCurrentPage={(value:string)=>setCurrentPage(value)} /> :
@@ -81,8 +98,6 @@ const styles = StyleSheet.create({
   },
   closeText:{
     color:'white',
-    textAlign:'right',
-    marginRight:25,
   },
   background: {
     flex: 1, // 화면 전체를 차지하도록 합니다.
