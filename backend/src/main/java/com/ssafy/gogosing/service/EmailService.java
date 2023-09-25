@@ -127,12 +127,22 @@ public class EmailService {
     public void sendMail(MailContentDto mailContentDto) throws MessagingException {
 
         MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        helper.setTo(mailContentDto.getAddress());
-        helper.setFrom(this.senderEmail);
-        helper.setSubject(mailContentDto.getTitle());
-        helper.setText(mailContentDto.getMessage(), true); // 두 번째 인자가 true면 HTML 형식으로 메시지 전송 가능
+        try {
+            message.setFrom(senderEmail);
+            message.setRecipients(MimeMessage.RecipientType.TO, mailContentDto.getAddress());
+            message.setSubject(mailContentDto.getTitle());
+            message.setText(mailContentDto.getMessage(),"UTF-8", "html");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
+//        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+//
+//        helper.setTo(mailContentDto.getAddress());
+//        helper.setFrom(this.senderEmail);
+//        helper.setSubject(mailContentDto.getTitle());
+//        helper.setText(mailContentDto.getMessage(), true); // 두 번째 인자가 true면 HTML 형식으로 메시지 전송 가능
 
         javaMailSender.send(message);
     }
