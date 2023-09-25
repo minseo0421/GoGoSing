@@ -21,29 +21,36 @@ function MainHome() {
     <View style={{ flex: 1 }}>
       <View style={styles.topbar}>
         <View style={styles.homecontainer}>
-          <Image source={require('../../assets/logo.png')} style={styles.logo}/>
-          {isLogin ? 
-          <TouchableOpacity onPress={()=>dispatch(setModal('mypage'))}>
-            <Image source={isLogin.profileImg ? {uri:`${isLogin.profileImg}`, width:50, height:50} : require('../../assets/default_user.png')} style={styles.profile_img}/>
-          </TouchableOpacity>
-          :
-          <TouchableOpacity onPress={()=>dispatch(setModal('login'))}>
-            <Text style={styles.login}>Login</Text>
-          </TouchableOpacity>}
+          <Image
+            source={require("../../assets/logo.png")}
+            style={styles.logo}
+          />
+          {isLogin ? (
+            <TouchableOpacity onPress={() => dispatch(setModal("mypage"))}>
+              <Image
+                source={
+                  isLogin.profileImg
+                    ? { uri: `${isLogin.profileImg}`, width: 50, height: 50 }
+                    : require("../../assets/default_user.png")
+                }
+                style={styles.profile_img}
+              />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => dispatch(setModal("login"))}>
+              <Text style={styles.login}>Login</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       <ScrollView style={{ flex: 0.8 }}>
         <Text style={styles.barStyle}>🎤 당신의 음역대에 맞는 음악 ! 🎤</Text>
         <HomeSmallContainer></HomeSmallContainer>
-        <Text style={styles.barStyle}>
-          😍 뭘 좋아 할 지 몰라서 다 준비했어😍
-        </Text>
+        <Text style={styles.barStyle}>😍좋아 할 지 몰라서 다 준비했어😍</Text>
         <HomeSmallContainer></HomeSmallContainer>
         <Text style={styles.barStyle}>🎸 이런 장르의 음악 좋아하시죠? 🎹</Text>
         <HomeSmallContainer></HomeSmallContainer>
-        <Text style={styles.barStyle}>
-          👩🏻 연령대에 맞춰서 추천해볼게요 ! 👨🏻
-        </Text>
+        <Text style={styles.barStyle}>👩🏻 연령대에 맞춰서 추천해볼게요 👨🏻</Text>
         <HomeSmallContainer></HomeSmallContainer>
       </ScrollView>
     </View>
@@ -79,8 +86,8 @@ const styles = StyleSheet.create({
   },
   profile_img: {
     width: 50, // 이미지의 너비 설정
-    resizeMode: 'contain',
-    borderRadius:50
+    resizeMode: "contain",
+    borderRadius: 50,
   },
   login: {
     textDecorationLine: "underline",
