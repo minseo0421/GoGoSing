@@ -1,17 +1,36 @@
 import React, { useState } from "react";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import styles from "./CardSmall.module.css";
+import { setModal, selectAlbum } from "../../store/actions";
+import { useDispatch, useSelector } from "react-redux";
 
-const CardSmall: React.FC = () => {
+interface AlbumProps {
+  album: {
+    id: number;
+    title: string;
+    singer: string;
+    image: any;
+    url: string;
+    lyrics: string;
+  };
+}
+
+const CardSmall: React.FC<AlbumProps> = ({ album }) => {
   const [liked, setLiked] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleAlbumClick = () => {
+    dispatch(setModal("musicDetail")); // 모달 표시 액션
+    dispatch(selectAlbum(album)); // 선택된 앨범 데이터 저장 액션
+  };
 
   return (
     <div className={styles.container}>
-      <img src="assets/sample1.svg" alt="" className={styles.image} />
+      <img src={album.image} alt="" className={styles.image} />
       <div className={styles.infoContainer}>
         <div className={styles.musicinfo}>
-          <span className={styles.title}>Super 슈퍼슈퍼슈퍼 Shy</span>
-          <span>NewJeans</span>
+          <span className={styles.title}>{album.title}</span>
+          <span>{album.singer}</span>
         </div>
         {liked ? (
           <AiFillHeart
