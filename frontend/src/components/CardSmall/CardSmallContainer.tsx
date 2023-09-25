@@ -1,6 +1,7 @@
 import CardSmall from "./CardSmall";
 import React, { useState, useRef } from "react";
 import styles from "./CardSmallContainer.module.css";
+import albums from "../album";
 
 const CardSmallContainer: React.FC = () => {
   const [startX, setStartX] = useState(0);
@@ -47,12 +48,9 @@ const CardSmallContainer: React.FC = () => {
       onMouseUp={handleEnd}
       onMouseLeave={handleEnd}
     >
-      <CardSmall />
-      <CardSmall />
-      <CardSmall />
-      <CardSmall />
-      <CardSmall />
-      <CardSmall />
+      {albums.map((album) => {
+        return <CardSmall key={album.id} album={album} />; // 각 ChartLong 컴포넌트에 album 데이터를 prop으로 전달합니다.
+      })}
     </div>
   );
 };
