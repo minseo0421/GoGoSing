@@ -23,7 +23,7 @@ const Login: React.FC = () => {
     }
     return (
       <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', width:'100%'}}>
-        <img src="assets/logo.png" alt="" style={{margin:'10% 0 30% 0'}}/>
+        <img src="assets/logo.png" alt="" style={{margin:'40% 0 30% 0'}}/>
         <button className={styled.sociallogin_btn} onClick={kakaologin}>
             <img src="assets/kakao_logo.png" alt="" style={{width:'30px'}}/>
             <span style={{marginLeft:'20px'}}>카카오로 로그인하기</span>

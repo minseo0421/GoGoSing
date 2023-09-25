@@ -22,7 +22,7 @@ const LocalLogin: React.FC = () => {
 
     return (
       <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', width:'100%'}}>
-        <img src="assets/logo.png" alt="" style={{margin:'10% 0 30% 0'}}/>
+        <img src="assets/logo.png" alt="" style={{margin:'40% 0 30% 0'}}/>
         <form onSubmit={login} style={{width:'80%'}}>
             <input className={styled.input_account} type="text" placeholder="이메일" value={email} onChange={(e)=>setEmail(e.target.value)}/>
             <p></p>

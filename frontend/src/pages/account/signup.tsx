@@ -33,7 +33,7 @@ const validationSchema = Yup.object().shape({
 
 const SignUp: React.FC = () => {
     const navigate = useNavigate();
-    const [firstStep, setStep] = useState(true);
+    const [firstStep, setStep] = useState(false);
     const [isCheckEmail, setCheckEmail] = useState(false) //이메일 중복검사 체크변수
     const [isCheckNickname, setCheckNickname] = useState(false) //닉네임 중복검사 체크변수
     const [isCalender, setCalender] = useState(false);
@@ -102,7 +102,7 @@ const SignUp: React.FC = () => {
     
     return (
       <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', width:'100%'}}>
-        {isCalender ? <span style={{margin:'30px'}}></span>:<img src="assets/logo.png" alt="" style={{margin:'25% 0 20% 0'}}/>}
+        {isCalender ? <span style={{margin:'30px'}}></span>:<img src="assets/logo.png" alt="" style={{margin:'40% 0 30% 0'}}/>}
         {/* 회원가입 form */}
         <form onSubmit={formik.handleSubmit} style={{width:'80%'}}>
             {firstStep ? 
