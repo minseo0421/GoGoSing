@@ -36,6 +36,6 @@ public class MusicAnalyzeController {
     public ResponseEntity<?> getVoiceMatchingList(@RequestBody VoiceMatchingListRequestDto voiceMatchingListRequestDto) throws IOException {
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(musicAnalyzeService.processVoiceAndReturnPath(voiceMatchingListRequestDto.getVoiceFile()));
+                .body(musicAnalyzeService.getVoiceMatchingList(voiceMatchingListRequestDto.getVoiceFile()));
     }
 }
