@@ -1,30 +1,40 @@
-// MainHome.js
-import React from 'react';
-import { View, Text, Button,StyleSheet } from 'react-native';
+import React, { useEffect } from "react";
 
-const MusicLike = () => {
+import { setPage } from "../store/actions";
+import { useDispatch } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+// import MainStyle from "../components/MainContainer/MainContainer.module.css";
+import RecordStyle from "../components/CardRecord/RecordSmall.module.css";
+import BarStyle from "./ContainerBar.module.css";
+import PitchSmall from "../components/CardRecord/PitchSmall";
+import VoiceSmall from "../components/CardRecord/VoiceSmall";
+import CardLongContainer from "../components/CardLong/CardLongContainer";
+
+const MusicLike: React.FC = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setPage(4));
+  }, [dispatch]);
+
+  // const navigate = useNavigate();
+
+  // const musicrecord = () => {
+  //   navigate("/record");
+  // };
+
   return (
-    <View style={{flex:1}}>
-      <View style={styles.topbar}>
-        <View style={styles.container}>
-          <Text style={{color:'white',fontSize:35, fontWeight:'bold'}}>검색</Text>
-        </View>
-      </View>
-    </View>
+    <div style={{height:'100%', overflow:'scroll'}}>
+      {/* <div className={MainStyle.container}> */}
+      <div className={RecordStyle.largeContainer}>
+        <PitchSmall></PitchSmall>
+        <VoiceSmall></VoiceSmall>
+      </div>
+      <div>
+        <div className={BarStyle.pitch}>❤️ 내가 좋아요 한 노래 !❤️</div>
+        <CardLongContainer></CardLongContainer>
+      </div>
+    </div>
+    // </div>
   );
-}
-const styles = StyleSheet.create({
-  topbar :{
-    flex:0.2,
-    width:'100%',
-  },
-  container:{
-    flex:1,
-    justifyContent:'center',
-    alignItems: 'center', // 교차 축을 따라 중앙 정렬
-    marginTop:20
-    
-  },
-});
-
+};
 export default MusicLike;

@@ -1,92 +1,104 @@
 import React from "react";
-import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
+import { useLocation } from "react-router-dom";
+import styled from "./bar.module.css";
 
-interface BottomTabBarProps {
-  state: any; // 네비게이션 상태
-  descriptors: any; // 스크린 디스크립터
-  navigation: any; // 네비게이션 객체
+import { AppState } from "../store/state";
+import { setPage } from "../store/actions";
+import { useSelector, useDispatch } from "react-redux";
+
+interface BottomBarProps {
+  onClickButton: (index: number) => void;
 }
 
-const iconMap = {
-  home: require("../../assets/sel_home.png"), // 홈 아이콘 이미지
-  home2: require("../../assets/unsel_home.png"), // 홈 아이콘 이미지
-  chart: require("../../assets/sel_chart.png"), // 프로필 아이콘 이미지
-  chart2: require("../../assets/unsel_chart.png"), // 프로필 아이콘 이미지
-  search: require("../../assets/sel_search.png"),
-  search2: require("../../assets/unsel_search.png"),
-  like: require("../../assets/sel_like.png"),
-  like2: require("../../assets/unsel_like.png"),
-};
+const BottomBar: React.FC<BottomBarProps> = ({ onClickButton }) => {
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const isPage = useSelector((state: AppState) => state.isPage);
 
-const BottomTabBar: React.FC<BottomTabBarProps> = ({
-  state,
-  descriptors,
-  navigation,
-}) => {
   return (
-    <View style={styles.box}>
-      {state.routes.map((route: any, index: number) => {
-        const { options } = descriptors[route.key];
-        const label =
-          options.tabBarLabel !== undefined
-            ? options.tabBarLabel
-            : options.title !== undefined
-            ? options.title
-            : route.name;
-
-        const isFocused = state.index === index;
-
-        const onPress = () => {
-          const event = navigation.emit({
-            type: "tabPress",
-            target: route.key,
-            canPreventDefault: true,
-          });
-
-          if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name);
-          }
-        };
-        var name = route.name;
-        if (!isFocused) {
-          name = route.name + "2";
-        }
-
-        const iconSource = iconMap[name]; // 해당 라우트에 대한 이미지 소스 가져오기
-
-        return (
-          <TouchableOpacity
-            key={route.key}
-            accessibilityRole="button"
-            accessibilityState={isFocused ? { selected: true } : {}}
-            accessibilityLabel={options.tabBarAccessibilityLabel}
-            testID={options.tabBarTestID}
-            onPress={onPress}
-            style={styles.btn}
-          >
-            <Image source={iconSource} style={{ width: 24, height: 24 }} />
-            <Text style={{ color: isFocused ? "#FFFFFF" : "#90FFF8" }}>
-              {label}
-            </Text>
-          </TouchableOpacity>
-        );
-      })}
-    </View>
+    <>
+      {location.pathname === "/" ||
+      location.pathname === "/chart" ||
+      location.pathname === "/search" ||
+      location.pathname === "/like" ? (
+        <div className={styled.Navbar}>
+          <div className={styled.iconbar}>
+            <div
+              className={`${styled.iconbtn} ${
+                isPage === 1 ? styled.sel_icon : null
+              }`}
+              onClick={() => {
+                onClickButton(0);
+                dispatch(setPage(1));
+              }}
+            >
+              <img
+                src={`${
+                  isPage === 1 ? `assets/sel_home.png` : `assets/unsel_home.png`
+                }`}
+                alt=""
+              />
+              홈
+            </div>
+            <div
+              className={`${styled.iconbtn} ${
+                isPage === 2 ? styled.sel_icon : null
+              }`}
+              onClick={() => {
+                onClickButton(1);
+                dispatch(setPage(2));
+              }}
+            >
+              <img
+                src={`${
+                  isPage === 2
+                    ? `assets/sel_chart.png`
+                    : `assets/unsel_chart.png`
+                }`}
+                alt=""
+              />
+              차트
+            </div>
+            <div
+              className={`${styled.iconbtn} ${
+                isPage === 3 ? styled.sel_icon : null
+              }`}
+              onClick={() => {
+                onClickButton(2);
+                dispatch(setPage(3));
+              }}
+            >
+              <img
+                src={`${
+                  isPage === 3
+                    ? `assets/sel_search.png`
+                    : `assets/unsel_search.png`
+                }`}
+                alt=""
+              />
+              검색
+            </div>
+            <div
+              className={`${styled.iconbtn} ${
+                isPage === 4 ? styled.sel_icon : null
+              }`}
+              onClick={() => {
+                onClickButton(3);
+                dispatch(setPage(4));
+              }}
+            >
+              <img
+                src={`${
+                  isPage === 4 ? `assets/sel_like.png` : `assets/unsel_like.png`
+                }`}
+                alt=""
+              />
+              좋아요
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 };
-const styles = StyleSheet.create({
-  box: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    height: 90,
-    borderTopColor: "#90FFF8",
-    borderTopWidth: 2,
-  },
-  btn: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
-
-export default BottomTabBar;
+export default BottomBar;
