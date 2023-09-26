@@ -23,6 +23,7 @@ import GenreSurvey from "./pages/account/genresurvey";
 import SocialSignUp from "./pages/account/socialsignup";
 import MyPage from "./pages/account/mypage";
 import FindPassWord from "./pages/account/findpw";
+import MusicDetail from "./pages/musicDetail";
 
 function App() {
   // BottomBar 관련 상태
@@ -45,20 +46,37 @@ function App() {
       setWindowWidth(window.innerWidth);
       setWindowHeight(window.innerHeight);
     };
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   return (
-    <div className="App" 
-    style={{height:`${windowHeight >= windowWidth *1.7 && windowWidth*2.35 >= windowHeight ? '100vh' : 
-            windowHeight < windowWidth *1.7 ? '100vh': `${windowWidth*2.35}px`}`, 
-            width:`${windowHeight >= windowWidth *1.7 && windowWidth*2.35 >= windowHeight ? '100vw' : 
-            windowHeight < windowWidth *1.7 ? `${windowHeight/1.7}px`:'100vw'}`}}>
-      <Topbar/>
+    <div
+      className="App"
+      style={{
+        height: `${
+          windowHeight >= windowWidth * 1.7 &&
+          windowWidth * 2.35 >= windowHeight
+            ? "100vh"
+            : windowHeight < windowWidth * 1.7
+            ? "100vh"
+            : `${windowWidth * 2.35}px`
+        }`,
+        width: `${
+          windowHeight >= windowWidth * 1.7 &&
+          windowWidth * 2.35 >= windowHeight
+            ? "100vw"
+            : windowHeight < windowWidth * 1.7
+            ? `${windowHeight / 1.7}px`
+            : "100vw"
+        }`,
+        overflow: "hidden",
+      }}
+    >
+      <Topbar />
       <AnimatePresence initial={false} mode="wait">
         <motion.div
           key={location.pathname}
@@ -68,8 +86,8 @@ function App() {
           variants={PageVariants}
           transition={PageTransition}
           custom={isForwardDirection}
-          id='motiondiv'
-          style={{height:'75%'}}
+          id="motiondiv"
+          style={{ height: "75%" }}
         >
           <Routes location={location}>
             {/* Bottom Bar */}
@@ -94,6 +112,7 @@ function App() {
         </motion.div>
       </AnimatePresence>
       <BottomBar onClickButton={cl} />
+      <MusicDetail windowWidth={windowWidth} windowHeight={windowHeight} />
     </div>
   );
 }
