@@ -17,7 +17,7 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @Getter
-@RequestMapping("/music/analyze")
+@RequestMapping("/api/music/analyze")
 public class MusicAnalyzeController {
 
     private final MusicAnalyzeService musicAnalyzeService;
@@ -36,6 +36,6 @@ public class MusicAnalyzeController {
     public ResponseEntity<?> getVoiceMatchingList(@RequestBody VoiceMatchingListRequestDto voiceMatchingListRequestDto) throws IOException {
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(musicAnalyzeService.processVoiceAndReturnPath(voiceMatchingListRequestDto.getVoiceFile()));
+                .body(musicAnalyzeService.getVoiceMatchingList(voiceMatchingListRequestDto.getVoiceFile()));
     }
 }
