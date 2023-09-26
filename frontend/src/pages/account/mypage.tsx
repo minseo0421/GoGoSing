@@ -2,8 +2,29 @@ import React,{useEffect} from "react";
 import styles from './mypage.module.css'
 import axios from "axios";
 import { Link } from "react-router-dom";
+import axiosInstance from "../../axiosinstance";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../../store/actions";
 
 const MyPage: React.FC = () => {
+    const dispatch = useDispatch()
+    const logout = () => {
+        const AccessToken = localStorage.getItem('AccessToken')
+        dispatch(setLogin(null))
+        axiosInstance({
+            method:'get',
+            url:`${process.env.REACT_APP_API_URL}/user/logout`,
+            headers:{
+                Authorization: 'Bearer ' + AccessToken,
+            }
+        }).then(res=>{
+            console.log(res)
+        }).catch(err=>{
+            console.log(err)
+        })
+        localStorage.removeItem('AccessToken')
+        localStorage.removeItem('RefreshToken')
+    }
     useEffect(()=>{
         axios({
             method:'get',
@@ -34,7 +55,7 @@ const MyPage: React.FC = () => {
             <div style={{justifyContent:'space-around',display:'flex', width:'100%', padding:'0 5% 10% 5%',boxSizing:'border-box'}}>
                 <button style={{width:'40%',borderRadius:'2rem',height:'45px',backgroundColor:'red'}}>회원정보 수정</button>
                 <button style={{width:'40%',borderRadius:'2rem',height:'45px',backgroundColor:'green'}}
-                onClick={()=>{localStorage.removeItem('usertoken')}}>로그아웃</button>
+                onClick={()=>logout}>로그아웃</button>
             </div>
         </div>
         <div style={{display:'flex', width:'90%', justifyContent:'space-between', padding:'0 5%', alignItems:'center'}}>

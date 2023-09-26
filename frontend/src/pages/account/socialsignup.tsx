@@ -7,6 +7,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axiosInstance from '../../axiosinstance';
 import ko from 'date-fns/locale/ko';
+import { useDispatch } from 'react-redux';
+import { setLogin } from '../../store/actions';
 
 const validationSchema = Yup.object().shape({
     nickname: Yup.string()
@@ -22,6 +24,7 @@ const validationSchema = Yup.object().shape({
 
 const SocialSignUp: React.FC = () => {
     const navigate = useNavigate();
+    const dispath = useDispatch();
     const [isCheckNickname, setCheckNickname] = useState(false) //닉네임 중복검사 체크변수
     const [selectedDate, setSelectedDate] = useState<Date|null>(null);
     const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
@@ -62,15 +65,20 @@ const SocialSignUp: React.FC = () => {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
+            const AccessToken = localStorage.getItem('AccessToken')
             // 회원가입 요청 로직 -> 로그인 처리까지
             axiosInstance({
                 method:'post',
-                url:`${process.env.REACT_APP_API_URL}/user/signup`,
+                url:`${process.env.REACT_APP_API_URL}/user/signup-plus`,
                 data:{'nickname':values.nickname,
                 'gender':values.gender,
                 'birth':values.birthday},
+                headers:{
+                    Authorization: 'Bearer ' + AccessToken,
+                }
             }).then(res=>{
                 console.log(res)
+                dispath(setLogin(res.data))
                 navigate('/')
             }).catch(err=>{
                 console.log(err)

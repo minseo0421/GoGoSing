@@ -9,7 +9,7 @@ import styles from './mainhome.module.css'
 const MainHome: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const usertoken = localStorage.getItem('usertoken')
+  const AccessToken = localStorage.getItem('AccessToken')
   useEffect(() => {
     dispatch(setPage(1));
   }, [dispatch]);
@@ -17,7 +17,7 @@ const MainHome: React.FC = () => {
     <div style={{height:'88vh'}}>
       <div  className={styles.topbar}>
         <img src="assets/logo.png" alt="" style={{ width: "20%" }} />
-        {usertoken ? 
+        {AccessToken ? 
         <img src="assets/default_user.png" alt="" style={{ width: "15%"}} onClick={()=>navigate('/mypage')} />: 
         <Link style={{ color: "white" }} to="/login">Login</Link>
         }
