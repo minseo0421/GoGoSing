@@ -26,7 +26,6 @@ const LocalLogin: React.FC = () => {
       })
     }  
     const login = () => {
-      console.log(123)
       axios({
         method:'post',
         url:`${process.env.REACT_APP_API_URL}/login`,
@@ -37,13 +36,12 @@ const LocalLogin: React.FC = () => {
         localStorage.setItem('RefreshToken',res.headers['authorization-refresh']);
         getuserdata(token)
         if (res.headers['user_role']==='first') {
-          navigate('/genreservey')
+          navigate('/genresurvey')
         } else {
           navigate('/')}
       }).catch(err=>{
         console.log(err)
       })
-      console.log(1243)
     }
 
     return (

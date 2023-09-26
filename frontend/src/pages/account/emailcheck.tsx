@@ -24,6 +24,7 @@ const EmailCheck: React.FC<Props> = ({email,closemodal,success}) => {
             closemodal();
           }
       }, [isTime,closemodal]);
+
     const checknum = () => {
         axios({
             method:'post',
@@ -31,6 +32,7 @@ const EmailCheck: React.FC<Props> = ({email,closemodal,success}) => {
             data:{email:email,certificationNumber:isNum}
         }).then(res=>{
             success(isNum)
+            closemodal()
             alert('인증성공! 회원가입을 계속 진행해주세요.')
         }).catch(err=>{
             alert('인증실패')
