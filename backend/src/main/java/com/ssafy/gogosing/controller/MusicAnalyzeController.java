@@ -17,7 +17,7 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @Getter
-@RequestMapping("/music/analyze")
+@RequestMapping("/api/music/analyze")
 public class MusicAnalyzeController {
 
     private final MusicAnalyzeService musicAnalyzeService;
