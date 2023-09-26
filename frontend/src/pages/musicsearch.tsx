@@ -1,13 +1,23 @@
-// MainHome.js
-import React from 'react';
-import { View, Text, Button } from 'react-native';
+import React, { useEffect } from "react";
 
-const MusicSearch = () => {
+import { setPage } from "../store/actions";
+import { useDispatch } from "react-redux";
+import styles from './musicsearch.module.css'
+
+const MusicSearch: React.FC = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setPage(3));
+  }, [dispatch]);
   return (
-    <View>
-      <Text>Search</Text>
-    </View>
+    <>
+      <div  className={styles.topbar}>
+        <p>검색</p>
+      </div>
+      <div style={{height:'75vh', overflow:'auto'}}>
+          {/* 여기가 메인 영역 */}
+      </div>
+    </>
   );
 };
-
 export default MusicSearch;
