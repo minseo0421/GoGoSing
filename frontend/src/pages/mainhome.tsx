@@ -12,9 +12,8 @@ const MainHome: React.FC = () => {
   const dispatch = useDispatch();
   const isLogin = useSelector((state: AppState) => state.isLogin);
   useEffect(() => {
-    console.log(isLogin)
     dispatch(setPage(1));
-  }, [dispatch,isLogin]);
+  }, [dispatch]);
   return (
     <div style={{height:'88vh'}}>
       <div  className={styles.topbar}>
