@@ -35,12 +35,13 @@ public class EmailService {
 
     public MailContentDto createCertificationMailAndSaveRedis(String userEmail) throws NoSuchAlgorithmException {
         System.out.println("=======createCertificationMailAndSaveRedis 함수 호출==========");
-        String certificationNumber = getCertificationNumber();
+//        String certificationNumber = getCertificationNumber();
 
         String message = "";
         message += "<h3>" + "요청하신 인증 번호입니다." + "</h3>";
-        message += "<h1>" + certificationNumber + "</h1>";
+        message += "<h1>" + "1111" + "</h1>";
         message += "<h3>" + "감사합니다." + "</h3>";
+        System.out.println("=======createCertificationMailAndSaveRedis 함수 호출 중==========");
         MailContentDto mailContentDto = MailContentDto.builder()
                 .address(userEmail)
                 .title("GoGoSing 인증 이메일 입니다.")
