@@ -12,7 +12,129 @@ const DatePicker: React.FC<Props> = ({onCalendar,birth,onBirth}) => {
   const [year, setYear] = useState<number>(birthday!==null ? birthday.getFullYear():today.getFullYear());
   const [month, setMonth] = useState<number>(birthday!==null ? birthday.getMonth()+1:today.getMonth()+1);
   const [day, setDay] = useState<number>(birthday!==null ? birthday.getDate():today.getDate());
+  const handleTouchScroll = (e: React.TouchEvent<HTMLDivElement>, type: string) => {
+    // 터치 스크롤 방향을 확인합니다.
+    const touchStartY = e.touches[0].clientY;
+    const touchMoveY = e.touches[0].clientY;
+  
+    // 위로 스크롤
+    if (touchMoveY < touchStartY) {
+      handleScrollUp(type);
+    }
+    // 아래로 스크롤
+    else if (touchMoveY > touchStartY) {
+      handleScrollDown(type);
+    }
+  };
 
+  const handleScrollUp = (type: string) => {
+    if (type === 'year') {
+      // 연도를 증가시키는 처리
+      const newYear = Math.min(2023, Math.max(1900, year + 1));
+      setYear(newYear);
+      
+      // 연도가 현재 연도와 같으면 월과 일에 대한 처리
+      if (newYear === today.getFullYear()) {
+        if (month > today.getMonth() + 1) {
+          setMonth(1);
+          setDay(1);
+        } else if (month === today.getMonth() + 1 && day > today.getDate()) {
+          setDay(1);
+        }
+      }
+    } else if (type === 'month') {
+      // 월을 증가시키는 처리
+      const newMonth = month + 1;
+      if (newMonth > 12) {
+        setYear((prevYear) => prevYear + 1);
+        setMonth(1);
+      } else {
+        setMonth(newMonth);
+      }
+    } else if (type === 'day') {
+      // 일을 증가시키는 처리
+      const daysInSelectedMonth = getDaysInMonth(year, month);
+      const newDay = day + 1;
+      if (newDay > daysInSelectedMonth) {
+        if (month === 12) {
+          setYear((prevYear) => prevYear + 1);
+          setMonth(1);
+          setDay(1);
+        } else {
+          setMonth((prevMonth) => prevMonth + 1);
+          setDay(1);
+        }
+      } else {
+        setDay(newDay);
+      }
+    }
+  };
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+
+// 터치 시작 시
+const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+  setTouchStartY(e.touches[0].clientY);
+};
+
+// 터치 종료 시
+const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+  if (touchStartY !== null) {
+    const touchEndY = e.changedTouches[0].clientY;
+
+    // 터치 시작과 종료 지점을 비교하여 스크롤 방향을 확인
+    if (touchEndY < touchStartY) {
+      // 아래로 스크롤
+      handleScrollDown('day'); // 원하는 스크롤 방향에 따라 변경
+    } else if (touchEndY > touchStartY) {
+      // 위로 스크롤
+      handleScrollUp('day'); // 원하는 스크롤 방향에 따라 변경
+    }
+
+    // 터치 시작 지점 초기화
+    setTouchStartY(null);
+  }
+};
+  const handleScrollDown = (type: string) => {
+    if (type === 'year') {
+      // 연도를 감소시키는 처리
+      const newYear = Math.min(2023, Math.max(1900, year - 1));
+      setYear(newYear);
+      
+      // 연도가 현재 연도와 같으면 월과 일에 대한 처리
+      if (newYear === today.getFullYear()) {
+        if (month > today.getMonth() + 1) {
+          setMonth(1);
+          setDay(1);
+        } else if (month === today.getMonth() + 1 && day > today.getDate()) {
+          setDay(1);
+        }
+      }
+    } else if (type === 'month') {
+      // 월을 감소시키는 처리
+      const newMonth = month - 1;
+      if (newMonth < 1) {
+        setYear((prevYear) => prevYear - 1);
+        setMonth(12);
+      } else {
+        setMonth(newMonth);
+      }
+    } else if (type === 'day') {
+      // 일을 감소시키는 처리
+      const newDay = day - 1;
+      if (newDay < 1) {
+        if (month === 1) {
+          setYear((prevYear) => prevYear - 1);
+          setMonth(12);
+          setDay(getDaysInMonth(year - 1, 12));
+        } else {
+          setMonth((prevMonth) => prevMonth - 1);
+          setDay(getDaysInMonth(year, month - 1));
+        }
+      } else {
+        setDay(newDay);
+      }
+    }
+  };
   const handleScroll = (e: React.WheelEvent<HTMLDivElement>, type: string) => {
     const delta = e.deltaY;
 
@@ -130,7 +252,7 @@ const DatePicker: React.FC<Props> = ({onCalendar,birth,onBirth}) => {
     </div>
     <div className={styled.input_calender}>
 
-      <div style={{width:'50%'}} onWheel={(e) => handleScroll(e, 'year')} ref={yearRef}>
+      <div style={{width:'50%'}} onWheel={(e) => handleScroll(e, 'year')} onTouchMove={(e) => handleTouchScroll(e, 'year')}  ref={yearRef}  onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         {generateValuesArray(year).map((value, index) => (
             <div key={index} className={`${value === year ? styled.selected : null}`}>
             {/* 범위 내에서만 출력 */}
@@ -145,7 +267,7 @@ const DatePicker: React.FC<Props> = ({onCalendar,birth,onBirth}) => {
           </div>
         ))}
       </div>
-      <div style={{width:'25%'}} onWheel={(e) => handleScroll(e, 'month')} ref={monthRef}>
+      <div style={{width:'25%'}} onWheel={(e) => handleScroll(e, 'month')}  onTouchMove={(e) => handleTouchScroll(e, 'month')}  ref={monthRef}  onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         {generateValuesArray(month).map((value, index) => (
             <div key={index} className={`${value===month ? styled.selected:null}`}>
             {/* 범위 내에서만 출력 */}
@@ -171,7 +293,7 @@ const DatePicker: React.FC<Props> = ({onCalendar,birth,onBirth}) => {
           </div>
         ))}
       </div>
-      <div style={{width:'25%'}} onWheel={(e) => handleScroll(e, 'day')} ref={dayRef}>
+      <div style={{width:'25%'}} onWheel={(e) => handleScroll(e, 'day')}  onTouchMove={(e) => handleTouchScroll(e, 'day')}  ref={dayRef}  onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         {generateValuesArray(day).map((value, index) => (
             <div key={index} className={`${value === day ? styled.selected : null}`}>
             {/* 범위 내에서만 출력 */}
