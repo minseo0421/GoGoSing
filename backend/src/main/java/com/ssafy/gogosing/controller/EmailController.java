@@ -25,10 +25,8 @@ public class EmailController {
     @ApiOperation(value = "이메일 인증번호 전송")
     @PostMapping("/send-certification")
     public ResponseEntity<?> sendCertificationNumber(@Valid @RequestBody SpendCertificationNumberRequestDto spendEmailRequestDto) throws Exception {
-        System.out.println("======컨트롤러 진입======");
         MailContentDto mailContentDto = emailCertificationService.createCertificationMailAndSaveRedis(spendEmailRequestDto.getEmail());
         emailCertificationService.sendMail(mailContentDto);
-        System.out.println("======service 종료======");
         return ResponseEntity.ok().body("이메일 인증번호가 전송 완료되었습니다.");
     }
 
