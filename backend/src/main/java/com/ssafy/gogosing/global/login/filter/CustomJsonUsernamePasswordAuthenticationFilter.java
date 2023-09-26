@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    private static final String DEFAULT_LOGIN_REQUEST_URL = "/login";
+    private static final String DEFAULT_LOGIN_REQUEST_URL = "/api/login";
 
     private static final String HTTP_METHOD = "POST";
 
