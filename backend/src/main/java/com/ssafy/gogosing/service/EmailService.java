@@ -17,6 +17,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Random;
 
 @RequiredArgsConstructor
 @Service
@@ -34,40 +35,35 @@ public class EmailService {
     private String senderEmail;
 
     public MailContentDto createCertificationMailAndSaveRedis(String userEmail) throws NoSuchAlgorithmException {
-        System.out.println("=======createCertificationMailAndSaveRedis 함수 호출==========");
-//        String certificationNumber = getCertificationNumber();
+        String certificationNumber = getCertificationNumber();
 
         String message = "";
         message += "<h3>" + "요청하신 인증 번호입니다." + "</h3>";
-        message += "<h1>" + "1111" + "</h1>";
+        message += "<h1>" + certificationNumber + "</h1>";
         message += "<h3>" + "감사합니다." + "</h3>";
-        System.out.println("=======createCertificationMailAndSaveRedis 함수 호출 중==========");
         MailContentDto mailContentDto = MailContentDto.builder()
                 .address(userEmail)
                 .title("GoGoSing 인증 이메일 입니다.")
                 .message(message).build();
 
-//        certificationNumberDao.saveCertificationNumber(userEmail, certificationNumber);
-        System.out.println("=======createCertificationMailAndSaveRedis 함수 종료==========");
+        certificationNumberDao.saveCertificationNumber(userEmail, certificationNumber);
 
         return mailContentDto;
     }
 
     private static String getCertificationNumber() throws NoSuchAlgorithmException {
-        String result;
+        Random random = new Random();
 
-        do {
-            int i = SecureRandom.getInstanceStrong().nextInt(999999);
-            result = String.valueOf(i);
-        } while (result.length() != 6);
+        // 6자리 숫자 생성
+        String randomNumber = String.valueOf(100000 + random.nextInt(900000));
 
-        return result;
+        return randomNumber;
     }
 
     public void verifyEmail(String certificationNumber, String email) {
-//        if (isVerify(certificationNumber, email)) {
-//            throw new RuntimeException("이메일 인증을 실패하였습니다.");
-//        }
+        if (isVerify(certificationNumber, email)) {
+            throw new RuntimeException("이메일 인증을 실패하였습니다.");
+        }
     }
 
     private boolean isVerify(String certificationNumber, String email) {
@@ -87,11 +83,10 @@ public class EmailService {
         String tempPassword = getTempPassword();
 
         String message = "";
-        message += "안녕하세요. GoGoSing 임시비밀번호 안내 관련 이메일 입니다.";
+        message += "안녕하세요.<br/>요청하신 임시비밀번호 입니다.";
         message += "<div style='margin:100px;'>";
         message +=
                 "<div align='center' style='border:1px solid black; font-family:verdana';>";
-        message += "<h3 style='color:blue;'>임시 비밀번호입니다.</h3>";
         message += "<div style='font-size:130%'>";
         message += "CODE : <strong>";
         message += tempPassword + "</strong><div><br/> ";
@@ -128,7 +123,6 @@ public class EmailService {
     }
 
     public void sendMail(MailContentDto mailContentDto) throws MessagingException {
-        System.out.println("====sendMail 함수 호출======");
         MimeMessage message = javaMailSender.createMimeMessage();
 
         try {
@@ -139,15 +133,6 @@ public class EmailService {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-
-//        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-//
-//        helper.setTo(mailContentDto.getAddress());
-//        helper.setFrom(this.senderEmail);
-//        helper.setSubject(mailContentDto.getTitle());
-//        helper.setText(mailContentDto.getMessage(), true); // 두 번째 인자가 true면 HTML 형식으로 메시지 전송 가능
-        System.out.println("====javaMailSender send 전======");
         javaMailSender.send(message);
-        System.out.println("====javaMailSender send 후======");
     }
 }
