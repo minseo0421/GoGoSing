@@ -26,6 +26,7 @@ const LocalLogin: React.FC = () => {
       })
     }  
     const login = () => {
+      console.log(123)
       axios({
         method:'post',
         url:`${process.env.REACT_APP_API_URL}/login`,
@@ -38,11 +39,11 @@ const LocalLogin: React.FC = () => {
         if (res.headers['user_role']==='first') {
           navigate('/genreservey')
         } else {
-          navigate('/')
-        }
+          navigate('/')}
       }).catch(err=>{
         console.log(err)
       })
+      console.log(1243)
     }
 
     return (
@@ -53,7 +54,7 @@ const LocalLogin: React.FC = () => {
             <p></p>
             <input className={styled.input_account} type="password" placeholder="비밀번호" value={password} onChange={(e)=>setPassword(e.target.value)} autoComplete='current-password' />
             <p></p>
-            <button type='button' onSubmit={()=>login()}  className={styled.signup_btn}>로그인</button>
+            <button type='button' onClick={()=>login()}  className={styled.signup_btn}>로그인</button>
         </form>
         <Link className={styled.link} to='/findpw'>비밀번호 찾기</Link>
         <Link className={styled.link} to='/signup'>회원가입</Link>
