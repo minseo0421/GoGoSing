@@ -113,27 +113,3 @@
     margin:auto;
     border-radius: 0.5rem;
 }
-
-
-.myprofile {
-    width: 100%;
-    background-image: url('../../../public/assets/mypage_back.png');
-    background-size: cover;
-    display: flex;
-}
-
-.myinfo {
-    margin:10%;
-    display: flex;
-    width: 100%;
-}
-
-.myinfo img {
-    width:30%
-}
-.info {
-    padding: 0 5%;
-    box-sizing: border-box;
-    width: 70%;
-    text-align: start;
-}
