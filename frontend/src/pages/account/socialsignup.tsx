@@ -30,7 +30,7 @@ const SocialSignUp: React.FC = () => {
         // 닉네임 중복 체크 axios 작성
         axios({
             method:'get',
-            url:`${process.env.REACT_APP_URL}/api/user/signup-plus`,
+            url:`${process.env.REACT_APP_API_URL}/user/signup-plus`,
         }).then(res=>{
             console.log(res)
             setCheckNickname(true)
@@ -50,7 +50,7 @@ const SocialSignUp: React.FC = () => {
             // 회원가입 요청 로직 -> 로그인 처리까지
             axiosInstance({
                 method:'post',
-                url:`${process.env.REACT_APP_URL}/api/user/signup-plus`,
+                url:`${process.env.REACT_APP_API_URL}/user/signup-plus`,
                 data:{'gender':values.gender,
                     'birthday':values.birthday,
                     'nickname':values.nickname}

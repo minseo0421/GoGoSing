@@ -3,7 +3,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import styled from './account.module.css'
 import { useNavigate } from 'react-router-dom';
-import DatePicker from '../../components/datepicker';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import axiosInstance from '../../axiosinstance';
 
 const validationSchema = Yup.object().shape({
@@ -36,8 +37,17 @@ const SignUp: React.FC = () => {
     const [firstStep, setStep] = useState(false);
     const [isCheckEmail, setCheckEmail] = useState(false) //이메일 중복검사 체크변수
     const [isCheckNickname, setCheckNickname] = useState(false) //닉네임 중복검사 체크변수
-    const [isCalender, setCalender] = useState(false);
-    
+    const [selectedDate, setSelectedDate] = useState<Date|null>(null);
+    const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  
+    const handleDateChange = (date:Date) => {
+      setSelectedDate(date);
+      formik.setFieldValue('birthday',date.toISOString().split('T')[0])
+    };
+  
+    const openDatePicker = () => {
+      setIsDatePickerOpen(!isDatePickerOpen);
+    };
     const emailcheck = (email:string) => {
         // 지금은 지나가기위한 true 처리 나중에 지워야함
         setCheckEmail(true)
@@ -45,7 +55,7 @@ const SignUp: React.FC = () => {
         // 이메일 중복 체크 axiosInstance 작성
         axiosInstance({
             method:'get',
-            url:`${process.env.REACT_APP_URL}/api/user/signup`,
+            url:`${process.env.REACT_APP_API_URL}/user/signup`,
         }).then(res=>{
             console.log(res)
             setCheckEmail(true)
@@ -60,7 +70,7 @@ const SignUp: React.FC = () => {
         // 닉네임 중복 체크 axiosInstance 작성
         axiosInstance({
             method:'get',
-            url:`${process.env.REACT_APP_URL}/api/user/signup`,
+            url:`${process.env.REACT_APP_API_URL}/user/signup`,
         }).then(res=>{
             console.log(res)
             setCheckNickname(true)
@@ -83,7 +93,7 @@ const SignUp: React.FC = () => {
             // 회원가입 요청 로직 -> 로그인 처리까지
             axiosInstance({
                 method:'post',
-                url:`${process.env.REACT_APP_URL}/api/user/signup`,
+                url:`${process.env.REACT_APP_API_URL}/user/signup`,
                 data:{'email':values.email,
                 'password':values.password,
                 'nickname':values.nickname,
@@ -102,7 +112,7 @@ const SignUp: React.FC = () => {
     
     return (
       <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', width:'100%'}}>
-        {isCalender ? <span style={{margin:'30px'}}></span>:<img src="assets/logo.png" alt="" style={{margin:'40% 0 30% 0'}}/>}
+        {isDatePickerOpen ? <span style={{margin:'30px'}}></span>:<img src="assets/logo.png" alt="" style={{margin:'40% 0 30% 0'}}/>}
         {/* 회원가입 form */}
         <form onSubmit={formik.handleSubmit} style={{width:'80%'}}>
             {firstStep ? 
@@ -161,18 +171,24 @@ const SignUp: React.FC = () => {
                 {formik.values.gender === '' ? <span>　</span> : formik.errors.gender ? <span>{formik.errors.gender}</span> : formik.errors.gender ? <span>성별을 선택해주세요.</span>:<span style={{color:'green'}}>성별 선택완료</span>}
                 </p>
 
-                <button className={styled.input_account} type='button' onClick={()=>{setCalender(true)
-                    const divElement = document.getElementById('motiondiv');
-                    if (divElement) {
-                        divElement.style.transform = 'none';
-                    }
-                    }}>
+                <button className={styled.input_account} type='button' onClick={()=>{openDatePicker()}}>
                     {formik.values.birthday === null ? '생년월일을 선택해주세요.' : new Date(formik.values.birthday).toLocaleDateString('ko-KR', {
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit',
                     })}
                 </button>
+
+                {isDatePickerOpen && (
+                    <DatePicker
+                    selected={selectedDate}
+                    onChange={handleDateChange}
+                    dateFormat="yyyy/MM/dd"
+                    inline
+                    readOnly
+                    />
+                )}
+
                 <p style={{fontSize:'8px', fontWeight:'bold', textAlign:'left'}}>
                     {formik.values.birthday === null ? <span>　</span> : formik.errors.birthday ? <span style={{color:'red'}}>{formik.errors.birthday}</span> : <span style={{color:'green'}}>생년월일 입력완료</span>}
                 </p>
@@ -187,9 +203,6 @@ const SignUp: React.FC = () => {
             
             }
         </form>
-        {isCalender ? 
-            <DatePicker onCalendar={()=>setCalender(false)} birth={formik.values.birthday} onBirth={(value)=>{formik.setFieldValue('birthday',value)}}/>
-        :null}
       </div>
     );
 }

@@ -22,6 +22,7 @@ import GenreSurvey from "./pages/account/genresurvey";
 import SocialSignUp from "./pages/account/socialsignup";
 import MyPage from "./pages/account/mypage";
 import FindPassWord from "./pages/account/findpw";
+import SocialLogin from "./pages/account/sociallogin";
 
 function App() {
   // BottomBar 관련 상태
@@ -79,6 +80,7 @@ function App() {
             <Route path="/locallogin" element={<LocalLogin />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/socialsignup" element={<SocialSignUp />} />
+            <Route path="/sociallogin" element={<SocialLogin />} />
             <Route path="/genresurvey" element={<GenreSurvey />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/findpw" element={<FindPassWord />} />
