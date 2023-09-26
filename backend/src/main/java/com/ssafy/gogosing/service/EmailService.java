@@ -34,6 +34,7 @@ public class EmailService {
     private String senderEmail;
 
     public MailContentDto createCertificationMailAndSaveRedis(String userEmail) throws NoSuchAlgorithmException {
+        System.out.println("=======createCertificationMailAndSaveRedis 함수 호출==========");
         String certificationNumber = getCertificationNumber();
 
         String message = "";
@@ -45,7 +46,8 @@ public class EmailService {
                 .title("GoGoSing 인증 이메일 입니다.")
                 .message(message).build();
 
-        certificationNumberDao.saveCertificationNumber(userEmail, certificationNumber);
+//        certificationNumberDao.saveCertificationNumber(userEmail, certificationNumber);
+        System.out.println("=======createCertificationMailAndSaveRedis 함수 종료==========");
 
         return mailContentDto;
     }
