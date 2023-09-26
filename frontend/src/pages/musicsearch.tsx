@@ -1,11 +1,13 @@
+// MainHome.js
 import React from 'react';
+import { View, Text, Button } from 'react-native';
 
-const MusicSearch: React.FC = () => {
-    return (
-      <div>
-        <h1>MusicSearch 입니당</h1>
-      </div>
-    );
-}
+const MusicSearch = () => {
+  return (
+    <View>
+      <Text>Search</Text>
+    </View>
+  );
+};
+
 export default MusicSearch;
-  

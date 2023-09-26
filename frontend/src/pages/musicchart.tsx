@@ -1,11 +1,12 @@
 import React from 'react';
+import { View, Text, Button } from 'react-native';
 
-const MusicChart: React.FC = () => {
-    return (
-      <div>
-        <h1>MusicChart 입니당</h1>
-      </div>
-    );
-}
+const MusicChart = () => {
+  return (
+    <View>
+      <Text>Chart</Text>
+    </View>
+  );
+};
+
 export default MusicChart;
-  
