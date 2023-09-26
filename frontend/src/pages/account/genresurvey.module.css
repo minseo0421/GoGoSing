@@ -1,20 +1,16 @@
 .container {
-
-    
+    height: 97vh;
 }
 
 .genrelist {
     width: 80%;
-    margin: auto;
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 30px;
+    margin: 10% auto;
 }
 
 .genre {
     border-radius: 50%;
-    width: 75px;
-    height: 75px;
+    width: 90px;
+    height: 90px;
     background-color: red;
     margin:10px;
     cursor: pointer;
