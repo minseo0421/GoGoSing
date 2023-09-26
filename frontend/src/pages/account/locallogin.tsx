@@ -36,10 +36,9 @@ const LocalLogin: React.FC = () => {
         localStorage.setItem('RefreshToken',res.headers['authorization-refresh']);
         getuserdata(token)
         if (res.headers['user_role']==='first') {
-          navigate('/genreservey')
+          navigate('/genresurvey')
         } else {
-          navigate('/')
-        }
+          navigate('/')}
       }).catch(err=>{
         console.log(err)
       })
@@ -53,7 +52,7 @@ const LocalLogin: React.FC = () => {
             <p></p>
             <input className={styled.input_account} type="password" placeholder="비밀번호" value={password} onChange={(e)=>setPassword(e.target.value)} autoComplete='current-password' />
             <p></p>
-            <button type='button' onSubmit={()=>login()}  className={styled.signup_btn}>로그인</button>
+            <button type='button' onClick={()=>login()}  className={styled.signup_btn}>로그인</button>
         </form>
         <Link className={styled.link} to='/findpw'>비밀번호 찾기</Link>
         <Link className={styled.link} to='/signup'>회원가입</Link>
