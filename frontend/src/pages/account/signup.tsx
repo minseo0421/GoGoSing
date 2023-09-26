@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axiosInstance from '../../axiosinstance';
+import ko from 'date-fns/locale/ko';
 
 const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -34,7 +35,7 @@ const validationSchema = Yup.object().shape({
 
 const SignUp: React.FC = () => {
     const navigate = useNavigate();
-    const [firstStep, setStep] = useState(false);
+    const [firstStep, setStep] = useState(true);
     const [isCheckEmail, setCheckEmail] = useState(false) //이메일 중복검사 체크변수
     const [isCheckNickname, setCheckNickname] = useState(false) //닉네임 중복검사 체크변수
     const [selectedDate, setSelectedDate] = useState<Date|null>(null);
@@ -42,7 +43,10 @@ const SignUp: React.FC = () => {
   
     const handleDateChange = (date:Date) => {
       setSelectedDate(date);
-      formik.setFieldValue('birthday',date.toISOString().split('T')[0])
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      formik.setFieldValue('birthday',`${year}-${month}-${day}`)
     };
   
     const openDatePicker = () => {
@@ -172,11 +176,7 @@ const SignUp: React.FC = () => {
                 </p>
 
                 <button className={styled.input_account} type='button' onClick={()=>{openDatePicker()}}>
-                    {formik.values.birthday === null ? '생년월일을 선택해주세요.' : new Date(formik.values.birthday).toLocaleDateString('ko-KR', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                    })}
+                    {formik.values.birthday === null ? '생년월일을 선택해주세요.' : `${formik.values.birthday}`}
                 </button>
 
                 {isDatePickerOpen && (
@@ -184,8 +184,17 @@ const SignUp: React.FC = () => {
                     selected={selectedDate}
                     onChange={handleDateChange}
                     dateFormat="yyyy/MM/dd"
+                    locale={ko}
                     inline
                     readOnly
+                    minDate={new Date('1900-01-01')}
+                    maxDate={new Date()}
+                    // scrollableYearDropdown
+                    // scrollableMonthYearDropdown
+                    // scrollableYearDropdown
+                    showMonthDropdown
+                    showYearDropdown
+                    dropdownMode="select"
                     />
                 )}
 
@@ -194,13 +203,12 @@ const SignUp: React.FC = () => {
                 </p>
 
                 {/* 정상적으로 모든 입력이 되었을때 버튼 활성화 */}
-                {isCheckNickname && formik.values.gender!=='' && formik.values.birthday!==null && !formik.errors.gender && !formik.errors.birthday ?
+                {isDatePickerOpen ? <button type='button' className={styled.signup_btn} onClick={()=>setIsDatePickerOpen(false)}>완료</button>
+                : isCheckNickname && formik.values.gender!=='' && formik.values.birthday!==null && !formik.errors.gender && !formik.errors.birthday ?
                 <button type='submit' className={styled.signup_btn}>가입완료</button>
                 :
                 <button className={styled.signup_btn} disabled>가입완료</button>}
-
             </>
-            
             }
         </form>
       </div>
