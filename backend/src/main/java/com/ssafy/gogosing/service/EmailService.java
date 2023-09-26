@@ -125,7 +125,7 @@ public class EmailService {
     }
 
     public void sendMail(MailContentDto mailContentDto) throws MessagingException {
-
+        System.out.println("====sendMail 함수 호출======");
         MimeMessage message = javaMailSender.createMimeMessage();
 
         try {
@@ -143,7 +143,8 @@ public class EmailService {
 //        helper.setFrom(this.senderEmail);
 //        helper.setSubject(mailContentDto.getTitle());
 //        helper.setText(mailContentDto.getMessage(), true); // 두 번째 인자가 true면 HTML 형식으로 메시지 전송 가능
-
+        System.out.println("====javaMailSender send 전======");
         javaMailSender.send(message);
+        System.out.println("====javaMailSender send 후======");
     }
 }
