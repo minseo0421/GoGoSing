@@ -23,7 +23,6 @@ import SocialSignUp from "./pages/account/socialsignup";
 import MyPage from "./pages/account/mypage";
 import FindPassWord from "./pages/account/findpw";
 import SocialLogin from "./pages/account/sociallogin";
-import axiosInstance from "./axiosinstance";
 
 function App() {
   // BottomBar 관련 상태
