@@ -46,10 +46,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
             String targetUrl = loginSuccess(httpServletResponse, oAuth2User);
-
-//            clearAuthenticationAttributes(request, response);
             httpServletResponse.sendRedirect(targetUrl);
-//            loginSuccess(httpServletResponse, oAuth2User);
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -92,13 +89,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 //        refreshTokenCookie.setSecure(true);
         httpServletResponse.addCookie(refreshTokenCookie);
 
-        // Role이 GUEST일 경우 처음 요청한 회원이므로 회원가입 페이지로 리다이렉트
         if(oAuth2User.getRole() == Role.GUEST) {
-//            // guest : 해당 계정으로 소셜 첫 로그인이므로 추가정보 받아야하는 상태
-//            httpServletResponse.addHeader("user_role", "guest");
-            // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
-//            httpServletResponse.sendRedirect("http://localhost:8081/");
-//            httpServletResponse.sendRedirect("http://192.168.31.187:3000/sociallogin" + accessToken);
 
             Optional<User> findUser = userRepository.findByEmail(oAuth2User.getEmail());
 
@@ -111,7 +102,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             access = accessToken;
             refresh = refreshToken;
 
-            return UriComponentsBuilder.fromUriString("http://192.168.31.187:3000/sociallogin")
+            return UriComponentsBuilder.fromUriString("https://j9b305.p.ssafy.io/sociallogin")
                     .queryParam("Authorization", accessToken)
                     .queryParam("Authorization-Refresh", refreshToken)
                     .queryParam("user_role", "guest")
@@ -119,10 +110,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                     .toUriString();
         }
         else if(oAuth2User.getRole() == Role.FIRST) {
-//            // first : 해당 계정으로 추가정보를 받고 소셜 첫 로그인인 상태
-//            httpServletResponse.addHeader("user_role", "first");
-            // 해당 계정으로 첫 로그인 이므로 장르 선택 페이지로 리다이렉트
-//            httpServletResponse.sendRedirect("http://192.168.31.187:3000/sociallogin"  + accessToken);
 
             User user = userRepository.findByEmail(oAuth2User.getEmail())
                     .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
@@ -131,7 +118,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
             userRepository.save(user);
 
-            return UriComponentsBuilder.fromUriString("http://192.168.31.187:3000/sociallogin")
+            return UriComponentsBuilder.fromUriString("https://j9b305.p.ssafy.io/sociallogin")
                     .queryParam("Authorization", accessToken)
                     .queryParam("Authorization-Refresh", refreshToken)
                     .queryParam("user_role", "first")
@@ -139,11 +126,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                     .toUriString();
         }
         else {
-//            // user : 회원가입 추가 정보가 입력되어 있고 첫번째 로그인이 아니고 로그인 성공 상태
-//            httpServletResponse.addHeader("user_role", "user");
-            // 회원가입 추가 정보가 입력되어 있고 첫번째 로그인이 아니고 로그인 성공 상태이면 홈 으로 리다이렉트
-//            httpServletResponse.sendRedirect("http://192.168.31.187:3000/sociallogin"  + accessToken);
-            return UriComponentsBuilder.fromUriString("http://192.168.31.187:3000/sociallogin")
+            return UriComponentsBuilder.fromUriString("https://j9b305.p.ssafy.io/sociallogin")
                     .queryParam("Authorization", accessToken)
                     .queryParam("Authorization-Refresh", refreshToken)
                     .queryParam("user_role", "user")
