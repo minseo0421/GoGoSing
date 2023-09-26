@@ -1,0 +1,21 @@
+.calender {
+  background-color: rgb(82, 92, 144);
+  position: absolute;
+  width: 100%;
+  /* height: 40%; */
+  bottom:0px;
+  border-radius: 1rem 1rem 0rem 0rem;
+}
+
+.input_calender {
+  background-color:rgba(5, 15, 51,0.3);
+  width:90%;
+  display: flex;
+  margin:auto;
+  border-radius: 0.5rem;
+}
+
+.selected {
+  background-color: rgba(204, 204, 204, 0.3);
+  margin:0 10px;
+}
