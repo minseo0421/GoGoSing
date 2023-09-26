@@ -5,15 +5,15 @@ import { Link } from 'react-router-dom';
 const Login: React.FC = () => {
     // 카카오 로그인 반응
     const kakaologin = () => {
-        window.location.href = `${process.env.REACT_APP_KAKAO_URI}`;
+        window.location.href = `${process.env.REACT_APP_SOCIAL_URL}/kakao`;
     }
     // 네이버 로그인 반응
     const naverlogin = () => {
-        window.location.href = `${process.env.REACT_APP_NAVER_URI}`;
+        window.location.href = `${process.env.REACT_APP_SOCIAL_URL}/naver`;
     }
     // 구글 로그인 반응
     const googlelogin = () => {
-        window.location.href = `${process.env.REACT_APP_GOOGLE_URI}`;
+        window.location.href = `${process.env.REACT_APP_SOCIAL_URL}/google`;
     }
     return (
       <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', width:'100%'}}>

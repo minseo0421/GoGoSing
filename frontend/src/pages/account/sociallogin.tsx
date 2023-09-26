@@ -18,8 +18,8 @@ const SocialLogin: React.FC = () => {
 
     //     xhr.send();
     const fetchKakaoToken = async () => {
-      const params = new URL(document.location.toString()).toJSON;
-      console.log(params)
+      const params = new URL(document.location.toString()).searchParams;
+      console.log(params.get('Authorization'),params.get('Authorization-Refresh'),params.get('user_role'))
     };
 
     fetchKakaoToken();
