@@ -55,8 +55,9 @@ function App() {
   return (
     <div className="App" 
     style={{height:windowHeight,width:windowWidth}}>
-      <div style={{marginTop:'3vh'}}></div>
       <AnimatePresence initial={false} mode="wait">
+        {location.pathname!=='/mypage' && <div style={{marginTop:'3vh'}}></div>}
+        
         <motion.div
           key={location.pathname}
           initial="initial"
