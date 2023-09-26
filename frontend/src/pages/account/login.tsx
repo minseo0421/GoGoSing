@@ -6,6 +6,7 @@ const Login: React.FC = () => {
     // 카카오 로그인 반응
     const kakaologin = () => {
         window.location.href = `${process.env.REACT_APP_SOCIAL_URL}/kakao`;
+        console.log(process.env.REACT_APP_SOCIAL_URL)
     }
     // 네이버 로그인 반응
     const naverlogin = () => {

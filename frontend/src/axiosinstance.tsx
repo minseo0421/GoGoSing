@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const TOKEN = localStorage.getItem('ACCESS_TOKEN');
+const AccessToken = localStorage.getItem('AccessToken');
 const axiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
-    Authorization: 'Bearer ' + TOKEN,
+    Authorization: 'Bearer ' + AccessToken,
   },
 });
 
@@ -21,8 +21,8 @@ axiosInstance.interceptors.response.use(
     const originalRequest = config;
 
     if (status === 403) {
-      const accessToken = localStorage.getItem('ACCESS_TOKEN');
-      const refreshToken = localStorage.getItem('REFRESH_TOKEN');
+      const accessToken = localStorage.getItem('AccessToken');
+      const refreshToken = localStorage.getItem('RefreshToken');
 
       try {
         const { data } = await axios({
@@ -36,8 +36,8 @@ axiosInstance.interceptors.response.use(
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + newAccessToken,
         };
-        localStorage.setItem('ACCESS_TOKEN', newAccessToken);
-        localStorage.setItem('REFRESH_TOKEN', newRefreshToken);
+        localStorage.setItem('AccessToken', newAccessToken);
+        localStorage.setItem('RefreshToken', newRefreshToken);
         return await axios(originalRequest);
       } catch (err) {
         console.log(err);
