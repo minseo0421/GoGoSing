@@ -1,0 +1,20 @@
+/* CardLongContainer.module.css */
+
+.container {
+  width: 90%; /* 가로 길이 90% 설정 */
+  /* max-height: 100%; 필요에 따라 조절 */
+  display: flex;
+  flex-direction: column; /* CardLong 컴포넌트들을 세로로 나열 */
+  overflow-y: none; /* 세로로 스크롤 가능하도록 설정 */
+  white-space: nowrap;
+  -ms-overflow-style: none;
+  /* margin-left: 5px; */
+  margin: auto;
+
+  /* scrollbar-width: none; */
+}
+
+/* If you'd like to hide the scrollbar for Webkit browsers as well */
+::-webkit-scrollbar {
+  display: none;
+}

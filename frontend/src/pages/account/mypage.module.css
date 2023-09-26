@@ -1,0 +1,25 @@
+.myprofile {
+    width: 100%;
+    background-image: url('../../../public/assets/mypage_back.png');
+    background-size: cover;
+    /* justify-content: center; */
+    /* align-items: center; */
+    padding-top: 6vh;
+    /* padding: 30% 5%; */
+    box-sizing: border-box;
+
+}
+
+.myinfo {
+    display: flex;
+    /* height: 100px; */
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+.info {
+    width: 70%;
+    padding: 0 5%;
+    box-sizing: border-box;
+    text-align: start;
+}
