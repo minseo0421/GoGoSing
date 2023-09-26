@@ -16,13 +16,13 @@ import MusicRecord from "./pages/musicrecord";
 import MusicUpload from "./pages/musicupload";
 
 import BottomBar from "./components/Bottombar";
-import Topbar from "./components/Topbar";
 import { AnimatePresence, motion } from "framer-motion";
 import { PageVariants, PageTransition } from "./components/pageTransition";
 import GenreSurvey from "./pages/account/genresurvey";
 import SocialSignUp from "./pages/account/socialsignup";
 import MyPage from "./pages/account/mypage";
 import FindPassWord from "./pages/account/findpw";
+import SocialLogin from "./pages/account/sociallogin";
 
 function App() {
   // BottomBar 관련 상태
@@ -54,11 +54,8 @@ function App() {
 
   return (
     <div className="App" 
-    style={{height:`${windowHeight >= windowWidth *1.7 && windowWidth*2.35 >= windowHeight ? '100vh' : 
-            windowHeight < windowWidth *1.7 ? '100vh': `${windowWidth*2.35}px`}`, 
-            width:`${windowHeight >= windowWidth *1.7 && windowWidth*2.35 >= windowHeight ? '100vw' : 
-            windowHeight < windowWidth *1.7 ? `${windowHeight/1.7}px`:'100vw'}`}}>
-      <Topbar/>
+    style={{height:windowHeight,width:windowWidth}}>
+      <div style={{marginTop:'3vh'}}></div>
       <AnimatePresence initial={false} mode="wait">
         <motion.div
           key={location.pathname}
@@ -83,6 +80,7 @@ function App() {
             <Route path="/locallogin" element={<LocalLogin />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/socialsignup" element={<SocialSignUp />} />
+            <Route path="/sociallogin" element={<SocialLogin />} />
             <Route path="/genresurvey" element={<GenreSurvey />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/findpw" element={<FindPassWord />} />
