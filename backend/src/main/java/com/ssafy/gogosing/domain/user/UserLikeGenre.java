@@ -2,6 +2,7 @@ package com.ssafy.gogosing.domain.user;
 
 import com.ssafy.gogosing.domain.music.Genre;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,4 +26,10 @@ public class UserLikeGenre {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "genre_id")
     private Genre genre;
+
+    @Builder
+    public UserLikeGenre(User user, Genre genre) {
+        this.user = user;
+        this.genre = genre;
+    }
 }
