@@ -5,8 +5,9 @@ import styled from './account.module.css'
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import axiosInstance from '../../axiosinstance';
 import ko from 'date-fns/locale/ko';
+import EmailCheck from './emailcheck';
+import axios from 'axios';
 
 const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -19,6 +20,8 @@ const validationSchema = Yup.object().shape({
       .max(15, '15 자 이하의 패스워드를 입력해주세요')
       .matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{9,15}$/, '영문/숫자/특수문자 1개 이상 포함')
       .required('비밀번호를 입력해주세요'),
+    emailCertificationNumber: Yup.string()
+      .required('인증번호를 입력해주세요'),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password') as any, null], '비밀번호가 일치하지 않습니다.')
       .required('비밀번호를 확인해주세요'),
@@ -36,7 +39,8 @@ const validationSchema = Yup.object().shape({
 const SignUp: React.FC = () => {
     const navigate = useNavigate();
     const [firstStep, setStep] = useState(true);
-    const [isCheckEmail, setCheckEmail] = useState(false) //이메일 중복검사 체크변수
+    const [isCheckEmail, setCheckEmail] = useState(false) //이메일 유효성 검사 체크변수
+    const [isChkModal, setChkModal] = useState(false) // 유효성 검사 모달 오픈
     const [isCheckNickname, setCheckNickname] = useState(false) //닉네임 중복검사 체크변수
     const [selectedDate, setSelectedDate] = useState<Date|null>(null);
     const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
@@ -52,40 +56,38 @@ const SignUp: React.FC = () => {
     const openDatePicker = () => {
       setIsDatePickerOpen(!isDatePickerOpen);
     };
-    const emailcheck = (email:string) => {
-        // 지금은 지나가기위한 true 처리 나중에 지워야함
-        setCheckEmail(true)
-        
-        // 이메일 중복 체크 axiosInstance 작성
-        axiosInstance({
-            method:'get',
-            url:`${process.env.REACT_APP_API_URL}/user/signup`,
-        }).then(res=>{
-            console.log(res)
-            setCheckEmail(true)
-        }).catch(err=>{
-            console.log(err)
-        })
-    }
+
     const nicknamecheck = (nickname:string) => {
         // 지금은 지나가기위한 true 처리 나중에 지워야함
         setCheckNickname(true)
         
-        // 닉네임 중복 체크 axiosInstance 작성
-        axiosInstance({
-            method:'get',
-            url:`${process.env.REACT_APP_API_URL}/user/signup`,
+        // 닉네임 중복 체크 axios 작성
+        // axios({
+        //     method:'get',
+        //     url:`${process.env.REACT_APP_API_URL}/`,
+        // }).then(res=>{
+        //     console.log(res)
+        //     setCheckNickname(true)
+        // }).catch(err=>{
+        //     console.log(err)
+        // })
+    }
+    const emailauth = () => {
+        axios({
+            method:'post',
+            url:`${process.env.REACT_APP_API_URL}/email/send-certification`,
+            data:{email:formik.values.email}
         }).then(res=>{
-            console.log(res)
-            setCheckNickname(true)
-        }).catch(err=>{
-            console.log(err)
+            setChkModal(true)
+        })
+        .catch(err=>{
+            alert('인증번호 전송 실패, 다시 시도해주세요')
         })
     }
-
     const formik = useFormik({
         initialValues: {
             email: '',
+            emailCertificationNumber:'',
             password: '',
             confirmPassword: '',
             nickname:'',
@@ -95,10 +97,11 @@ const SignUp: React.FC = () => {
         validationSchema: validationSchema,
         onSubmit: (values) => {
             // 회원가입 요청 로직 -> 로그인 처리까지
-            axiosInstance({
+            axios({
                 method:'post',
                 url:`${process.env.REACT_APP_API_URL}/user/signup`,
                 data:{'email':values.email,
+                'emailCertificationNumber':values.emailCertificationNumber,
                 'password':values.password,
                 'nickname':values.nickname,
                 'gender':values.gender,
@@ -118,6 +121,7 @@ const SignUp: React.FC = () => {
       <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', width:'100%'}}>
         {isDatePickerOpen ? <span style={{margin:'30px'}}></span>:<img src="assets/logo.png" alt="" style={{margin:'40% 0 30% 0'}}/>}
         {/* 회원가입 form */}
+        {isChkModal && <EmailCheck email={formik.values.email} closemodal={()=>setChkModal(false)} success={(value:string)=>{formik.setFieldValue('emailCertificationNumber',value); setCheckEmail(true);}} />}
         <form onSubmit={formik.handleSubmit} style={{width:'80%'}}>
             {firstStep ? 
             <>
@@ -127,11 +131,12 @@ const SignUp: React.FC = () => {
                     {/* 올바른 이메일 입력시 인증버튼 활성화 */}
                     {formik.values.email==='' || formik.errors.email ? 
                     <button className={styled.checkemail} type="button" disabled>인증</button>
-                    :<button className={styled.checkemail} type="button" onClick={()=>{emailcheck(formik.values.email)}}>인증</button>
+                    : isCheckEmail ? <button className={styled.checkemail} disabled type="button" style={{color:'green'}}>완료</button> :
+                    <button className={styled.checkemail} type="button" onClick={()=>{emailauth()}}>인증</button>
                     }
                 </div>
                 <p style={{fontSize:'8px', fontWeight:'bold', textAlign:'left'}}>
-                    {formik.values.email === '' ? <span>　</span> : formik.errors.email ? <span style={{color:'red'}}>{formik.errors.email}</span> : !isCheckEmail ? <span style={{color:'yellowgreen'}}>이메일 중복체크를 진행해주세요.</span>: <span style={{color:'green'}}>사용가능한 이메일입니다.</span> }
+                    {formik.values.email === '' ? <span>　</span> : formik.errors.email ? <span style={{color:'red'}}>{formik.errors.email}</span> : !isCheckEmail ? <span style={{color:'yellowgreen'}}>이메일 인증을 진행해주세요.</span>: <span style={{color:'green'}}>이메일 인증완료</span> }
                 </p>
 
                 {/* 패스워드 input */}

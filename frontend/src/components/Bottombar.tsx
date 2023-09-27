@@ -34,7 +34,7 @@ const BottomBar: React.FC<BottomBarProps> = ({ onClickButton }) => {
             >
               <img
                 src={`${
-                  isPage === 1 ? `assets/sel_home.png` : `assets/unsel_home.png`
+                  isPage === 1 ? "assets/sel_home.png" : "assets/unsel_home.png"
                 }`}
                 alt=""
               />
@@ -52,8 +52,8 @@ const BottomBar: React.FC<BottomBarProps> = ({ onClickButton }) => {
               <img
                 src={`${
                   isPage === 2
-                    ? `assets/sel_chart.png`
-                    : `assets/unsel_chart.png`
+                    ? "assets/sel_chart.png"
+                    : "assets/unsel_chart.png"
                 }`}
                 alt=""
               />
@@ -71,8 +71,8 @@ const BottomBar: React.FC<BottomBarProps> = ({ onClickButton }) => {
               <img
                 src={`${
                   isPage === 3
-                    ? `assets/sel_search.png`
-                    : `assets/unsel_search.png`
+                    ? "assets/sel_search.png"
+                    : "assets/unsel_search.png"
                 }`}
                 alt=""
               />
@@ -89,7 +89,7 @@ const BottomBar: React.FC<BottomBarProps> = ({ onClickButton }) => {
             >
               <img
                 src={`${
-                  isPage === 4 ? `assets/sel_like.png` : `assets/unsel_like.png`
+                  isPage === 4 ? "assets/sel_like.png" : "assets/unsel_like.png"
                 }`}
                 alt=""
               />
