@@ -1,6 +1,8 @@
 package com.ssafy.gogosing.controller;
 
+import com.ssafy.gogosing.domain.user.User;
 import com.ssafy.gogosing.dto.music.request.VoiceMatchingListRequestDto;
+import com.ssafy.gogosing.repository.UserRepository;
 import com.ssafy.gogosing.service.MusicAnalyzeService;
 import io.swagger.annotations.ApiOperation;
 import lombok.Getter;
@@ -21,6 +23,7 @@ import java.io.IOException;
 public class MusicAnalyzeController {
 
     private final MusicAnalyzeService musicAnalyzeService;
+    private final UserRepository userRepository;
 
     @ApiOperation(value = "목소리 녹음 파일 저장")
     @PostMapping("")
@@ -47,5 +50,14 @@ public class MusicAnalyzeController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(musicAnalyzeService.getVoiceMatchingList(voiceMatchingListRequestDto.getVoiceFile()));
+    }
+
+    @ApiOperation(value = "일단 임시로 영인님 드릴려고 만든 api")
+    @GetMapping("/voiceFile")
+    public ResponseEntity<?> getVoiceFile(@AuthenticationPrincipal UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        return ResponseEntity.ok()
+                .body(user.getVoiceFile());
     }
 }
