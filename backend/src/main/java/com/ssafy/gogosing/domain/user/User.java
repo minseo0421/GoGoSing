@@ -56,17 +56,17 @@ public class User extends BaseTimeEntity {
     @Column(name = "deleted_date")
     private LocalDateTime deletedDate;
 
-    @Column(name = "vocal_range_highest")
-    private String vocalRangeHighest;
+    @Column(name = "voice_range_highest")
+    private String voiceRangeHighest;
 
-    @Column(name = "vocal_range_lowest")
-    private String vocalRangeLowest;
+    @Column(name = "voice_range_lowest")
+    private String voiceRangeLowest;
 
     @Column(name = "voice_file")
     private String voiceFile;
 
     @Builder
-    public User(Long id, String email, String password, String nickname, Gender gender, LocalDate birth, String profileImg, Role role, SocialType socialType, String socialId, LocalDateTime deletedDate, String vocalRangeHighest, String vocalRangeLowest) {
+    public User(Long id, String email, String password, String nickname, Gender gender, LocalDate birth, String profileImg, Role role, SocialType socialType, String socialId, LocalDateTime deletedDate, String voiceRangeHighest, String voiceRangeLowest) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -78,8 +78,8 @@ public class User extends BaseTimeEntity {
         this.socialType = socialType;
         this.socialId = socialId;
         this.deletedDate = deletedDate;
-        this.vocalRangeHighest = vocalRangeHighest;
-        this.vocalRangeLowest = vocalRangeLowest;
+        this.voiceRangeHighest = voiceRangeHighest;
+        this.voiceRangeLowest = voiceRangeLowest;
     }
 
     /**
@@ -125,5 +125,10 @@ public class User extends BaseTimeEntity {
         this.voiceFile = voiceFile;
 
         return this.id;
+    }
+
+    public void updateVoiceRange(String voiceRangeHighest, String voiceRangeLowest) {
+        this.voiceRangeHighest = voiceRangeHighest;
+        this.voiceRangeLowest = voiceRangeLowest;
     }
 }
