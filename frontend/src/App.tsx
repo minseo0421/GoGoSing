@@ -12,8 +12,10 @@ import SignUp from "./pages/account/signup";
 import Login from "./pages/account/login";
 import LocalLogin from "./pages/account/locallogin";
 
-import MusicRecord from "./pages/musicrecord";
-import MusicUpload from "./pages/musicupload";
+import MusicRecord from "./pages/musicrecord/musicrecord";
+import MusicUpload from "./pages/musicupload/musicupload";
+import RecordResult from "./pages/musicrecord/recordresult";
+import UploadResult from "./pages/musicupload/uploadresult";
 
 import BottomBar from "./components/Bottombar";
 import { AnimatePresence, motion } from "framer-motion";
@@ -88,7 +90,10 @@ function App() {
 
             {/* Music Record */}
             <Route path="/record" element={<MusicRecord />} />
+            <Route path="/recordresult" element={<RecordResult />} />
             <Route path="/musicupload" element={<MusicUpload />} />
+            <Route path="/uploadresult" element={<UploadResult />} />
+            
           </Routes>
         </motion.div>
       </AnimatePresence>
