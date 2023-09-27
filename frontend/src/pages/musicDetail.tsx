@@ -152,7 +152,7 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
   return (
     <div style={{ width: windowWidth, height: windowHeight }}>
       <Background imageUrl="/assets/background.png">
-        <CloseButton onClick={() => dispatch(setModal(null))}>닫기</CloseButton>
+        <CloseButton onTouchEnd={() => dispatch(setModal(null))}>닫기</CloseButton>
         <ModalContainer open={isModalOpen}>
           <div
             className={musicStyle.blur}
@@ -171,7 +171,7 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
                 <img
                   src={isPlay ? "/assets/pause.png" : "/assets/play.png"}
                   alt="play/pause"
-                  onClick={handlePlayPause} // 추가
+                  onTouchEnd={handlePlayPause} // 추가
                 />
                 <img src="/assets/nextSong.png" alt="" />
               </div>
