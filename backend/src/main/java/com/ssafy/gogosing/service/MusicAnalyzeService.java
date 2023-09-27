@@ -118,9 +118,9 @@ public class MusicAnalyzeService {
 
         System.out.println("Python Call");
         String[] command = new String[4];
-        command[0] = "python";
-//        command[0] = "/usr/bin/python3";
-        command[1] = "voiceRangeAnalyze.py";
+//        command[0] = "python";
+        command[0] = "/usr/bin/python3";
+        command[1] = "/voiceRangeAnalyze.py";
         command[2] = voiceFile;
 
         String result = execPython(command);
@@ -190,8 +190,8 @@ public class MusicAnalyzeService {
 
         System.out.println("Python Call");
         String[] command = new String[4];
-        command[0] = "python";
-//        command[0] = "/usr/bin/python3";
+//        command[0] = "python";
+        command[0] = "/usr/bin/python3";
         command[1] = pythonPath;
         command[2] = voiceFile;
 
