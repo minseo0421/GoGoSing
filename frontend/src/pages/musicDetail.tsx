@@ -56,7 +56,7 @@ const CloseButton = styled.button`
   cursor: pointer;
   font-size: 20px;
   /* position: absolute; */
-  top: 10px;
+  top: 30px;
   left: 5px;
 `;
 
