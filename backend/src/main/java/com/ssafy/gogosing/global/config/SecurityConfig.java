@@ -72,7 +72,12 @@ public class SecurityConfig {
                 .formLogin().disable() // FormLogin 사용 X
                 .httpBasic().disable() // httpBasic 사용 X
                 .csrf().disable() // csrf 보안 사용 X
-                .headers().frameOptions().disable()
+                .headers()
+                .frameOptions().disable()
+                .addHeaderWriter((request, response) -> {
+                    response.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+                    response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+                })
                 .and()
                 .cors()
                 .and()
