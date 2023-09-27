@@ -31,6 +31,16 @@ public class MusicAnalyzeController {
                 .body(musicAnalyzeService.saveVoice(multipartFile, userDetails));
     }
 
+    @ApiOperation(value = "사용자의 음역대 분석 결과 반환")
+    @PostMapping("/temp")
+    public ResponseEntity<?> saveVoiceTemp(@RequestParam("file") MultipartFile multipartFile,
+                                       @AuthenticationPrincipal UserDetails userDetails) throws Exception {
+
+        String voiceTempFile = musicAnalyzeService.saveVoiceTemp(multipartFile, userDetails);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(musicAnalyzeService.getVoiceRangeMatching(voiceTempFile, userDetails));
+    }
+
     @ApiOperation(value = "유사도 분석을 통한 목소리 녹음 파일 url과 유사한 노래 리스트 반환")
     @PostMapping("/voice")
     public ResponseEntity<?> getVoiceMatchingList(@RequestBody VoiceMatchingListRequestDto voiceMatchingListRequestDto) throws IOException {
