@@ -8,6 +8,8 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ssafy.gogosing.domain.music.Music;
 import com.ssafy.gogosing.domain.user.User;
 import com.ssafy.gogosing.dto.music.response.VoiceMatchingListResponseDto;
+import com.ssafy.gogosing.dto.music.response.VoiceRangeMatchingMusicDto;
+import com.ssafy.gogosing.dto.music.response.VoiceRangeMatchingResponseDto;
 import com.ssafy.gogosing.repository.MusicRepository;
 import com.ssafy.gogosing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,22 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.commons.exec.CommandLine;
-
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 @Service
 @Transactional(readOnly = true)
@@ -87,6 +77,86 @@ public class MusicAnalyzeService {
         } catch (AmazonClientException e) {
             throw new RuntimeException("S3에 음성을 업로드하는데 실패했습니다.", e);
         }
+    }
+
+    /**
+     * 음역대 분석을 위한 음성 url을 넘겨서 파이썬 파일을 실행시키기 위한 임시 음성 파일 s3 저장
+     */
+    @Transactional
+    public String saveVoiceTemp(MultipartFile multipartFile, UserDetails userDetails) throws IOException {
+
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
+
+        if (multipartFile.isEmpty()) {
+            throw new IllegalArgumentException("음성파일이 없으면 음역대를 저장할 수 없습니다.");
+        }
+
+        try {
+
+            String fileName = generateTempFileName(multipartFile, user.getNickname());
+
+            byte[] fileBytes = multipartFile.getBytes();
+
+            // S3에 업로드
+            String filePath = uploadToS3(fileName, fileBytes, multipartFile.getContentType());
+
+            user.updateVoiceFile(filePath);
+
+            return filePath;
+
+        } catch (AmazonClientException e) {
+            throw new RuntimeException("S3에 음성을 업로드하는데 실패했습니다.", e);
+        }
+    }
+
+    /**
+     * 음역대 분석 후 음역대 저장 및 결과 출력
+     */
+    @Transactional
+    public VoiceRangeMatchingResponseDto getVoiceRangeMatching(String voiceFile, UserDetails userDetails) throws IOException {
+
+        System.out.println("Python Call");
+        String[] command = new String[4];
+//        command[0] = "python";
+        command[0] = "/usr/bin/python3";
+        command[1] = "/voiceRangeAnalyze.py";
+        command[2] = voiceFile;
+
+        String result = execPython(command);
+
+        // 결과 값을 List에 저장
+        String[] resultLines = result.trim().split("\n");
+
+        String voiceRangeHighest = resultLines[3].trim();
+        String voiceRangeLowest = resultLines[1].trim();
+        String voiceRangeNum = resultLines[2].trim();
+
+        // 일단 임의로 2 넣음
+        // 추후 데이터 받으면 voiceRangeNum 해서 유사한 음역대 노래 id 찾아서 넘길 예정
+        Music music = musicRepository.findById(2L)
+                        .orElseThrow(() -> new EmptyResultDataAccessException("해당 노래는 존재하지 않습니다.", 1));
+
+        VoiceRangeMatchingMusicDto voiceRangeMatchingMusicDto = VoiceRangeMatchingMusicDto.builder()
+                .musicId(music.getId())
+                .singer(music.getSinger())
+                .songImg(music.getSongImg())
+                .title(music.getTitle())
+                .build();
+
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
+
+        user.updateVoiceRange(voiceRangeHighest, voiceRangeLowest);
+        userRepository.save(user);
+
+        VoiceRangeMatchingResponseDto voiceRangeMatchingResponseDto = VoiceRangeMatchingResponseDto.builder()
+                .voiceRangeHighest(voiceRangeHighest)
+                .voiceRangeLowest(voiceRangeLowest)
+                .voiceRangeMatchingMusic(voiceRangeMatchingMusicDto)
+                .build();
+
+        return voiceRangeMatchingResponseDto;
     }
 
     /**
@@ -176,6 +246,15 @@ public class MusicAnalyzeService {
         String originalName = multipartFile.getOriginalFilename();
         String fileExtension = getFileExtension(originalName);
         return userNickname + "_voicefile" + fileExtension;
+    }
+
+    /**
+     * 임시 파일 이름 생성 메서드
+     */
+    private String generateTempFileName(MultipartFile multipartFile, String userNickname) {
+        String originalName = multipartFile.getOriginalFilename();
+        String fileExtension = getFileExtension(originalName);
+        return userNickname + "_voiceTempfile" + fileExtension;
     }
 
     /**
