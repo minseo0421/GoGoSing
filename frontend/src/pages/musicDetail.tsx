@@ -56,7 +56,7 @@ const CloseButton = styled.button`
   cursor: pointer;
   font-size: 20px;
   /* position: absolute; */
-  top: 30px;
+  top: 10px;
   left: 5px;
 `;
 
@@ -152,9 +152,7 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
   return (
     <div style={{ width: windowWidth, height: windowHeight }}>
       <Background imageUrl="/assets/background.png">
-        <CloseButton onTouchEnd={() => dispatch(setModal(null))}>
-          닫기
-        </CloseButton>
+        <CloseButton onClick={() => dispatch(setModal(null))}>닫기</CloseButton>
         <ModalContainer open={isModalOpen}>
           <div
             className={musicStyle.blur}
@@ -173,13 +171,13 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
                 <img
                   src={isPlay ? "/assets/pause.png" : "/assets/play.png"}
                   alt="play/pause"
-                  onTouchEnd={handlePlayPause} // 추가
+                  onClick={handlePlayPause} // 추가
                 />
                 <img src="/assets/nextSong.png" alt="" />
               </div>
             </div>
             <div className={musicStyle.lyricsContainer}>
-              {/* <p className={musicStyle.lyrics}>{album.lyrics}</p> */}
+              <p className={musicStyle.lyrics}>{album.lyrics}</p>
             </div>
             <div ref={youtubeRef}></div> {/* YouTube Player를 위한 ref */}
           </div>
