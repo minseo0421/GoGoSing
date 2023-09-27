@@ -92,7 +92,7 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
     height: "0",
     width: "0",
     playerVars: {
-      origin: "",
+      origin: window.location.origin,
     },
   };
 
