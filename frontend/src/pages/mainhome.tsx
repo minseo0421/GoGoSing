@@ -19,7 +19,7 @@ const MainHome: React.FC = () => {
       <div  className={styles.topbar}>
         <img src="assets/logo.png" alt="" style={{ width: "20%" }} />
         {isLogin ? 
-        <img src={isLogin.profileImg!==null ? `${isLogin.profileImg}`:'assets/default_user.png'} alt="" style={{ width: "15%", borderRadius:'50%'}} onClick={()=>navigate('/mypage')} />: 
+        <img crossOrigin="anonymous" src={isLogin.profileImg!==null ? `${isLogin.profileImg}`:'assets/default_user.png'} alt="" style={{ width: "15%", borderRadius:'50%'}} onClick={()=>navigate('/mypage')} />: 
         <Link style={{ color: "white" }} to="/login">Login</Link>
         }
       </div>
