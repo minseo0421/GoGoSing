@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
-import MusicPlay from '../components/musicrecord/musicplay';
+import MusicPlay from '../../components/musicrecord/musicplay';
 
 const MusicRecord: React.FC = () => {
 
@@ -64,7 +64,7 @@ const MusicRecord: React.FC = () => {
             <div style={{ display: 'flex', flexDirection:'column',justifyContent: 'center', marginBottom: 24 }}>
                 {!isRecording && audioSourceURL==="" && (
                 <div style={{ margin: 'auto', marginBottom: '10px' }}>
-                    <img src="assets/microphone.png" alt="" style={{width: '50%', height:'60%'}} onClick={handleStartRecording}/>
+                    <img src="assets/colmic.png" alt="" style={{width: '50%', height:'50%'}} onClick={handleStartRecording}/>
                 </div>
                 )}
                 {isRecording && audioSourceURL==="" && (
