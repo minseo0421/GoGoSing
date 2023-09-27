@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
+// import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import MusicPlay from '../components/musicrecord/musicplay';
+// import MusicPlay from '../components/musicrecord/musicplay';
 
 const RecordResult: React.FC = () => {
 
     
-    const [audioSourceURL, setAudioSourceURL] = React.useState("");
+    // const [audioSourceURL, setAudioSourceURL] = React.useState("");
 
     const navigate = useNavigate();
 
     const home = () => {
         navigate("/");
     };
+
+    // const RecordResult = () => await 
 
     return (
         <>
