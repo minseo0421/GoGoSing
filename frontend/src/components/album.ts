@@ -374,7 +374,7 @@ const albums = [
     title: "바람기억",
     singer: "나얼",
     image: "/assets/sample7.png",
-    url: "https://www.youtube.com/watch?v=mBXBOLG06Wc",
+    url: "https://www.youtube.com/watch?v=f5ShDNOqq1E",
     lyrics: `
     바람 불어와 내 맘 흔들면
     지나간 세월에
@@ -408,7 +408,7 @@ const albums = [
     title: "민들레",
     singer: "우효",
     image: "/assets/sample8.png",
-    url: "https://www.youtube.com/watch?v=mBXBOLG06Wc",
+    url: "https://www.youtube.com/watch?v=aLMuwlIaGWY",
     lyrics: `우리 손 잡을까요 지난날은 다 잊어버리고
     나를 사랑한다고 말해주세요
     우리 동네에 가요 편한 미소를 지어 주세요
@@ -444,7 +444,7 @@ const albums = [
     title: "Piano Man",
     singer: "Billy Joel",
     image: "/assets/sample9.png",
-    url: "https://www.youtube.com/watch?v=mBXBOLG06Wc",
+    url: "https://www.youtube.com/watch?v=gxEPV4kolz0",
     lyrics: `It's nine o'clock on a Saturday
     The regular crowd shuffles in
     There's an old man sittin' next to me

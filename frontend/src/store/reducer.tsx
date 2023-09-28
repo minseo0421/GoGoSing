@@ -20,6 +20,8 @@ const reducer = (
   action: { type: string; payload: any }
 ) => {
   switch (action.type) {
+    case "SET_PAGE":
+      return { ...state, isPage: action.payload };
     case "SET_MODAL":
       return { ...state, isModalOpen: action.payload };
     case "SET_GENRE":
