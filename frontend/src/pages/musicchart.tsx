@@ -11,15 +11,15 @@ const MusicChart: React.FC = () => {
     dispatch(setPage(2));
   }, [dispatch]);
   return (
-    <>
+    <div style={{height:'100%', width:'100%'}}>
       <div  className={styles.topbar}>
         <p>차트</p>
       </div>
-      <div style={{height:'75vh', overflow:'auto'}}>
+      <div style={{height:'90%', overflow:'auto'}}>
         <div className={styles.pitch}>🍪내가 만든 http only 쿠키 ~🍪</div>
         <CardLongContainer></CardLongContainer>
       </div>
-    </>
+    </div>
   );
 };
 export default MusicChart;
