@@ -91,7 +91,6 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
   const opts = {
     height: "0",
     width: "0",
-    crossOriginIsolated,
     playerVars: {
       origin: window.location.origin,
     },
@@ -146,7 +145,8 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
                   onTouchEnd={handlePlayPause}
                 />
                 <img src="/assets/nextSong.png" alt="" />
-                <YouTube ref={youtubeRef} videoId={videoId} opts={opts} />
+                <iframe title='youtube' width="300" height="200" src='https://www.youtube.com/embed/BzYnNdJhZQw' allow="cross-origin-embedder-policy require-corp"></iframe>
+                {/* <YouTube ref={youtubeRef} videoId={videoId} opts={opts}  /> */}
               </div>
             </div>
             <div className={musicStyle.lyricsContainer}>
