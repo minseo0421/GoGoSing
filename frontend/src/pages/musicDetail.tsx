@@ -5,7 +5,6 @@ import { setModal } from "../store/actions";
 import { AppState } from "../store/state";
 import musicStyle from "./musicDetail.module.css";
 import YouTube from "react-youtube";
-import { Helmet } from 'react-helmet';
 
 const slideUp = keyframes`
   from {
@@ -121,11 +120,6 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
 
   return (
     <div style={{ width: windowWidth, height: windowHeight }}>
-      <Helmet>
-        {/* COEP 및 COOP 정책을 설정합니다. */}
-        <meta http-equiv="Cross-Origin-Embedder-Policy" content="credentialless" />
-        <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups" />
-      </Helmet>
       <Background $imageUrl="../../assets/background.png">
         <CloseButton onTouchEnd={() => dispatch(setModal(null))}>
           닫기
