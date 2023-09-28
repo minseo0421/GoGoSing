@@ -26,22 +26,21 @@ const MusicLike: React.FC = () => {
   // };
 
   return (
-    <>
+    <div style={{width:'100%', height:'100%'}}>
       <div  className={styles.topbar}>
         <p>보관함</p>
       </div>
-      <div style={{height:'75vh', overflow:'scroll'}}>
-        {/* <div className={MainStyle.container}> */}
+      <div style={{height:'90%', overflow:'scroll'}}>
         <div className={RecordStyle.largeContainer}>
-          <PitchSmall></PitchSmall>
-          <VoiceSmall></VoiceSmall>
+          <PitchSmall/>
+          <VoiceSmall/>
         </div>
         <div>
           <div className={BarStyle.pitch}>❤️ 내가 좋아요 한 노래 !❤️</div>
-          <CardLongContainer></CardLongContainer>
+          <CardLongContainer/>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 export default MusicLike;
