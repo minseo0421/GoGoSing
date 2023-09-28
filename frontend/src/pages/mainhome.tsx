@@ -15,7 +15,7 @@ const MainHome: React.FC = () => {
     dispatch(setPage(1));
   }, [dispatch]);
   return (
-    <div style={{height:'88vh'}}>
+    <div style={{height:'100%'}}>
       <div  className={styles.topbar}>
         <img src="assets/logo.png" alt="" style={{ width: "20%" }} />
         {isLogin ? 
@@ -23,7 +23,9 @@ const MainHome: React.FC = () => {
         <Link style={{ color: "white" }} to="/login">Login</Link>
         }
       </div>
-      <MainContainer/>
+      <div style={{height:'90%'}}>
+        <MainContainer/>
+      </div>
     </div>
   );
 };
