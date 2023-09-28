@@ -92,6 +92,9 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
   const opts = {
     height: "0",
     width: "0",
+    playerVars: {
+      origin: 'http://localhost:3000',
+    },
   };
 
   const youtubeRef = React.useRef<YouTube | null>(null);
@@ -120,7 +123,7 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
     <div style={{ width: windowWidth, height: windowHeight }}>
       <Helmet>
         {/* COEP 및 COOP 정책을 설정합니다. */}
-        <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp" />
+        <meta http-equiv="Cross-Origin-Embedder-Policy" content="credentialless" />
         <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups" />
       </Helmet>
       <Background $imageUrl="../../assets/background.png">
@@ -148,7 +151,7 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
                   onTouchEnd={handlePlayPause}
                 />
                 <img src="/assets/nextSong.png" alt="" />
-                <YouTube ref={youtubeRef} videoId={videoId} opts={opts}  />
+                <YouTube ref={youtubeRef} videoId={videoId} opts={opts} />
               </div>
             </div>
             <div className={musicStyle.lyricsContainer}>
