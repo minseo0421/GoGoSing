@@ -10,6 +10,7 @@ const MusicSearch: React.FC = () => {
   useEffect(() => {
     dispatch(setPage(3));
   }, [dispatch]);
+
   return (
     <div style={{height:'100%', width:'100%'}}>
       <div className={styles.topbar}>
@@ -23,7 +24,7 @@ const MusicSearch: React.FC = () => {
           title="Spectre vulnerability Wikipedia page"
           width="960"
           height="600"
-          referrerPolicy="no-referrer-when-downgrade" allow="encrypted-media" sandbox="allow-same-origin allow-scripts"></iframe>
+          referrerPolicy="no-referrer-when-downgrade" allow="encrypted-media"></iframe>
       </div>
     </div>
   );
