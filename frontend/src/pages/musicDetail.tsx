@@ -92,7 +92,7 @@ const MusicDetail: React.FC = () => {
       setTimeout(() => {
         const iframe = document.querySelector<HTMLIFrameElement>("#yt");
         if (iframe) {
-          alert(iframe.src)
+          // alert(iframe.src)
           const a=iframe.src
           iframe.setAttribute('credentialless','true')
           iframe.src=a
@@ -143,7 +143,7 @@ const MusicDetail: React.FC = () => {
                 <img
                   src={isPlay ? "/assets/pause.png" : "/assets/play.png"}
                   alt="play/pause"
-                  onTouchEnd={handlePlayPause}
+                  onClick={handlePlayPause}
                 />
                 <img src="/assets/nextSong.png" alt="" />
                 <YouTube id='yt' ref={youtubeRef} videoId={videoId} opts={opts} />
