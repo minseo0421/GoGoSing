@@ -11,15 +11,15 @@ const MusicSearch: React.FC = () => {
     dispatch(setPage(3));
   }, [dispatch]);
   return (
-    <>
+    <div style={{height:'100%', width:'100%'}}>
       <div className={styles.topbar}>
         <p>검색</p>
       </div>
-      <div style={{ height: "75vh", overflow: "auto" }}>
+      <div style={{ height: "90%", overflow: "auto" }}>
         {/* 여기가 메인 영역 */}
         <ReactPlayer url="https://www.youtube.com/watch?v=pSUydWEqKwE" />
       </div>
-    </>
+    </div>
   );
 };
 export default MusicSearch;

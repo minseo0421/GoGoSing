@@ -4,7 +4,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../axiosinstance";
 import { useDispatch, useSelector } from "react-redux";
-import { setLogin } from "../../store/actions";
+import { setLogin, setModal } from "../../store/actions";
 import { AppState } from "../../store/state";
 
 const MyPage: React.FC = () => {
@@ -69,13 +69,13 @@ const MyPage: React.FC = () => {
         </div>
         <div style={{display:'flex', width:'90%', justifyContent:'space-between', padding:'0 5%', alignItems:'center'}}>
             <h2>내가 좋아하는 장르</h2>
-            <p onClick={()=>navigate('/genresurvey')}>수정하기</p>
+            <p onClick={()=>dispatch(setModal('genreSelect'))}>수정하기</p>
         </div>
         <div style={{flexDirection:'row',width:'90%', display:'flex', justifyContent:'space-between', alignItems:'center', padding:'0 5%'}}>
             <img src="assets/genre_img.png" alt="" />
             <img src="assets/genre_img.png" alt="" />
             <div style={{borderRadius:'50%',width:80,height:80,justifyContent:'center',alignItems:'center',display:'flex',flexDirection:'column'}}
-             onClick={()=>navigate('/genresurvey')}>
+             onClick={()=>dispatch(setModal('genreSelect'))}>
                 <img src="assets/plus_icon.png" alt="" />
                 <span style={{color:'#C0CEFF'}}>추가하기</span>
             </div>

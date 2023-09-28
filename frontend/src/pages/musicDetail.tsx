@@ -31,6 +31,8 @@ const slideDown = keyframes`
 const Background = styled.div<{ $imageUrl: string }>`
   opacity: 1;
   position: fixed;
+  width:100%;
+  height:100%;
   top: 0;
   left: 0;
   right: 0;
@@ -67,26 +69,14 @@ const ModalContainer = styled.div<{ open: boolean }>`
   animation: ${(props) => (props.open ? slideUp : slideDown)} 0.3s forwards;
 `;
 
-type MusicDetailProps = {
-  windowWidth: number;
-  windowHeight: number;
-};
-
-const MusicDetail: React.FC<MusicDetailProps> = ({
-  windowWidth,
-  windowHeight,
-}) => {
+const MusicDetail: React.FC = () => {
   const dispatch = useDispatch();
-  const isModalOpen = useSelector(
-    (state: AppState) => state.isModalOpen === "musicDetail"
-  );
+  const isModalOpen = useSelector((state: AppState) => state.isModalOpen === "musicDetail");
   const album = useSelector((state: AppState) => state.album);
   const [isPlay, setIsplay] = useState(false);
 
   const youtubeURL = `${album.url}`;
   const videoId = youtubeURL.split("v=")[1]?.split("&")[0];
-
-  console.log(youtubeURL);
 
   const opts = {
     height: "0",
@@ -119,9 +109,8 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
   // 터치 이벤트 end
 
   return (
-    <div style={{ width: windowWidth, height: windowHeight }}>
       <Background $imageUrl="../../assets/background.png">
-        <CloseButton onTouchEnd={() => dispatch(setModal(null))}>
+        <CloseButton onClick={() => dispatch(setModal(null))}>
           닫기
         </CloseButton>
         <ModalContainer open={isModalOpen}>
@@ -154,7 +143,6 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
           </div>
         </ModalContainer>
       </Background>
-    </div>
   );
 };
 
