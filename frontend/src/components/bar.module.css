@@ -1,20 +1,7 @@
-.topbar {
-    margin:10px 25px 0 25px;
-    height: 10%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-sizing: border-box;
-}
-
 .Navbar {
-    position: absolute;
-    bottom: 0px;
-    width: 100%;
     border-top:#90FFF8 2px solid;
-    height: 12vh;
-    /* border-bottom-left-radius: 2.5rem;
-    border-bottom-right-radius: 2.5rem; */
+    width: 100%;
+    height: 100%;
 }
   
 .iconbar {

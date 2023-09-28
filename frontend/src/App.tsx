@@ -26,11 +26,16 @@ import MyPage from "./pages/account/mypage";
 import FindPassWord from "./pages/account/findpw";
 import SocialLogin from "./pages/account/sociallogin";
 import MusicDetail from "./pages/musicDetail";
+import { useSelector } from "react-redux";
+import { AppState } from "./store/state";
+import GenreSelect from "./pages/genreselect";
 
 function App() {
   // BottomBar 관련 상태
   const [pageNumber, setPageNumber] = useState(1);
   const [isForwardDirection, setIsForwardDirection] = useState(true);
+  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);
+
   const location = useLocation();
   const navigate = useNavigate();
   const pageRoutes = ["/", "/chart", "/search", "/like"];
@@ -40,26 +45,15 @@ function App() {
     setPageNumber(clickedNumber);
   };
 
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-  useEffect(() => {
-    // 창의 너비가 변경될 때마다 상태를 업데이트합니다.
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-      setWindowHeight(window.innerHeight);
-    };
-    window.addEventListener("resize", handleResize);
-    // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   return (
-    <div className="App" style={{height:windowHeight,width:windowWidth}}>
-      <AnimatePresence initial={false} mode="wait">
-        {location.pathname!=='/mypage' && <div style={{marginTop:'3vh'}}></div>}
-        
+    <div className="App" style={{height:'100vh',width:'100vw', overflow:'hidden'}}>
+      <div id='musicdetailmodal'>
+        <MusicDetail />
+      </div>
+      <div id='genremodal'>
+        <GenreSelect />
+      </div>
+      <AnimatePresence initial={false} mode="wait"> 
         <motion.div
           key={location.pathname}
           initial="initial"
@@ -69,7 +63,7 @@ function App() {
           transition={PageTransition}
           custom={isForwardDirection}
           id="motiondiv"
-          style={{ height: "75%" }}
+          style={{ height: "88%", width:'100%' }}
         >
           <Routes location={location}>
             {/* Bottom Bar */}
@@ -96,9 +90,10 @@ function App() {
             
           </Routes>
         </motion.div>
+        <div style={{height:'12%', width:'100%'}}>
+          <BottomBar onClickButton={cl}/>
+        </div>
       </AnimatePresence>
-      <BottomBar onClickButton={cl} />
-      <MusicDetail windowWidth={windowWidth} windowHeight={windowHeight} />
     </div>
   );
 }
