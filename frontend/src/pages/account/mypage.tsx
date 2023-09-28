@@ -49,7 +49,7 @@ const MyPage: React.FC = () => {
                 <Link to='/'>닫기</Link>
             </div>
             <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'100%',padding:'10%',}}>
-                <img src={isLogin!.profileImg!==null ? `${isLogin!.profileImg}`:'assets/default_user.png'} alt="" style={{ width: "30%", borderRadius:'50%'}} onClick={()=>navigate('/mypage')} /> 
+                <img crossOrigin="anonymous" src={isLogin!.profileImg!==null ? `${isLogin!.profileImg}`:'assets/default_user.png'} alt="" style={{ width: "30%", borderRadius:'50%'}} onClick={()=>navigate('/mypage')} /> 
                 <div className={styles.info}>
                     <p style={{display:'flex',justifyContent:'start',alignItems:'center',textAlign:'center'}}>
                         <img src={isLogin!.socialType==='KAKAO' ? "assets/kakao_logo.png":
