@@ -134,7 +134,7 @@ const MusicDetail: React.FC = () => {
                   onTouchEnd={handlePlayPause}
                 />
                 <img src="/assets/nextSong.png" alt="" />
-                <YouTube ref={youtubeRef} videoId={videoId} opts={opts} />
+                <YouTube id='yt' ref={youtubeRef} videoId={videoId} opts={opts} />
               </div>
             </div>
             <div className={musicStyle.lyricsContainer}>
