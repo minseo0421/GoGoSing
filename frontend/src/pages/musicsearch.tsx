@@ -18,6 +18,12 @@ const MusicSearch: React.FC = () => {
       <div style={{ height: "90%", overflow: "auto" }}>
         {/* 여기가 메인 영역 */}
         <ReactPlayer url="https://www.youtube.com/watch?v=pSUydWEqKwE" />
+        <iframe
+          src="https://www.youtube.com/embed/pSUydWEqKwE"
+          title="Spectre vulnerability Wikipedia page"
+          width="960"
+          height="600"
+          referrerPolicy="no-referrer-when-downgrade" allow="encrypted-media" ></iframe>
       </div>
     </div>
   );
