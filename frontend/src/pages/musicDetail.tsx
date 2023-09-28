@@ -5,6 +5,7 @@ import { setModal } from "../store/actions";
 import { AppState } from "../store/state";
 import musicStyle from "./musicDetail.module.css";
 import YouTube from "react-youtube";
+import { Helmet } from 'react-helmet';
 
 const slideUp = keyframes`
   from {
@@ -91,9 +92,6 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
   const opts = {
     height: "0",
     width: "0",
-    playerVars: {
-      origin: window.location.origin,
-    },
   };
 
   const youtubeRef = React.useRef<YouTube | null>(null);
@@ -120,6 +118,11 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
 
   return (
     <div style={{ width: windowWidth, height: windowHeight }}>
+      <Helmet>
+        {/* COEP 및 COOP 정책을 설정합니다. */}
+        <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp" />
+        <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups" />
+      </Helmet>
       <Background $imageUrl="../../assets/background.png">
         <CloseButton onTouchEnd={() => dispatch(setModal(null))}>
           닫기
@@ -145,8 +148,7 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
                   onTouchEnd={handlePlayPause}
                 />
                 <img src="/assets/nextSong.png" alt="" />
-                <iframe title='youtube' width="300" height="200" src='https://www.youtube.com/embed/BzYnNdJhZQw' allow="cross-origin-embedder-policy require-corp"></iframe>
-                {/* <YouTube ref={youtubeRef} videoId={videoId} opts={opts}  /> */}
+                <YouTube ref={youtubeRef} videoId={videoId} opts={opts}  />
               </div>
             </div>
             <div className={musicStyle.lyricsContainer}>
