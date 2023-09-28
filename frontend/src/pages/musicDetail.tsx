@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { setModal } from "../store/actions";
@@ -87,7 +87,19 @@ const MusicDetail: React.FC = () => {
   };
 
   const youtubeRef = React.useRef<YouTube | null>(null);
-
+  useEffect(()=>{
+    if (isModalOpen) {
+      setTimeout(() => {
+        const iframe = document.querySelector<HTMLIFrameElement>("#yt");
+        if (iframe) {
+          alert(iframe.src)
+          const a=iframe.src
+          iframe.setAttribute('credentialless','true')
+          iframe.src=a
+        }
+      }, 500);
+    }
+  },[isModalOpen])
   const handlePlayPause = () => {
     if (isPlay) {
       // Pause the video
