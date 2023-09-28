@@ -6,10 +6,12 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ssafy.gogosing.domain.music.Music;
+import com.ssafy.gogosing.domain.music.MusicRangeAnalyze;
 import com.ssafy.gogosing.domain.user.User;
 import com.ssafy.gogosing.dto.music.response.VoiceMatchingListResponseDto;
 import com.ssafy.gogosing.dto.music.response.VoiceRangeMatchingMusicDto;
 import com.ssafy.gogosing.dto.music.response.VoiceRangeMatchingResponseDto;
+import com.ssafy.gogosing.repository.MusicRangeAnalyzeRepository.MusicRangeAnalyzeRepository;
 import com.ssafy.gogosing.repository.MusicRepository;
 import com.ssafy.gogosing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,12 @@ import org.apache.commons.exec.CommandLine;
 public class MusicAnalyzeService {
 
     @Value("${python.file.path}")
+    private String voiceAnalyzePythonPath;
+
+    @Value("${python.file.path2}")
+    private String voiceRangeAnalyzePythonPath;
+
+    @Value("${python.exe.path}")
     private String pythonPath;
 
     @Autowired
@@ -46,6 +54,8 @@ public class MusicAnalyzeService {
     private final UserRepository userRepository;
 
     private final MusicRepository musicRepository;
+
+    private final MusicRangeAnalyzeRepository musicRangeAnalyzeRepository;
 
     /**
      * 파이썬을 음역대 저장
@@ -118,9 +128,8 @@ public class MusicAnalyzeService {
 
         System.out.println("Python Call");
         String[] command = new String[4];
-//        command[0] = "python";
-        command[0] = "/usr/bin/python3";
-        command[1] = "/voiceRangeAnalyze.py";
+        command[0] = pythonPath;
+        command[1] = voiceRangeAnalyzePythonPath;
         command[2] = voiceFile;
 
         String result = execPython(command);
@@ -132,9 +141,9 @@ public class MusicAnalyzeService {
         String voiceRangeLowest = resultLines[1].trim();
         String voiceRangeNum = resultLines[2].trim();
 
-        // 일단 임의로 2 넣음
-        // 추후 데이터 받으면 voiceRangeNum 해서 유사한 음역대 노래 id 찾아서 넘길 예정
-        Music music = musicRepository.findById(2L)
+        List<MusicRangeAnalyze> musicList = musicRangeAnalyzeRepository.findMatchingListByMaxPitch(Double.parseDouble(voiceRangeNum));
+
+        Music music = musicRepository.findById(musicList.get(0).getMusicId())
                         .orElseThrow(() -> new EmptyResultDataAccessException("해당 노래는 존재하지 않습니다.", 1));
 
         VoiceRangeMatchingMusicDto voiceRangeMatchingMusicDto = VoiceRangeMatchingMusicDto.builder()
@@ -147,7 +156,7 @@ public class MusicAnalyzeService {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
 
-        user.updateVoiceRange(voiceRangeHighest, voiceRangeLowest);
+        user.updateVoiceRange(voiceRangeHighest, voiceRangeLowest, voiceRangeNum);
         userRepository.save(user);
 
         VoiceRangeMatchingResponseDto voiceRangeMatchingResponseDto = VoiceRangeMatchingResponseDto.builder()
@@ -157,6 +166,34 @@ public class MusicAnalyzeService {
                 .build();
 
         return voiceRangeMatchingResponseDto;
+    }
+
+    /**
+     * 음역대 분석 결과 기반한 노래 리스트 반환
+     */
+    public List<VoiceRangeMatchingMusicDto> getVoiceRangeMatchingMusicList(UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
+
+        List<MusicRangeAnalyze> analyzesResultList = musicRangeAnalyzeRepository.findMatchingListByMaxPitch(user.getMaxPitch());
+
+        List<VoiceRangeMatchingMusicDto> voiceRangeMatchingMusicList = new ArrayList<>();
+
+        for(int i = 0; i < analyzesResultList.size(); i++) {
+            Music music = musicRepository.findById(analyzesResultList.get(i).getMusicId())
+                    .orElseThrow(() -> new EmptyResultDataAccessException("해당 노래는 존재하지 않습니다.", 1));
+
+            VoiceRangeMatchingMusicDto voiceRangeMatchingMusicDto = VoiceRangeMatchingMusicDto.builder()
+                    .musicId(music.getId())
+                    .singer(music.getSinger())
+                    .songImg(music.getSongImg())
+                    .title(music.getTitle())
+                    .build();
+
+            voiceRangeMatchingMusicList.add(voiceRangeMatchingMusicDto);
+        }
+
+        return voiceRangeMatchingMusicList;
     }
 
     /**
@@ -190,9 +227,8 @@ public class MusicAnalyzeService {
 
         System.out.println("Python Call");
         String[] command = new String[4];
-//        command[0] = "python";
-        command[0] = "/usr/bin/python3";
-        command[1] = pythonPath;
+        command[0] = pythonPath;
+        command[1] = voiceAnalyzePythonPath;
         command[2] = voiceFile;
 
         String result = execPython(command);

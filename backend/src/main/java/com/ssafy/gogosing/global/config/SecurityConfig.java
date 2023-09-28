@@ -72,9 +72,18 @@ public class SecurityConfig {
                 .formLogin().disable() // FormLogin 사용 X
                 .httpBasic().disable() // httpBasic 사용 X
                 .csrf().disable() // csrf 보안 사용 X
-                .headers().frameOptions().disable()
+                .headers()
+//                .contentSecurityPolicy("require-corp")
+//                .and()
+                .frameOptions().disable()
+                .addHeaderWriter((request, response) -> {
+                    response.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+                    response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+                    response.setHeader("Access-Control-Allow-Origin", "*"); // 모든 출처에서 접근 허용
+
+                })
                 .and()
-                .cors()
+                .cors().and().authorizeRequests()
                 .and()
 
                 // 세션 사용 X, 토큰 사용
