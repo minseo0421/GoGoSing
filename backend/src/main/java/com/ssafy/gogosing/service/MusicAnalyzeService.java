@@ -141,9 +141,9 @@ public class MusicAnalyzeService {
         String voiceRangeLowest = resultLines[1].trim();
         String voiceRangeNum = resultLines[2].trim();
 
-        List<MusicRangeAnalyze> musicIdList = musicRangeAnalyzeRepository.findMatchingListByMaxPitch(Double.parseDouble(voiceRangeNum));
+        List<MusicRangeAnalyze> musicList = musicRangeAnalyzeRepository.findMatchingListByMaxPitch(Double.parseDouble(voiceRangeNum));
 
-        Music music = musicRepository.findById(musicIdList.get(0).getMusicId())
+        Music music = musicRepository.findById(musicList.get(0).getMusicId())
                         .orElseThrow(() -> new EmptyResultDataAccessException("해당 노래는 존재하지 않습니다.", 1));
 
         VoiceRangeMatchingMusicDto voiceRangeMatchingMusicDto = VoiceRangeMatchingMusicDto.builder()
@@ -166,6 +166,34 @@ public class MusicAnalyzeService {
                 .build();
 
         return voiceRangeMatchingResponseDto;
+    }
+
+    /**
+     * 음역대 분석 결과 기반한 노래 리스트 반환
+     */
+    public List<VoiceRangeMatchingMusicDto> getVoiceRangeMatchingMusicList(UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
+
+        List<MusicRangeAnalyze> analyzesResultList = musicRangeAnalyzeRepository.findMatchingListByMaxPitch(user.getMaxPitch());
+
+        List<VoiceRangeMatchingMusicDto> voiceRangeMatchingMusicList = new ArrayList<>();
+
+        for(int i = 0; i < analyzesResultList.size(); i++) {
+            Music music = musicRepository.findById(analyzesResultList.get(i).getMusicId())
+                    .orElseThrow(() -> new EmptyResultDataAccessException("해당 노래는 존재하지 않습니다.", 1));
+
+            VoiceRangeMatchingMusicDto voiceRangeMatchingMusicDto = VoiceRangeMatchingMusicDto.builder()
+                    .musicId(music.getId())
+                    .singer(music.getSinger())
+                    .songImg(music.getSongImg())
+                    .title(music.getTitle())
+                    .build();
+
+            voiceRangeMatchingMusicList.add(voiceRangeMatchingMusicDto);
+        }
+
+        return voiceRangeMatchingMusicList;
     }
 
     /**
