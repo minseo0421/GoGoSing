@@ -91,6 +91,7 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
   const opts = {
     height: "0",
     width: "0",
+    crossOriginIsolated,
     playerVars: {
       origin: window.location.origin,
     },
