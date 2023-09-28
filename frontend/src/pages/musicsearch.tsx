@@ -23,7 +23,7 @@ const MusicSearch: React.FC = () => {
           title="Spectre vulnerability Wikipedia page"
           width="960"
           height="600"
-          referrerPolicy="no-referrer-when-downgrade" allow="encrypted-media" ></iframe>
+          referrerPolicy="no-referrer-when-downgrade" allow="encrypted-media" credentialless ></iframe>
       </div>
     </div>
   );
