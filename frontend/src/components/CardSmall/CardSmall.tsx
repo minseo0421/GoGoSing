@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import styles from "./CardSmall.module.css";
 import { setModal, selectAlbum } from "../../store/actions";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 interface AlbumProps {
   album: {
@@ -25,10 +25,10 @@ const CardSmall: React.FC<AlbumProps> = ({ album }) => {
   };
 
   return (
-    <div onClick={handleAlbumClick} className={styles.container}>
-      <img src={album.image} alt="" className={styles.image} />
+    <div className={styles.container}>
+      <img onClick={handleAlbumClick} src={album.image} alt="" className={styles.image} />
       <div className={styles.infoContainer}>
-        <div className={styles.musicinfo}>
+        <div className={styles.musicinfo} onClick={handleAlbumClick}>
           <span className={styles.title}>{album.title}</span>
           <span>{album.singer}</span>
         </div>

@@ -6,34 +6,34 @@
   filter: blur(3px);
   opacity: 0.7;
   width: 120vw; /* 너비를 뷰포트의 105%로 설정 */
-  height: 45vh; /* 높이를 뷰포트의 50%로 설정 */
+  height: 47%; /* 높이를 뷰포트의 50%로 설정 */
   border-radius: 20px;
 }
 
 .lyricsContainer {
   position: fixed;
-  top: 50vh;
-  margin-left: 10%;
-  margin-right: 10%;
+  top: 53vh;
   height: 50vh; /* 화면 세로 크기의 50%만큼 높이를 설정 */
   color: aquamarine;
   margin-bottom: 3%;
+  width: 100%;
 }
 
 .lyrics {
   line-height: 2;
   color: white;
-  font-size: 16;
-  text-align: left;
-  max-height: 25vh;
+  font-size: 16px;
+  text-align: center;
+  max-height: 35vh;
   overflow-y: auto;
-  /* padding: 20px;  */
-  width: 100%; /* 가로 폭을 설정하거나 필요한 경우 조절 */
+  margin:0 10%;  
+  width: 80%; /* 가로 폭을 설정하거나 필요한 경우 조절 */
 }
 
 .musicContainer {
   flex: 50;
   position: absolute;
+  margin-top: 15%;
   /* z-index: 2000; */
   /* margin-top: 5%; */
 }

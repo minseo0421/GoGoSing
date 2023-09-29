@@ -5,7 +5,8 @@ import { setModal } from "../store/actions";
 import { AppState } from "../store/state";
 import styles from './account/genresurvey.module.css'
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
+import axiosInstance from "../axiosinstance";
 
 const slideUp = keyframes`
   from {
@@ -54,7 +55,7 @@ const CloseButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 16px;
   top: 40px;
   right: 20px;
 `;
@@ -76,11 +77,12 @@ const GenreSelect: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(()=>{
-    axios({
+    const AccessToken = localStorage.getItem('AccessToken')
+    axiosInstance({
       method:'get',
-      url:'',
+      url:`${process.env.REACT_APP_API_URL}/chart`,
       headers:{
-        Authorization:''
+        Authorization:`Bearer ${AccessToken}`
       }
     }).then(res=>{
       setSelGenres(res.data)
@@ -104,7 +106,7 @@ const GenreSelect: React.FC = () => {
     }
   }
   const submit = () => {
-    axios({
+    axiosInstance({
       method:'post',
       url:'',
       headers:{
@@ -115,7 +117,6 @@ const GenreSelect: React.FC = () => {
     }).catch(err => {
       console.log(err)
     })
-    navigate('/')
   }
   // Render the modal
   if (!isModalOpen) {

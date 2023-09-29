@@ -108,7 +108,7 @@ const SignUp: React.FC = () => {
                 'birth':values.birthday},
             }).then(res=>{
                 console.log(res)
-                navigate('/')
+                navigate('/locallogin')
             }).catch(err=>{
                 console.log(err)
                 alert('회원가입 실패!')

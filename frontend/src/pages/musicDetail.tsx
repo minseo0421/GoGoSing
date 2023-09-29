@@ -49,15 +49,13 @@ const CloseButton = styled.button`
   position: absolute;
   color: white;
   text-align: right;
-  margin-right: 25px;
   z-index: 9999;
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 20px;
-  /* position: absolute; */
-  top: 30px;
-  left: 5px;
+  font-size: 16px;
+  top: 40px;
+  right: 20px;
 `;
 
 const ModalContainer = styled.div<{ open: boolean }>`
@@ -82,12 +80,13 @@ const MusicDetail: React.FC = () => {
     height: "0",
     width: "0",
     playerVars: {
-      origin: 'http://localhost:3000',
+      origin: window.location.origin,
     },
   };
 
   const youtubeRef = React.useRef<YouTube | null>(null);
   useEffect(()=>{
+    setIsplay(false);
     if (isModalOpen) {
       setTimeout(() => {
         const iframe = document.querySelector<HTMLIFrameElement>("#yt");
@@ -150,7 +149,13 @@ const MusicDetail: React.FC = () => {
               </div>
             </div>
             <div className={musicStyle.lyricsContainer}>
-              <p className={musicStyle.lyrics}>{album.lyrics}</p>
+              <p className={musicStyle.lyrics}>
+              {album.lyrics.split('\n').map((line, index) => (
+              <span key={index}>
+                {line}
+                <br />
+              </span>))}
+              </p>
             </div>
           </div>
         </ModalContainer>
