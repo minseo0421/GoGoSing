@@ -13,7 +13,6 @@ const MyPage: React.FC = () => {
     const navigate = useNavigate()
     const logout = () => {
         const AccessToken = localStorage.getItem('AccessToken')
-        dispatch(setLogin(null))
         axiosInstance({
             method:'get',
             url:`${process.env.REACT_APP_API_URL}/user/logout`,
@@ -27,6 +26,7 @@ const MyPage: React.FC = () => {
         })
         localStorage.removeItem('AccessToken')
         localStorage.removeItem('RefreshToken')
+        dispatch(setLogin(null))
         navigate('/')
     }
     useEffect(()=>{
@@ -48,7 +48,7 @@ const MyPage: React.FC = () => {
             <div style={{justifyContent:'right',display:'flex',marginRight:'7vw'}}>
                 <Link to='/'>닫기</Link>
             </div>
-            <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'100%',padding:'10%',}}>
+            <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'100%',padding:'5% 10% 10% 10%',}}>
                 <img crossOrigin="anonymous" src={isLogin!.profileImg!==null ? `${isLogin!.profileImg}`:'assets/default_user.png'} alt="" style={{ width: "30%", borderRadius:'50%'}} onClick={()=>navigate('/mypage')} /> 
                 <div className={styles.info}>
                     <p style={{display:'flex',justifyContent:'start',alignItems:'center',textAlign:'center'}}>
