@@ -2,29 +2,11 @@ import React,{useState} from 'react';
 import styled from './account.module.css'
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { setLogin } from '../../store/actions';
-import axiosInstance from '../../axiosinstance';
 
 const LocalLogin: React.FC = () => {
     const navigate = useNavigate()
-    const dispatch = useDispatch()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const getuserdata = (token:string) => {
-      axiosInstance({
-        method:'get',
-        url:`${process.env.REACT_APP_API_URL}/user/detail`,
-        headers:{
-          Authorization:`Bearer ${token}`
-        }
-      }).then(res=>{
-          dispatch(setLogin(res.data))
-          alert('로그인 성공!')
-      }).catch(err=>{
-        console.log(err)
-      })
-    }  
     const login = () => {
       axios({
         method:'post',
@@ -34,11 +16,8 @@ const LocalLogin: React.FC = () => {
         const token =res.headers['authorization']
         localStorage.setItem('AccessToken',token);
         localStorage.setItem('RefreshToken',res.headers['authorization-refresh']);
-        getuserdata(token)
-        if (res.headers['user_role']==='first') {
-          navigate('/genresurvey')
-        } else {
-          navigate('/')}
+        if (res.headers['user_role']==='first') {localStorage.setItem('user_role','first')}
+        navigate('/')
       }).catch(err=>{
         console.log(err)
       })
