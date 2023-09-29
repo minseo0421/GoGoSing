@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import "./App.css";
 
@@ -20,22 +20,19 @@ import UploadResult from "./pages/musicupload/uploadresult";
 import BottomBar from "./components/Bottombar";
 import { AnimatePresence, motion } from "framer-motion";
 import { PageVariants, PageTransition } from "./components/pageTransition";
-import GenreSurvey from "./pages/account/genresurvey";
+
 import SocialSignUp from "./pages/account/socialsignup";
 import MyPage from "./pages/account/mypage";
 import FindPassWord from "./pages/account/findpw";
 import SocialLogin from "./pages/account/sociallogin";
 import MusicDetail from "./pages/musicDetail";
-import { useSelector } from "react-redux";
-import { AppState } from "./store/state";
 import GenreSelect from "./pages/genreselect";
+
 
 function App() {
   // BottomBar 관련 상태
   const [pageNumber, setPageNumber] = useState(1);
   const [isForwardDirection, setIsForwardDirection] = useState(true);
-  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);
-
   const location = useLocation();
   const navigate = useNavigate();
   const pageRoutes = ["/", "/chart", "/search", "/like"];
@@ -44,7 +41,6 @@ function App() {
     navigate(pageRoutes[clickedNumber]);
     setPageNumber(clickedNumber);
   };
-
   return (
     <div className="App" style={{height:'100vh',width:'100vw', overflow:'hidden'}}>
       <div id='musicdetailmodal'>
@@ -78,7 +74,6 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/socialsignup" element={<SocialSignUp />} />
             <Route path="/sociallogin" element={<SocialLogin />} />
-            <Route path="/genresurvey" element={<GenreSurvey />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/findpw" element={<FindPassWord />} />
 
