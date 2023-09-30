@@ -27,6 +27,7 @@ import FindPassWord from "./pages/account/findpw";
 import SocialLogin from "./pages/account/sociallogin";
 import MusicDetail from "./pages/musicDetail";
 import GenreSelect from "./pages/genreselect";
+import MusicSing from "./pages/musicsing";
 
 
 function App() {
@@ -48,6 +49,9 @@ function App() {
       </div>
       <div id='genremodal'>
         <GenreSelect />
+      </div>
+      <div id='singmodal'>
+        <MusicSing />
       </div>
       <AnimatePresence initial={false} mode="wait"> 
         <motion.div
