@@ -4,7 +4,6 @@ import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import MusicPlay from '../../components/musicrecord/musicplay';
 
 const MusicRecord: React.FC = () => {
-
     const recorderControls = useAudioRecorder();
     const [isRecording, setIsRecording] = useState(false);
     const [audioSourceURL, setAudioSourceURL] = React.useState("");
