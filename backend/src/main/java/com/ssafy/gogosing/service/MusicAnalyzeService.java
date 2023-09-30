@@ -8,9 +8,11 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ssafy.gogosing.domain.music.Music;
 import com.ssafy.gogosing.domain.music.MusicRangeAnalyze;
 import com.ssafy.gogosing.domain.user.User;
-import com.ssafy.gogosing.dto.music.response.VoiceMatchingListResponseDto;
 import com.ssafy.gogosing.dto.music.response.VoiceRangeMatchingMusicDto;
 import com.ssafy.gogosing.dto.music.response.VoiceRangeMatchingResponseDto;
+import com.ssafy.gogosing.dto.music.response.VoiceWaveMatchingResponseDto;
+import com.ssafy.gogosing.domain.analyze.VoiceWaveMatching;
+import com.ssafy.gogosing.repository.VoiceWaveMatchingRepository;
 import com.ssafy.gogosing.repository.MusicRangeAnalyzeRepository.MusicRangeAnalyzeRepository;
 import com.ssafy.gogosing.repository.MusicRepository;
 import com.ssafy.gogosing.repository.UserRepository;
@@ -56,6 +58,8 @@ public class MusicAnalyzeService {
     private final MusicRepository musicRepository;
 
     private final MusicRangeAnalyzeRepository musicRangeAnalyzeRepository;
+
+    private final VoiceWaveMatchingRepository userVoiceWaveMatchingRepository;
 
     /**
      * 파이썬을 음역대 저장
@@ -110,8 +114,6 @@ public class MusicAnalyzeService {
 
             // S3에 업로드
             String filePath = uploadToS3(fileName, fileBytes, multipartFile.getContentType());
-
-            user.updateVoiceFile(filePath);
 
             return filePath;
 
@@ -197,6 +199,73 @@ public class MusicAnalyzeService {
     }
 
     /**
+     * 파형 분석 후 음성파일 저장 및 파형과 가장 유사한 노래 출력
+     */
+    public VoiceWaveMatchingResponseDto getVoiceWaveMatchingMusic(String voiceFile, UserDetails userDetails) throws IOException {
+
+        System.out.println("Python Call");
+        String[] command = new String[4];
+        command[0] = pythonPath;
+        command[1] = voiceAnalyzePythonPath;
+        command[2] = voiceFile;
+
+        String result = execPython(command);
+
+        // 결과 값을 List에 저장
+        String[] resultLines = result.trim().split("\n");
+
+        List<VoiceWaveMatchingResponseDto> voiceMatchingList = new ArrayList<>();
+
+        // 일단 10개 추천
+        for (int i = 0; i < 10; i++) {
+            try {
+                Long value = Long.valueOf(resultLines[i].split("\\.")[0]);
+                Music music = musicRepository.findById(value)
+                        .orElseThrow(() -> new EmptyResultDataAccessException("해당 노래는 존재하지 않습니다.", 1));
+                VoiceWaveMatchingResponseDto voiceWaveMatchingResponseDto = VoiceWaveMatchingResponseDto.builder()
+                        .musicId(music.getId())
+                        .singer(music.getSinger())
+                        .songImg(music.getSongImg())
+                        .title(music.getTitle())
+                        .build();
+                voiceMatchingList.add(voiceWaveMatchingResponseDto);
+            } catch (NumberFormatException e) {
+                // 파싱 오류 처리
+                e.printStackTrace();
+            }
+        }
+
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
+
+        // 기존 데이터를 삭제합니다.
+        userVoiceWaveMatchingRepository.deleteByUserId(user.getId());
+
+        VoiceWaveMatching userVoiceWaveMatching = VoiceWaveMatching.builder()
+                .userId(user.getId())
+                .voiceWaveMatchingResponseDtoList(voiceMatchingList)
+                .build();
+
+        userVoiceWaveMatchingRepository.save(userVoiceWaveMatching);
+
+        return voiceMatchingList.get(0);
+    }
+
+    /**
+     * 파형 분석 결과 기반한 노래 리스트 반환
+     */
+    public List<VoiceWaveMatchingResponseDto> getVoiceWaveAnalyzeMusicList(UserDetails userDetails) {
+
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
+
+        VoiceWaveMatching userVoiceWaveMatching = userVoiceWaveMatchingRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 분석을 진행하지 않았습니다.", 1));
+
+        return userVoiceWaveMatching.getVoiceWaveMatchingResponseDtoList();
+    }
+
+    /**
      * S3 업로드 메서드
      */
     private String uploadToS3(String fileName, byte[] fileBytes, String contentType) {
@@ -221,43 +290,6 @@ public class MusicAnalyzeService {
         } catch (AmazonClientException e) {
             throw new RuntimeException("S3에 파일을 업로드하는데 실패했습니다. " + e.getMessage(), e);
         }
-    }
-
-    public List<VoiceMatchingListResponseDto> getVoiceMatchingList(String voiceFile) throws IOException {
-
-        System.out.println("Python Call");
-        String[] command = new String[4];
-        command[0] = pythonPath;
-        command[1] = voiceAnalyzePythonPath;
-        command[2] = voiceFile;
-
-        String result = execPython(command);
-
-        // 결과 값을 List에 저장
-        String[] resultLines = result.trim().split("\n");
-
-        List<VoiceMatchingListResponseDto> voiceMatchingList = new ArrayList<>();
-
-        // 일단 10개 추천
-        for (int i = 0; i < 10; i++) {
-            try {
-                Long value = Long.valueOf(resultLines[i].split("\\.")[0]);
-                Music music = musicRepository.findById(value)
-                        .orElseThrow(() -> new EmptyResultDataAccessException("해당 노래는 존재하지 않습니다.", 1));
-                VoiceMatchingListResponseDto voiceMatchingListResponseDto = VoiceMatchingListResponseDto.builder()
-                        .musicId(music.getId())
-                        .singer(music.getSinger())
-                        .songImg(music.getSongImg())
-                        .title(music.getTitle())
-                        .build();
-                voiceMatchingList.add(voiceMatchingListResponseDto);
-            } catch (NumberFormatException e) {
-                // 파싱 오류 처리
-                e.printStackTrace();
-            }
-        }
-
-        return voiceMatchingList;
     }
 
     public String execPython(String[] command) throws IOException {
