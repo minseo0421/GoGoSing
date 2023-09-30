@@ -4,7 +4,7 @@ const albums = [
     title: "밤편지",
     singer: "아이유",
     image: "/assets/sample1.png",
-    url: "https://www.youtube.com/watch?v=BzYnNdJhZQw",
+    url: "https://www.youtube.com/watch?v=osMe1lFrKAY",
     lyrics: `
     이 밤 그날의 반딧불을 당신의
     창 가까이 보낼게요

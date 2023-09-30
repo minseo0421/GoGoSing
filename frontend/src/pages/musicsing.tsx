@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { IframeHTMLAttributes, useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { setModal } from "../store/actions";
 import { AppState } from "../store/state";
 import musicStyle from "./musicDetail.module.css";
-import YouTube from "react-youtube";
 
 const slideUp = keyframes`
   from {
@@ -67,31 +66,22 @@ const ModalContainer = styled.div<{ open: boolean }>`
   animation: ${(props) => (props.open ? slideUp : slideDown)} 0.3s forwards;
 `;
 
-const MusicDetail: React.FC = () => {
+const MusicSing: React.FC = () => {
   const dispatch = useDispatch();
-  const isModalOpen = useSelector((state: AppState) => state.isModalOpen === "musicDetail");
+  const isModalOpen = useSelector((state: AppState) => state.isModalOpen === "musicSing");
   const album = useSelector((state: AppState) => state.album);
   const [isPlay, setIsplay] = useState(false);
 
   const youtubeURL = `${album.url}`;
   const videoId = youtubeURL.split("v=")[1]?.split("&")[0];
 
-  const opts = {
-    height: "0",
-    width: "0",
-    playerVars: {
-      origin: window.location.origin,
-    },
-  };
-
-  const youtubeRef = React.useRef<YouTube | null>(null);
+  const youtubeRef = React.useRef<HTMLIFrameElement | null>(null);
   useEffect(()=>{
     setIsplay(false);
     if (isModalOpen) {
       setTimeout(() => {
-        const iframe = document.querySelector<HTMLIFrameElement>("#yt");
+        const iframe = document.querySelector<HTMLIFrameElement>("#yt2");
         if (iframe) {
-          // alert(iframe.src)
           const a=iframe.src
           iframe.setAttribute('credentialless','true')
           iframe.src=a
@@ -102,11 +92,9 @@ const MusicDetail: React.FC = () => {
   const handlePlayPause = () => {
     if (isPlay) {
       // Pause the video
-      youtubeRef.current?.getInternalPlayer().pauseVideo();
       setIsplay(false);
     } else {
       // Play the video
-      youtubeRef.current?.getInternalPlayer().playVideo();
       setIsplay(true);
     }
   };
@@ -125,43 +113,22 @@ const MusicDetail: React.FC = () => {
           닫기
         </CloseButton>
         <ModalContainer open={isModalOpen}>
-          <div
-            className={musicStyle.blur}
-            style={{
-              width: "105%",
-              backgroundImage: `url(${album.image})`,
-            }}
-          ></div>
-          <div className={musicStyle.musicContainer}>
-            <img src={album.image} alt="" className={musicStyle.musicImage} />
-            <div className={musicStyle.titleFont}>{album.title}</div>
-            <div className={musicStyle.singerFont}>{album.singer}</div>
-            <div>
-              <div className={musicStyle.iconContainer}>
-                <img src="/assets/previousSong.png" alt="" />
-                <img
-                  src={isPlay ? "/assets/pause.png" : "/assets/play.png"}
-                  alt="play/pause"
-                  onClick={handlePlayPause}
-                />
-                <img src="/assets/nextSong.png" alt="" />
-                <YouTube id='yt' ref={youtubeRef} videoId={videoId} opts={opts} />
-              </div>
-              <button onClick={()=>{dispatch(setModal('musicSing'))}} style={{marginTop:40}}>Sing!!</button>
+          <h1>SING</h1>
+          <div style={{display:'flex', justifyContent:'start', width:'90%', alignItems:'center', height:'10%', marginTop:15, padding:'0 5px', backgroundColor:'rgba(255, 255, 255, 0.2)', borderRadius:20}}>
+            <img src={album.image} alt="" style={{height:'80%', borderRadius:10, marginRight:10}} />
+            <div style={{textAlign:'start'}}>
+              <div className={musicStyle.titleFont}>{album.title}</div>
+              <div className={musicStyle.singerFont}>{album.singer}</div>
             </div>
-            <div className={musicStyle.lyricsContainer}>
-              <p className={musicStyle.lyrics}>
-              {album.lyrics.split('\n').map((line, index) => (
-              <span key={index}>
-                {line}
-                <br />
-              </span>))}
-              </p>
-            </div>
+          </div>
+          
+          <div style={{width:'100%', height:'250px',backgroundColor:'black', marginTop:10}}>
+            <img onClick={()=>{handlePlayPause()}} src="assets/colmic.png" alt=""  style={isPlay ? {display:'none', }:{width: '40%',margin:'auto'}} />
+            {isPlay && <iframe title='yt' id='yt' ref={youtubeRef} width='100%' height='250' allow={'autoplay'} src={`https://yewtu.be/embed/${videoId}`} frameBorder={0} allowFullScreen style={{pointerEvents:'none'}} />}
           </div>
         </ModalContainer>
       </Background>
   );
 };
 
-export default MusicDetail;
+export default MusicSing;
