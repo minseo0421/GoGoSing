@@ -1,8 +1,6 @@
-package com.ssafy.gogosing.repository.MusicRangeAnalyzeRepository;
+package com.ssafy.gogosing.repository.AnalyzeRepository;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.gogosing.domain.music.MusicRangeAnalyze;
-import com.ssafy.gogosing.domain.music.QMusicRangeAnalyze;
+import com.ssafy.gogosing.domain.analyze.MusicRangeAnalyze;
 
 import javax.persistence.EntityManager;
 import java.util.List;
