@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import MusicPlay from '../../components/musicrecord/musicplay';
+import axiosInstance from '../../axiosinstance';
 
 const MusicRecord: React.FC = () => {
 
     const recorderControls = useAudioRecorder();
     const [isRecording, setIsRecording] = useState(false);
     const [audioSourceURL, setAudioSourceURL] = React.useState("");
+    const [file, setFile] = useState<File | null>(null);
 
     const handleStartRecording = () => {
         // 미디어 액세스 권한 확인 및 요청
@@ -30,9 +32,17 @@ const MusicRecord: React.FC = () => {
 
     const addAudio = (blob: Blob) => {
         setIsRecording(true);
+        // setIsRecording(false);
         const url = URL.createObjectURL(blob);
         setAudioSourceURL(url);
+        // audioFile에 audio.webm을 할당
+        const audioFile = new File([blob], 'audio.webm', { type: 'audio/webm' });
+        // file을 audioFile로 변경 
+        setFile(audioFile);
+        console.log(audioSourceURL)
+
         console.log(url)
+        console.log(audioFile);
     };
 
     const handleRestartRecording = () => {
@@ -42,11 +52,40 @@ const MusicRecord: React.FC = () => {
       console.log(isRecording)
     };
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
-    const recordresult = () => {
-        navigate("/recordresult");
-    };
+    const MyrecordUpload = () => {
+        if (file) {
+          const formData = new FormData();
+          formData.append('file', file); 
+          console.log(formData)
+          console.log(file)
+  
+          axiosInstance({
+            method: 'post',
+            url: `${process.env.REACT_APP_API_URL}/music/analyze/rangeResult`,
+            data: formData,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              'accessToken': `Bearer ${localStorage.getItem("AccessToken")}`
+            },
+          })
+            .then((res) => {
+              console.log(res);
+              alert('업로드 완료!')
+            //   navigate("/uploadresult");
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        } else {
+          console.log('파일이 선택되지 않았습니다.');
+        }
+      };
+
+    // const recordresult = () => {
+    //     navigate("/recordresult");
+    // };
 
     return (
         <>
@@ -80,8 +119,11 @@ const MusicRecord: React.FC = () => {
                     <button onClick={handleRestartRecording} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>다시하기</button>
                     )}
                     {isRecording && audioSourceURL&&(
-                    <button onClick={recordresult} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>
-                        다음으로
+                    // <button onClick={recordresult} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>
+                    //     다음으로
+                    // </button>
+                    <button onClick={MyrecordUpload} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>
+                    다음으로
                     </button>
                     )}
             </div>

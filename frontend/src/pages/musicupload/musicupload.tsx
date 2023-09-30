@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from '../../axiosinstance';
 import { AudioPlayer }  from '../../components/musicrecord/audioplay';
 
+
 const MusicUpload: React.FC = () => {
     const navigate = useNavigate();
     // const Token = localStorage.getItem('accessToken');
@@ -33,12 +34,13 @@ const MusicUpload: React.FC = () => {
           data: formData,
           headers: {
             'Content-Type': 'multipart/form-data',
-            'accessToken': `Bearer ${localStorage.getItem("accessToken")}`
+            'accessToken': `Bearer ${localStorage.getItem("AccessToken")}`
           },
         })
           .then((res) => {
             console.log(res);
             alert('업로드 완료!')
+            navigate("/uploadresult");
           })
           .catch((err) => {
             console.log(err);
