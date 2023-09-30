@@ -1,4 +1,4 @@
-package com.ssafy.gogosing.repository;
+package com.ssafy.gogosing.repository.AnalyzeRepository;
 
 import com.ssafy.gogosing.domain.analyze.VoiceWaveMatching;
 import org.springframework.data.mongodb.repository.MongoRepository;
