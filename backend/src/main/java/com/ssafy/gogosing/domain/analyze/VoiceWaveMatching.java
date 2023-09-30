@@ -1,6 +1,6 @@
 package com.ssafy.gogosing.domain.analyze;
 
-import com.ssafy.gogosing.dto.music.response.VoiceWaveMatchingResponseDto;
+import com.ssafy.gogosing.dto.analyze.response.VoiceWaveMatchingResponseDto;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 

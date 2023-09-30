@@ -6,14 +6,14 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ssafy.gogosing.domain.music.Music;
-import com.ssafy.gogosing.domain.music.MusicRangeAnalyze;
+import com.ssafy.gogosing.domain.analyze.MusicRangeAnalyze;
 import com.ssafy.gogosing.domain.user.User;
-import com.ssafy.gogosing.dto.music.response.VoiceRangeMatchingMusicDto;
-import com.ssafy.gogosing.dto.music.response.VoiceRangeMatchingResponseDto;
-import com.ssafy.gogosing.dto.music.response.VoiceWaveMatchingResponseDto;
+import com.ssafy.gogosing.dto.analyze.response.VoiceRangeMatchingMusicDto;
+import com.ssafy.gogosing.dto.analyze.response.VoiceRangeMatchingResponseDto;
+import com.ssafy.gogosing.dto.analyze.response.VoiceWaveMatchingResponseDto;
 import com.ssafy.gogosing.domain.analyze.VoiceWaveMatching;
-import com.ssafy.gogosing.repository.VoiceWaveMatchingRepository;
-import com.ssafy.gogosing.repository.MusicRangeAnalyzeRepository.MusicRangeAnalyzeRepository;
+import com.ssafy.gogosing.repository.AnalyzeRepository.VoiceWaveMatchingRepository;
+import com.ssafy.gogosing.repository.AnalyzeRepository.MusicRangeAnalyzeRepository;
 import com.ssafy.gogosing.repository.MusicRepository;
 import com.ssafy.gogosing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ import org.apache.commons.exec.CommandLine;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class MusicAnalyzeService {
+public class AnalyzeService {
 
     @Value("${python.file.path}")
     private String voiceAnalyzePythonPath;

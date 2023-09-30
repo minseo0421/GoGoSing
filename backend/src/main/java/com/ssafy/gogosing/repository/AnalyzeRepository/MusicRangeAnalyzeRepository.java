@@ -1,10 +1,7 @@
-package com.ssafy.gogosing.repository.MusicRangeAnalyzeRepository;
+package com.ssafy.gogosing.repository.AnalyzeRepository;
 
-import com.ssafy.gogosing.domain.music.MusicRangeAnalyze;
+import com.ssafy.gogosing.domain.analyze.MusicRangeAnalyze;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QuerydslPredicateExecutor;
-import org.springframework.data.repository.query.Param;
 
 public interface MusicRangeAnalyzeRepository
         extends JpaRepository<MusicRangeAnalyze, Long>,

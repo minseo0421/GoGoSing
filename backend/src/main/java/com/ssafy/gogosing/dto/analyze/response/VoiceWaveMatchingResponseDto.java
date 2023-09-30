@@ -1,4 +1,4 @@
-package com.ssafy.gogosing.dto.music.response;
+package com.ssafy.gogosing.dto.analyze.response;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class VoiceRangeMatchingMusicDto {
+public class VoiceWaveMatchingResponseDto {
 
     private Long musicId;
 
@@ -18,7 +18,7 @@ public class VoiceRangeMatchingMusicDto {
     private String title;
 
     @Builder
-    public VoiceRangeMatchingMusicDto(Long musicId, String singer, String songImg, String title) {
+    public VoiceWaveMatchingResponseDto(Long musicId, String singer, String songImg, String title) {
         this.musicId = musicId;
         this.singer = singer;
         this.songImg = songImg;
