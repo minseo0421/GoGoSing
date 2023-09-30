@@ -1,6 +1,6 @@
-package com.ssafy.gogosing.repository.MusicRangeAnalyzeRepository;
+package com.ssafy.gogosing.repository.AnalyzeRepository;
 
-import com.ssafy.gogosing.domain.music.MusicRangeAnalyze;
+import com.ssafy.gogosing.domain.analyze.MusicRangeAnalyze;
 
 import java.util.List;
 

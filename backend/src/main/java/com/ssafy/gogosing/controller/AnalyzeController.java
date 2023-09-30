@@ -2,7 +2,7 @@ package com.ssafy.gogosing.controller;
 
 import com.ssafy.gogosing.domain.user.User;
 import com.ssafy.gogosing.repository.UserRepository;
-import com.ssafy.gogosing.service.MusicAnalyzeService;
+import com.ssafy.gogosing.service.AnalyzeService;
 import io.swagger.annotations.ApiOperation;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +18,10 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @Getter
-@RequestMapping("/api/music/analyze")
-public class MusicAnalyzeController {
+@RequestMapping("/api/analyze")
+public class AnalyzeController {
 
-    private final MusicAnalyzeService musicAnalyzeService;
+    private final AnalyzeService musicAnalyzeService;
 
     private final UserRepository userRepository;
 
