@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class VoiceMatchingListResponseDto {
+public class VoiceWaveMatchingResponseDto {
 
     private Long musicId;
 
@@ -18,7 +18,7 @@ public class VoiceMatchingListResponseDto {
     private String title;
 
     @Builder
-    public VoiceMatchingListResponseDto(Long musicId, String singer, String songImg, String title) {
+    public VoiceWaveMatchingResponseDto(Long musicId, String singer, String songImg, String title) {
         this.musicId = musicId;
         this.singer = singer;
         this.songImg = songImg;
