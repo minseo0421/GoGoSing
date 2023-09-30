@@ -1,4 +1,4 @@
-package com.ssafy.gogosing.domain.music;
+package com.ssafy.gogosing.domain.analyze;
 
 import lombok.AccessLevel;
 import lombok.Getter;

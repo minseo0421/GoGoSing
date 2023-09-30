@@ -1,12 +1,9 @@
-package com.ssafy.gogosing.dto.music.response;
+package com.ssafy.gogosing.dto.analyze.response;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Column;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
