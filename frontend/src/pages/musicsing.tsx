@@ -1,4 +1,4 @@
-import React, { IframeHTMLAttributes, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { setModal } from "../store/actions";
@@ -75,20 +75,10 @@ const MusicSing: React.FC = () => {
   const youtubeURL = `${album.url}`;
   const videoId = youtubeURL.split("v=")[1]?.split("&")[0];
 
-  const youtubeRef = React.useRef<HTMLIFrameElement | null>(null);
   useEffect(()=>{
     setIsplay(false);
-    if (isModalOpen) {
-      setTimeout(() => {
-        const iframe = document.querySelector<HTMLIFrameElement>("#yt2");
-        if (iframe) {
-          const a=iframe.src
-          iframe.setAttribute('credentialless','true')
-          iframe.src=a
-        }
-      }, 500);
-    }
   },[isModalOpen])
+  
   const handlePlayPause = () => {
     if (isPlay) {
       // Pause the video
@@ -96,6 +86,16 @@ const MusicSing: React.FC = () => {
     } else {
       // Play the video
       setIsplay(true);
+      setTimeout(() => {
+        const iframe = document.querySelector<HTMLIFrameElement>("#yt");
+        if (iframe) {
+          const a=iframe.src
+          iframe.setAttribute('credentialless','true')
+          iframe.src=a
+        }
+      }, 500);
+      
+      
     }
   };
 
@@ -124,7 +124,10 @@ const MusicSing: React.FC = () => {
           
           <div style={{width:'100%', height:'250px',backgroundColor:'black', marginTop:10}}>
             <img onClick={()=>{handlePlayPause()}} src="assets/colmic.png" alt=""  style={isPlay ? {display:'none', }:{width: '40%',margin:'auto'}} />
-            {isPlay && <iframe title='yt' id='yt' ref={youtubeRef} width='100%' height='250' allow={'autoplay'} src={`https://yewtu.be/embed/${videoId}`} frameBorder={0} allowFullScreen style={{pointerEvents:'none'}} />}
+            {isPlay && <iframe title='yt' id='yt' width='100%' height='250' allow={'autoplay'} src={`https://yewtu.be/embed/${videoId}`} frameBorder={0} allowFullScreen style={{pointerEvents:'none'}}
+             onPlay={()=>{
+              //여기에 녹음시작 코드 추가해야함
+             }}/>}
           </div>
         </ModalContainer>
       </Background>
