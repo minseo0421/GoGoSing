@@ -44,15 +44,12 @@ function App() {
   };
   return (
     <div className="App" style={{height:'100vh',width:'100vw', overflow:'hidden'}}>
-      <div id='musicdetailmodal'>
+      <div id='modals'>
         <MusicDetail />
-      </div>
-      <div id='genremodal'>
         <GenreSelect />
-      </div>
-      <div id='singmodal'>
         <MusicSing />
       </div>
+
       <AnimatePresence initial={false} mode="wait"> 
         <motion.div
           key={location.pathname}
