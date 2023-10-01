@@ -83,7 +83,7 @@ const MusicRecord: React.FC = () => {
       };
 
     // const recordresult = () => {
-    //     navigate("/recordresult");
+        // navigate("/recordresult");
     // };
 
     return (
