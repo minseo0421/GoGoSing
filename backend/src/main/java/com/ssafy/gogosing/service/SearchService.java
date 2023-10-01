@@ -39,6 +39,13 @@ public class SearchService {
         return builder(musicList);
     }
 
+    public List<SearchResponseDto> searchByLyric(String sentence) {
+
+        List<Music> musicList = searchRepository.findAllByLyric(sentence);
+
+        return builder(musicList);
+    }
+
     private List<SearchResponseDto> builder(List<Music> musicList) {
         List<SearchResponseDto> result = new ArrayList<>();
 

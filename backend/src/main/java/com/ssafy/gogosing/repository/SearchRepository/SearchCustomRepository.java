@@ -7,4 +7,6 @@ import java.util.List;
 public interface SearchCustomRepository {
 
     List<Music> findAllByTitle(String[] keywords);
+
+//    List<Music> findAllByLyric(String sentence);
 }

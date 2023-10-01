@@ -12,13 +12,19 @@ public class SearchCustomRepositoryImpl implements SearchCustomRepository{
 
     private final JPAQueryFactory jpaQueryFactory;
 
+    private final EntityManager em;
+
     QMusic music = QMusic.music;
 
     public SearchCustomRepositoryImpl(EntityManager em) {
         this.jpaQueryFactory = new JPAQueryFactory(em);
+        this.em = em;
     }
 
 
+    /**
+     * query dsl 이용
+     */
     @Override
     public List<Music> findAllByTitle(String[] keywords) {
         BooleanBuilder builder = new BooleanBuilder();

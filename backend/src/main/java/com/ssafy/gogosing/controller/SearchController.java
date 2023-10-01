@@ -34,4 +34,12 @@ public class SearchController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(searchService.searchBySinger(keyword));
     }
+
+    @ApiOperation(value = "가사로 노래 검색")
+    @GetMapping("/lyric")
+    public ResponseEntity<?> searchByLyric(@RequestParam("keyword") String sentence) {
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(searchService.searchByLyric(sentence));
+    }
 }
