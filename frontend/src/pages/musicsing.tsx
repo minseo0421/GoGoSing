@@ -105,9 +105,7 @@ const MusicSing: React.FC = () => {
       }).catch(err=>{
         alert('노래 상세정보 없음')
       })
-    } else {
-      alert('에러발생')
-    }
+    } 
   },[albumId])
     const handleStartRecording = () => {
         // 미디어 액세스 권한 확인 및 요청
@@ -224,7 +222,7 @@ const MusicSing: React.FC = () => {
         <ModalContainer open={isModalOpen}>
           <h1>SING</h1>
           <div style={{display:'flex', justifyContent:'start', width:'90%', alignItems:'center', height:'10%', marginTop:15, padding:'0 5px', backgroundColor:'rgba(255, 255, 255, 0.2)', borderRadius:20}}>
-            <img src={album?.songImg} alt="" style={{height:'80%', borderRadius:10, marginRight:10}} />
+            <img crossOrigin="anonymous" src={album?.songImg} alt="" style={{height:'80%', borderRadius:10, marginRight:10}} />
             <div style={{textAlign:'start'}}>
               <div className={musicStyle.titleFont}>{album?.title}</div>
               <div className={musicStyle.singerFont}>{album?.singer}</div>

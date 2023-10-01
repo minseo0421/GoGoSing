@@ -112,9 +112,7 @@ const MusicDetail: React.FC = () => {
       }).catch(err=>{
         alert('노래 상세정보 없음')
       })
-    } else {
-      alert('에러발생')
-    }
+    } 
   },[albumId])
 
   const opts = {
@@ -160,7 +158,7 @@ const MusicDetail: React.FC = () => {
             }}
           ></div>
           <div className={musicStyle.musicContainer}>
-            <img src={album?.songImg} alt="" className={musicStyle.musicImage} />
+            <img crossOrigin="anonymous" src={album?.songImg} alt="" className={musicStyle.musicImage} />
             <div className={musicStyle.titleFont}>{album?.title}</div>
             <div className={musicStyle.singerFont}>{album?.singer}</div>
             <div>
