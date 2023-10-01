@@ -83,7 +83,7 @@ const SocialSignUp: React.FC = () => {
     
     return (
       <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', width:'100%'}}>
-        {isDatePickerOpen ? <span style={{margin:'30px'}}></span>:<img src="assets/logo.png" alt="" style={{margin:'40% 0 30% 0'}}/>}
+        {isDatePickerOpen ? <span style={{margin:'30px'}}></span>:<img src="assets/logo.png" alt="" style={{margin:'40% 0 30% 0', width:'50%'}}/>}
         {/* 회원가입 form */}
         <form onSubmit={formik.handleSubmit} style={{width:'80%'}}>
             {/* 이메일 input */}

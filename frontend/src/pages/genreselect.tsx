@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setModal } from "../store/actions";
 import { AppState } from "../store/state";
 import styles from './genreselect.module.css'
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 
 import axiosInstance from "../axiosinstance";
 
@@ -75,20 +75,21 @@ const GenreSelect: React.FC = () => {
   const [defaultsel, setdefaultsel] = useState<number[]>([])
   const [selgenres, setSelGenres] = useState<number[]>([])
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(()=>{
     const AccessToken = localStorage.getItem('AccessToken')
     axiosInstance({
-      method:'get',
-      url:`${process.env.REACT_APP_API_URL}/genre`,
-      headers:{
-        Authorization:`Bearer ${AccessToken}`
-      }
+        method:'get',
+        url:`${process.env.REACT_APP_API_URL}/genre`,
+        headers:{
+            Authorization: 'Bearer ' + AccessToken,
+        }
     }).then(res=>{
-      setSelGenres(res.data)
-      setdefaultsel(res.data)
+        setSelGenres(res.data)
+        setdefaultsel(res.data)
     }).catch(err=>{
-      console.log(err)
+        console.log(err)
     })
   },[])
 
@@ -105,15 +106,19 @@ const GenreSelect: React.FC = () => {
     }
   }
   const submit = () => {
+    const AccessToken = localStorage.getItem('AccessToken')
     axiosInstance({
       method:'post',
-      url:'',
+      url:`${process.env.REACT_APP_API_URL}/genre/update`,
+      data:{genres:selgenres},
       headers:{
-        Authorization:''
+          Authorization: 'Bearer ' + AccessToken,
       }
     }).then(res => {
-      console.log(res)
-    }).catch(err => {
+      dispatch(setModal(null))
+      if (location.pathname==='/mypage'){
+        window.location.reload()
+      }}).catch(err => {
       console.log(err)
     })
   }
@@ -135,20 +140,24 @@ const GenreSelect: React.FC = () => {
             </div>
             <div className={styles.genrelist}>
               <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',margin:'5% 0',boxSizing:'border-box'}}>
-                <div onClick={()=>{genreSel(1)}} className={styles.genre}>
-                  <img src="assets/genres/1.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(1) ? styles.sel_genre : ''}`} />
-                  {selgenres.includes(1) && <div className={styles.checkmark}>v</div>}
-                </div>
                 <div onClick={()=>{genreSel(2)}} className={styles.genre}>
                   <img src="assets/genres/2.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(2) ? styles.sel_genre : ''}`} />
                   {selgenres.includes(2) && <div className={styles.checkmark}>v</div>}
                 </div>
+                <div onClick={()=>{genreSel(1)}} className={styles.genre}>
+                  <img src="assets/genres/1.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(1) ? styles.sel_genre : ''}`} />
+                  {selgenres.includes(1) && <div className={styles.checkmark}>v</div>}
+                </div>
+                <div onClick={()=>{genreSel(9)}} className={styles.genre}>
+                  <img src="assets/genres/9.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(9) ? styles.sel_genre : ''}`} />
+                  {selgenres.includes(9) && <div className={styles.checkmark}>v</div>}
+                </div>
+              </div>
+              <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',margin:'5% 0',boxSizing:'border-box'}}>
                 <div onClick={()=>{genreSel(3)}} className={styles.genre}>
                   <img src="assets/genres/3.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(3) ? styles.sel_genre : ''}`} />
                   {selgenres.includes(3) && <div className={styles.checkmark}>v</div>}
                 </div>
-              </div>
-              <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',margin:'5% 0',boxSizing:'border-box'}}>
                 <div onClick={()=>{genreSel(4)}} className={styles.genre}>
                   <img src="assets/genres/4.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(4) ? styles.sel_genre : ''}`} />
                   {selgenres.includes(4) && <div className={styles.checkmark}>v</div>}
@@ -157,9 +166,19 @@ const GenreSelect: React.FC = () => {
                   <img src="assets/genres/5.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(5) ? styles.sel_genre : ''}`} />
                   {selgenres.includes(5) && <div className={styles.checkmark}>v</div>}
                 </div>
+              </div>
+              <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',margin:'5% 0',boxSizing:'border-box'}}>
                 <div onClick={()=>{genreSel(6)}} className={styles.genre}>
                   <img src="assets/genres/6.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(6) ? styles.sel_genre : ''}`} />
                   {selgenres.includes(6) && <div className={styles.checkmark}>v</div>}
+                </div>
+                <div onClick={()=>{genreSel(8)}} className={styles.genre}>
+                  <img src="assets/genres/8.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(8) ? styles.sel_genre : ''}`} />
+                  {selgenres.includes(8) && <div className={styles.checkmark}>v</div>}
+                </div>
+                <div onClick={()=>{genreSel(10)}} className={styles.genre}>
+                  <img src="assets/genres/10.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(10) ? styles.sel_genre : ''}`} />
+                  {selgenres.includes(10) && <div className={styles.checkmark}>v</div>}
                 </div>
               </div>
               <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',margin:'5% 0',boxSizing:'border-box'}}>
@@ -167,27 +186,13 @@ const GenreSelect: React.FC = () => {
                   <img src="assets/genres/7.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(7) ? styles.sel_genre : ''}`} />
                   {selgenres.includes(7) && <div className={styles.checkmark}>v</div>}
                 </div>
-                <div onClick={()=>{genreSel(8)}} className={styles.genre}>
-                  <img src="assets/genres/8.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(8) ? styles.sel_genre : ''}`} />
-                  {selgenres.includes(8) && <div className={styles.checkmark}>v</div>}
-                </div>
-                <div onClick={()=>{genreSel(9)}} className={styles.genre}>
-                  <img src="assets/genres/9.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(9) ? styles.sel_genre : ''}`} />
-                  {selgenres.includes(9) && <div className={styles.checkmark}>v</div>}
-                </div>
-              </div>
-              <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',margin:'5% 0',boxSizing:'border-box'}}>
-                <div onClick={()=>{genreSel(10)}} className={styles.genre}>
-                  <img src="assets/genres/10.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(10) ? styles.sel_genre : ''}`} />
-                  {selgenres.includes(10) && <div className={styles.checkmark}>v</div>}
-                </div>
                 <div onClick={()=>{genreSel(11)}} className={styles.genre}>
                   <img src="assets/genres/11.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(11) ? styles.sel_genre : ''}`} />
                   {selgenres.includes(11) && <div className={styles.checkmark}>v</div>}
                 </div>
-                <div onClick={()=>{genreSel(12)}} className={styles.genre}>
-                  <img src="assets/genres/12.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(12) ? styles.sel_genre : ''}`} />
-                  {selgenres.includes(12) && <div className={styles.checkmark}>v</div>}
+                <div onClick={()=>{genreSel(14)}} className={styles.genre}>
+                  <img src="assets/genres/14.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(14) ? styles.sel_genre : ''}`} />
+                  {selgenres.includes(14) && <div className={styles.checkmark}>v</div>}
                 </div>
               </div>      
             </div>
