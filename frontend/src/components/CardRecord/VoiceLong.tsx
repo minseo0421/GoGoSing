@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import RecordLong from "./RecordLong.module.css";
-import CardSmallContainer from "../CardSmall/CardSmallContainer";
+// import CardSmallContainer from "../CardSmall/CardSmallContainer";
 import { useNavigate } from "react-router-dom";
 
 const VoiceLong: React.FC = () => {
@@ -33,7 +33,8 @@ const VoiceLong: React.FC = () => {
   return (
     <div>
       {pitch ? (
-        <div>{pitch ? <CardSmallContainer /> : null}</div>
+        // <div>{pitch ? <CardSmallContainer /> : null}</div>
+        <div>{pitch ? null : null}</div>
       ) : (
         <div className={RecordLong.container}>
           {!show && !pitch ? (
