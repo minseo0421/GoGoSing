@@ -1,6 +1,5 @@
-import React,{useEffect} from "react";
+import React,{ useEffect } from "react";
 import styles from './mypage.module.css'
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../axiosinstance";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,19 +28,19 @@ const MyPage: React.FC = () => {
         dispatch(setLogin(null))
         navigate('/')
     }
-    useEffect(()=>{
-        axios({
-            method:'get',
-            url:'',
-            headers:{
-                Authorization:''
-            }
-        }).then(res=>{
-            console.log(res)
-        }).catch(err=>{
-            console.log(err)
-        })
-    },[])
+    // useEffect(()=>{
+    //     axios({
+    //         method:'get',
+    //         url:'',
+    //         headers:{
+    //             Authorization:''
+    //         }
+    //     }).then(res=>{
+    //         console.log(res)
+    //     }).catch(err=>{
+    //         console.log(err)
+    //     })
+    // },[])
   return (
     <div>
         <div className={styles.myprofile}>

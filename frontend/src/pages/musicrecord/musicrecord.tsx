@@ -5,7 +5,6 @@ import MusicPlay from '../../components/musicrecord/musicplay';
 import axiosInstance from '../../axiosinstance';
 
 const MusicRecord: React.FC = () => {
-
     const recorderControls = useAudioRecorder();
     const [isRecording, setIsRecording] = useState(false);
     const [audioSourceURL, setAudioSourceURL] = React.useState("");
@@ -84,7 +83,7 @@ const MusicRecord: React.FC = () => {
       };
 
     // const recordresult = () => {
-    //     navigate("/recordresult");
+        // navigate("/recordresult");
     // };
 
     return (
