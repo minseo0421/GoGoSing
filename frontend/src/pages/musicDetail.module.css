@@ -13,6 +13,7 @@
 .lyricsContainer {
   position: fixed;
   top: 53vh;
+  left:0;
   height: 50vh; /* 화면 세로 크기의 50%만큼 높이를 설정 */
   color: aquamarine;
   margin-bottom: 3%;

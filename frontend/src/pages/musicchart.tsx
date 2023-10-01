@@ -4,10 +4,33 @@ import styles from "./musicchart.module.css";
 
 import { setPage } from "../store/actions";
 import { useDispatch } from "react-redux";
+import axios from "axios";
+
+interface AlbumProps {
+  musicId:number;
+  title:string;
+  singer:string|null;
+  songImg:string|null;
+  genreId:number[]|null;
+  genreType:string|null;
+}
 
 const MusicChart: React.FC = () => {
   const [chartpage, setChartPage] = useState('인기차트')
+  const [albums, setAlbums] = useState<AlbumProps[]>([])
   const dispatch = useDispatch();
+
+  useEffect(()=>{
+    axios({
+      method:'get',
+      url:`${process.env.REACT_APP_API_URL}/music/chart`,
+    }).then(res=>{
+      setAlbums(res.data)
+    }).catch(err=>{
+      console.log(err)
+    })
+  },[chartpage])
+  
   useEffect(() => {
     dispatch(setPage(2));
   }, [dispatch]);
@@ -22,28 +45,9 @@ const MusicChart: React.FC = () => {
           <span onClick={()=>setChartPage('무엇추천')}>무엇추천</span>
         </span>
       </div>
-      {chartpage==='인기차트' ? 
       <div style={{height:'90%', overflow:'auto'}}>
-        <CardLongContainer/>
+        <CardLongContainer albums={albums} />
       </div>
-      :
-      chartpage==='목소리추천' ? 
-      <div style={{height:'90%', overflow:'auto'}}>
-        {/* <CardLongContainer></CardLongContainer> */}
-      </div>
-      :
-      chartpage==='음역대추천' ? 
-      <div style={{height:'90%', overflow:'auto'}}>
-        <CardLongContainer/>
-      </div>
-      :
-      chartpage==='무엇추천' ? 
-      <div style={{height:'90%', overflow:'auto'}}>
-        {/* <CardLongContainer/> */}
-      </div>
-      :
-      null}
-      
     </div>
   );
 };

@@ -7,6 +7,7 @@ import musicStyle from "./musicDetail.module.css";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import MusicPlay from '../components/musicrecord/musicplay';
 import axiosInstance from "../axiosinstance";
+import axios from "axios";
 
 const slideUp = keyframes`
   from {
@@ -68,17 +69,46 @@ const ModalContainer = styled.div<{ open: boolean }>`
   align-items: center;
   animation: ${(props) => (props.open ? slideUp : slideDown)} 0.3s forwards;
 `;
-
+interface AlbumProps {
+  musicId: number,
+  title: string,
+  singer: string,
+  lyricist: string,
+  composer: string,
+  songImg: string,
+  releaseDate: string,
+  lyric: string,
+  mrUrl: string,
+  musicUrl:string,
+  musicPlayTime: string,
+  genreId: number[]|null,
+  genreType: string|null
+}
 const MusicSing: React.FC = () => {
   const dispatch = useDispatch();
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen === "musicSing");
-  const album = useSelector((state: AppState) => state.album);
+  const albumId = useSelector((state: AppState) => state.albumId);
   const [isPlay, setIsplay] = useState(false);
   const recorderControls = useAudioRecorder();
-    const [isRecording, setIsRecording] = useState(false);
-    const [audioSourceURL, setAudioSourceURL] = React.useState("");
-    const [file, setFile] = useState<File | null>(null);
-
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioSourceURL, setAudioSourceURL] = React.useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [album,setAlbum] = useState<AlbumProps>()
+  useEffect(()=>{
+    if (albumId) {
+      axios({
+        method:'get',
+        url:`${process.env.REACT_APP_API_URL}/music/detail/${albumId}`
+      }).then(res=>{
+        setAlbum(res.data)
+        setIsplay(false);
+      }).catch(err=>{
+        alert('노래 상세정보 없음')
+      })
+    } else {
+      alert('에러발생')
+    }
+  },[albumId])
     const handleStartRecording = () => {
         // 미디어 액세스 권한 확인 및 요청
         navigator.mediaDevices.getUserMedia({ audio: true })
@@ -152,12 +182,7 @@ const MusicSing: React.FC = () => {
     const recordresult = () => {
         // navigate("/recordresult");
     };
-  const youtubeURL = `${album.url}`;
-  const videoId = youtubeURL.split("v=")[1]?.split("&")[0];
 
-  useEffect(()=>{
-    setIsplay(false);
-  },[isModalOpen])
  
   const handlePlayPause = () => {
     if (isPlay) {
@@ -199,15 +224,15 @@ const MusicSing: React.FC = () => {
         <ModalContainer open={isModalOpen}>
           <h1>SING</h1>
           <div style={{display:'flex', justifyContent:'start', width:'90%', alignItems:'center', height:'10%', marginTop:15, padding:'0 5px', backgroundColor:'rgba(255, 255, 255, 0.2)', borderRadius:20}}>
-            <img src={album.image} alt="" style={{height:'80%', borderRadius:10, marginRight:10}} />
+            <img src={album?.songImg} alt="" style={{height:'80%', borderRadius:10, marginRight:10}} />
             <div style={{textAlign:'start'}}>
-              <div className={musicStyle.titleFont}>{album.title}</div>
-              <div className={musicStyle.singerFont}>{album.singer}</div>
+              <div className={musicStyle.titleFont}>{album?.title}</div>
+              <div className={musicStyle.singerFont}>{album?.singer}</div>
             </div>
           </div>
           
           <div style={{width:'100%', height:'250px',backgroundColor:'black', marginTop:10}}>
-            {isPlay && <iframe title='yt' id='yt' width='100%' height='250' allow={'autoplay'} src={`https://yewtu.be/embed/${videoId}`} frameBorder={0} allowFullScreen style={{pointerEvents:'none'}}
+            {isPlay && <iframe title='yt' id='yt' width='100%' height='250' allow={'autoplay'} src={`https://yewtu.be/embed/${album?.mrUrl}`} frameBorder={0} allowFullScreen style={{pointerEvents:'none'}}
              onLoad={()=>{
               // 영상 로딩 시작 시 녹음시작
               handleStartRecording()

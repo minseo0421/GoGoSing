@@ -22,7 +22,7 @@ export const setLogin = (
   type: "SET_LOGIN",
   payload: value,
 });
-export const selectAlbum = (album: any) => ({
-  type: "SELECT_ALBUM",
-  payload: album,
+export const setAlbum = (value: number|null) => ({
+  type: "SET_ALBUM",
+  payload: value,
 });
