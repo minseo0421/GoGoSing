@@ -36,6 +36,33 @@ const MyPage: React.FC = () => {
         localStorage.removeItem('RefreshToken')
         navigate('/')
     }
+    const myimgdelete = () =>{
+        axiosInstance({
+            method:'delete',
+            url:`${process.env.REACT_APP_API_URL}/user/delete/profileImage`,
+            headers:{
+              Authorization:`Bearer ${localStorage.getItem("AccessToken")}`
+            }
+          }).then(res=>{
+            Imgreload()
+          }).catch(err=>{
+          })
+    }
+    const Imgreload =()=>{
+        axiosInstance({
+            method:'get',
+            url:`${process.env.REACT_APP_API_URL}/user/detail`,
+            headers:{
+              Authorization:`Bearer ${localStorage.getItem("AccessToken")}`
+            }
+          }).then(res=>{
+            setLogin(res.data)
+            console.log(res.data)
+          }).catch(err=>{
+            localStorage.removeItem('AccessToken')
+            localStorage.removeItem('RefreshToken')
+          })
+    }
     useEffect(()=>{
         const AccessToken = localStorage.getItem('AccessToken')
         axiosInstance({
@@ -70,21 +97,62 @@ const MyPage: React.FC = () => {
                 <Link to='/'>닫기</Link>
             </div>
             <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'100%',padding:'5% 10% 10% 10%',}}>
-                <img crossOrigin="anonymous" src={isLogin?.profileImg==null ? `${isLogin?.profileImg}`:'assets/default_user.png'} alt="" style={{ width: "30%", borderRadius:'50%'}} onClick={()=>navigate('/mypage')} /> 
+                <div style={{ width: "30%"}}>
+                    <img crossOrigin="anonymous" src={isLogin?.profileImg!==null ? `${isLogin?.profileImg}`:'assets/default_user.png'} alt="" style={{ width: "80%", borderRadius:'50%'}} />
+                    {isLogin?.profileImg===`${process.env.REACT_APP_DEFAULT_IMG}` ? 
+                    <div style={{display:'flex',justifyContent:'space-evenly', width:'90%', marginLeft:'5%'}}>
+                        <button style={{borderRadius:10, border:'none',boxShadow:'5px 5px 10px rgba(0, 0, 0, 0.3)'}}>변경</button> 
+                    </div>     
+                    :
+                    <div style={{display:'flex',justifyContent:'space-evenly', width:'90%', marginLeft:'5%'}}>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            id="fileInput"
+                            style={{ display: 'none' }}
+                            onChange={({ target: { files } }) => {
+                                if (files && files[0]) {
+                                    const formData = new FormData();
+                                    formData.append('s3upload', files[0]); 
+                                    axiosInstance({
+                                    method: 'post',
+                                    url: `${process.env.REACT_APP_API_URL}/user/update/profileImage`,
+                                    data: formData,
+                                    headers: {
+                                        'Content-Type': 'multipart/form-data',
+                                        'accessToken': `Bearer ${localStorage.getItem("AccessToken")}`
+                                    },
+                                    })
+                                    .then((res) => {
+                                        alert('업로드 완료!')
+                                        Imgreload()
+                                    })
+                                    .catch((err) => {
+                                        console.log(err);
+                                    });
+                                }}}
+                            />
+                        <button style={{borderRadius:10, border:'none',boxShadow:'5px 5px 10px rgba(0, 0, 0, 0.3)'}} onClick={() => document.getElementById('fileInput')?.click()}>변경</button> 
+                        <button style={{borderRadius:10, border:'none',boxShadow:'5px 5px 10px rgba(0, 0, 0, 0.3)'}} onClick={myimgdelete}>삭제</button>
+                    </div>
+                    }
+                </div>
                 <div className={styles.info}>
                     <p style={{display:'flex',justifyContent:'start',alignItems:'center',textAlign:'center'}}>
-                        <img src={isLogin?.socialType==='KAKAO' ? "assets/kakao_logo.png":
-                    isLogin?.socialType==='GOOGLE' ? "assets/google_logo.png" :
-                    isLogin?.socialType==='NAVER' ? "assets/kakao_logo.png":''} style={{borderRadius:'50%', width:'25px', marginRight:'10px'}} alt="" />
-                        <span style={{fontSize:'25px', fontWeight:'bold', marginRight:'10px'}}>{isLogin?.nickname} 님</span> 
+                        <img src={isLogin?.socialType==='KAKAO' ? "assets/kakao_logo.png": isLogin?.socialType==='GOOGLE' ? "assets/google_logo.png" : isLogin?.socialType==='NAVER' ? "assets/kakao_logo.png":"assets/ggs_logo.png"} 
+                            style={{borderRadius:'50%', width:'25px', marginRight:'10px',marginTop:'5px', boxShadow:'5px 5px 5px rgba(0, 0, 0, 0.2)'}} alt="" />
+                        <span style={{fontSize:'25px', fontWeight:'bold', marginRight:'10px'}}>{isLogin?.nickname} 님</span>
+                        <img src="assets/account_edit.png" alt="" />
                     </p>
                     <p style={{fontSize:'16px', margin:0,}}>성　　별 : {isLogin?.gender==='MALE' ? '남자':'여자'}</p>
                     <p style={{fontSize:'16px',marginTop:0,}}>생년월일 : {isLogin?.birth}</p>
                 </div>
             </div>
             <div style={{justifyContent:'space-around',display:'flex', width:'100%', padding:'0 5% 10% 5%',boxSizing:'border-box'}}>
-                <button style={{width:'40%',borderRadius:'2rem',height:'45px',backgroundColor:'red'}}>회원정보 수정</button>
-                <button style={{width:'40%',borderRadius:'2rem',height:'45px',backgroundColor:'green'}}
+                {isLogin?.socialType==='X' ? 
+                <button style={{width:'40%',borderRadius:'2rem',height:'45px',backgroundColor:'#7290FA', border:'none',boxShadow:'5px 5px 10px rgba(0, 0, 0, 0.1)'}}>비밀번호 변경</button>
+                : <button style={{width:'40%',borderRadius:'2rem',height:'45px',backgroundColor:'rgba(255, 255, 255, 0.7)', border:'none',boxShadow:'5px 5px 10px rgba(0, 0, 0, 0.3)'}} disabled>비밀번호 변경<br /><span style={{fontSize:'6px'}}>(소셜 회원입니다)</span></button>}
+                <button style={{width:'40%',borderRadius:'2rem',height:'45px',backgroundColor:'#F27474', border:'none',boxShadow:'5px 5px 10px rgba(0, 0, 0, 0.3)'}}
                 onClick={()=>logout}>로그아웃</button>
             </div>
         </div>
