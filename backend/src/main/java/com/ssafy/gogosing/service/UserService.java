@@ -120,4 +120,11 @@ public class UserService {
 
         return new UserMypageResponseDto(user);
     }
+
+    public void nicknameUsefulCheck(String nickname) throws Exception {
+
+        if(userRepository.findByNickname(nickname).isPresent())
+            throw new Exception("이미 존재하는 닉네임입니다.");
+    }
+
 }
