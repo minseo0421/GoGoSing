@@ -1,15 +1,24 @@
-import React,{ useEffect } from "react";
+import React,{ useState, useEffect } from "react";
 import styles from './mypage.module.css'
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../axiosinstance";
-import { useDispatch, useSelector } from "react-redux";
-import { setLogin, setModal } from "../../store/actions";
-import { AppState } from "../../store/state";
+import { useDispatch } from "react-redux";
+import { setModal } from "../../store/actions";
+
+
+interface userdata { 
+    socialType: string;
+    nickname: string;
+    gender: string;
+    birth: string;
+    profileImg: string | null;    
+}
 
 const MyPage: React.FC = () => {
     const dispatch = useDispatch()
-    const isLogin = useSelector((state: AppState) => state.isLogin);
     const navigate = useNavigate()
+    const [isLogin, setLogin] = useState<userdata|null>(null)
+    const [mygenre, setMygenre] = useState<number[]>([])
     const logout = () => {
         const AccessToken = localStorage.getItem('AccessToken')
         axiosInstance({
@@ -25,22 +34,35 @@ const MyPage: React.FC = () => {
         })
         localStorage.removeItem('AccessToken')
         localStorage.removeItem('RefreshToken')
-        dispatch(setLogin(null))
         navigate('/')
     }
-    // useEffect(()=>{
-    //     axios({
-    //         method:'get',
-    //         url:'',
-    //         headers:{
-    //             Authorization:''
-    //         }
-    //     }).then(res=>{
-    //         console.log(res)
-    //     }).catch(err=>{
-    //         console.log(err)
-    //     })
-    // },[])
+    useEffect(()=>{
+        const AccessToken = localStorage.getItem('AccessToken')
+        axiosInstance({
+            method:'get',
+            url:`${process.env.REACT_APP_API_URL}/user/detail`,
+            headers:{
+              Authorization:`Bearer ${AccessToken}`
+            }
+          }).then(res=>{
+            setLogin(res.data)
+          }).catch(err=>{
+            localStorage.removeItem('AccessToken')
+            localStorage.removeItem('RefreshToken')
+          })
+
+        axiosInstance({
+            method:'get',
+            url:`${process.env.REACT_APP_API_URL}/genre`,
+            headers:{
+                Authorization: 'Bearer ' + AccessToken,
+            }
+        }).then(res=>{
+            setMygenre(res.data)
+        }).catch(err=>{
+            console.log(err)
+        })
+    },[])
   return (
     <div>
         <div className={styles.myprofile}>
@@ -48,16 +70,16 @@ const MyPage: React.FC = () => {
                 <Link to='/'>닫기</Link>
             </div>
             <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'100%',padding:'5% 10% 10% 10%',}}>
-                <img crossOrigin="anonymous" src={isLogin!.profileImg!==null ? `${isLogin!.profileImg}`:'assets/default_user.png'} alt="" style={{ width: "30%", borderRadius:'50%'}} onClick={()=>navigate('/mypage')} /> 
+                <img crossOrigin="anonymous" src={isLogin?.profileImg==null ? `${isLogin?.profileImg}`:'assets/default_user.png'} alt="" style={{ width: "30%", borderRadius:'50%'}} onClick={()=>navigate('/mypage')} /> 
                 <div className={styles.info}>
                     <p style={{display:'flex',justifyContent:'start',alignItems:'center',textAlign:'center'}}>
-                        <img src={isLogin!.socialType==='KAKAO' ? "assets/kakao_logo.png":
-                    isLogin!.socialType==='GOOGLE' ? "assets/google_logo.png" :
-                    isLogin!.socialType==='NAVER' ? "assets/kakao_logo.png":''} style={{borderRadius:'50%', width:'25px', marginRight:'10px'}} alt="" />
+                        <img src={isLogin?.socialType==='KAKAO' ? "assets/kakao_logo.png":
+                    isLogin?.socialType==='GOOGLE' ? "assets/google_logo.png" :
+                    isLogin?.socialType==='NAVER' ? "assets/kakao_logo.png":''} style={{borderRadius:'50%', width:'25px', marginRight:'10px'}} alt="" />
                         <span style={{fontSize:'25px', fontWeight:'bold', marginRight:'10px'}}>{isLogin?.nickname} 님</span> 
                     </p>
-                    <p style={{fontSize:'16px', margin:0,}}>성　　별 : {isLogin!.gender==='MALE' ? '남자':'여자'}</p>
-                    <p style={{fontSize:'16px',marginTop:0,}}>생년월일 : {isLogin!.birth}</p>
+                    <p style={{fontSize:'16px', margin:0,}}>성　　별 : {isLogin?.gender==='MALE' ? '남자':'여자'}</p>
+                    <p style={{fontSize:'16px',marginTop:0,}}>생년월일 : {isLogin?.birth}</p>
                 </div>
             </div>
             <div style={{justifyContent:'space-around',display:'flex', width:'100%', padding:'0 5% 10% 5%',boxSizing:'border-box'}}>
@@ -71,13 +93,18 @@ const MyPage: React.FC = () => {
             <p onClick={()=>dispatch(setModal('genreSelect'))}>수정하기</p>
         </div>
         <div style={{flexDirection:'row',width:'90%', display:'flex', justifyContent:'space-between', alignItems:'center', padding:'0 5%'}}>
-            <img src="assets/genre_img.png" alt="" />
-            <img src="assets/genre_img.png" alt="" />
+            {mygenre.length>=1 && <img src={`assets/genres/${mygenre[0]}.png`} alt=""  className={styles.genreimg} />}
+            {mygenre.length>=2 && <img src={`assets/genres/${mygenre[1]}.png`} alt=""  className={styles.genreimg} />}
+            {mygenre.length>=3 && <img src={`assets/genres/${mygenre[2]}.png`} alt=""  className={styles.genreimg} />}
+            {mygenre.length<3 && 
             <div style={{borderRadius:'50%',width:80,height:80,justifyContent:'center',alignItems:'center',display:'flex',flexDirection:'column'}}
              onClick={()=>dispatch(setModal('genreSelect'))}>
                 <img src="assets/plus_icon.png" alt="" />
                 <span style={{color:'#C0CEFF'}}>추가하기</span>
-            </div>
+            </div>}
+            {mygenre.length<2 && 
+            <div style={{borderRadius:'50%',width:80,height:80,justifyContent:'center',alignItems:'center',display:'flex',flexDirection:'column'}}>
+            </div>}
         </div>
         <hr style={{marginTop:20, width:'90%', border:'white 1px solid'}} />
         <div style={{display:'flex', width:'90%', justifyContent:'space-between', padding:'0 5%', alignItems:'center'}}>

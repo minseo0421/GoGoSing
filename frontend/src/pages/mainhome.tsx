@@ -1,18 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import MainContainer from "../components/MainContainer/MainContainer";
-import { setLogin, setModal, setPage } from "../store/actions";
-import { useDispatch, useSelector } from "react-redux";
+import { setModal, setPage } from "../store/actions";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 // import { useLocation } from "react-router-dom";
 import styles from './mainhome.module.css'
-import { AppState } from "../store/state";
 import axiosInstance from "../axiosinstance";
 
+interface userdata { 
+  socialType: string;
+  nickname: string;
+  gender: string;
+  birth: string;
+  profileImg: string | null;
+    
+}
 const MainHome: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isLogin = useSelector((state: AppState) => state.isLogin);
-
+  const [isLogin, setLogin] = useState<userdata|null>(null)
   useEffect(()=>{
     const AccessToken = localStorage.getItem('AccessToken')
     if (AccessToken) {
@@ -24,7 +30,7 @@ const MainHome: React.FC = () => {
         }
       }).then(res=>{
         console.log('로딩성공')
-        dispatch(setLogin(res.data))
+        setLogin(res.data)
         const user_role = localStorage.getItem('user_role') 
         if (user_role) {
           dispatch(setModal('genreSelect'))
@@ -36,7 +42,7 @@ const MainHome: React.FC = () => {
         localStorage.removeItem('user_role')
       })
     } else {
-      dispatch(setLogin(null))
+      setLogin(null)
     }
   },[dispatch])
 
