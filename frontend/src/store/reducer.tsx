@@ -4,7 +4,6 @@ const initialState: AppState = {
   isPage: 1,
   isModalOpen: null,
   isGenreSel: false,
-  isLogin: null,
   albumId: null,
 };
 
@@ -19,8 +18,6 @@ const reducer = (
       return { ...state, isModalOpen: action.payload };
     case "SET_GENRE":
       return { ...state, isGenreSel: action.payload };
-    case "SET_LOGIN":
-      return { ...state, isLogin: action.payload };
     case "SET_ALBUM":
       return { ...state, albumId: action.payload };
     default:
