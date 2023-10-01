@@ -4,6 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { setModal } from "../store/actions";
 import { AppState } from "../store/state";
 import musicStyle from "./musicDetail.module.css";
+import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
+import MusicPlay from '../components/musicrecord/musicplay';
+import axiosInstance from "../axiosinstance";
 
 const slideUp = keyframes`
   from {
@@ -71,14 +74,91 @@ const MusicSing: React.FC = () => {
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen === "musicSing");
   const album = useSelector((state: AppState) => state.album);
   const [isPlay, setIsplay] = useState(false);
+  const recorderControls = useAudioRecorder();
+    const [isRecording, setIsRecording] = useState(false);
+    const [audioSourceURL, setAudioSourceURL] = React.useState("");
+    const [file, setFile] = useState<File | null>(null);
 
+    const handleStartRecording = () => {
+        // 미디어 액세스 권한 확인 및 요청
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(function (stream) {
+                // 권한 승인됨, 녹음 시작
+                setIsRecording(!isRecording);
+                console.log(isRecording)
+                console.log(audioSourceURL)
+                // 녹음을 시작하는 코드 추가
+                recorderControls.startRecording();
+            })
+            .catch(function (error) {
+                // 권한 거부 또는 오류 발생
+                console.error('미디어 액세스 권한 확인 실패:', error);
+                // 사용자에게 오류 메시지 표시
+                alert('녹음 권한을 허용해야 녹음을 시작할 수 있습니다.');
+            });
+    };
+
+    const addAudio = (blob: Blob) => {
+        setIsRecording(true);
+        // setIsRecording(false);
+        const url = URL.createObjectURL(blob);
+        setAudioSourceURL(url);
+        // audioFile에 audio.webm을 할당
+        const audioFile = new File([blob], 'audio.webm', { type: 'audio/webm' });
+        // file을 audioFile로 변경 
+        setFile(audioFile);
+        console.log(audioSourceURL)
+
+        console.log(url)
+        console.log(audioFile);
+    };
+
+    const handleRestartRecording = () => {
+      setAudioSourceURL("");
+      setIsRecording(!isRecording);
+      console.log(audioSourceURL)
+      console.log(isRecording)
+    };
+
+    // 이 코드를 업로드 뿐만 아니라 아니라 음원 합치고, 그걸로 분석하게 해야함
+    const MyrecordUpload = () => {
+        if (file) {
+          const formData = new FormData();
+          formData.append('file', file); 
+          console.log(formData)
+          console.log(file)
+  
+          axiosInstance({
+            method: 'post',
+            url: `${process.env.REACT_APP_API_URL}/music/analyze/rangeResult`,
+            data: formData,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              'accessToken': `Bearer ${localStorage.getItem("AccessToken")}`
+            },
+          })
+            .then((res) => {
+              console.log(res);
+              alert('업로드 완료!')
+            //   navigate("/uploadresult");
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        } else {
+          console.log('파일이 선택되지 않았습니다.');
+        }
+      };
+    const recordresult = () => {
+        // navigate("/recordresult");
+    };
   const youtubeURL = `${album.url}`;
   const videoId = youtubeURL.split("v=")[1]?.split("&")[0];
 
   useEffect(()=>{
     setIsplay(false);
   },[isModalOpen])
-  
+ 
   const handlePlayPause = () => {
     if (isPlay) {
       // Pause the video
@@ -106,7 +186,11 @@ const MusicSing: React.FC = () => {
   // 여기부터 터치 이벤트 관련 start
 
   // 터치 이벤트 end
+  const recordStop = ()=>{
+    setIsplay(false);
+    recorderControls.stopRecording()
 
+  }
   return (
       <Background $imageUrl="../../assets/background.png">
         <CloseButton onClick={() => dispatch(setModal(null))}>
@@ -123,12 +207,45 @@ const MusicSing: React.FC = () => {
           </div>
           
           <div style={{width:'100%', height:'250px',backgroundColor:'black', marginTop:10}}>
-            <img onClick={()=>{handlePlayPause()}} src="assets/colmic.png" alt=""  style={isPlay ? {display:'none', }:{width: '40%',margin:'auto'}} />
             {isPlay && <iframe title='yt' id='yt' width='100%' height='250' allow={'autoplay'} src={`https://yewtu.be/embed/${videoId}`} frameBorder={0} allowFullScreen style={{pointerEvents:'none'}}
-             onPlay={()=>{
-              //여기에 녹음시작 코드 추가해야함
-             }}/>}
+             onLoad={()=>{
+              // 영상 로딩 시작 시 녹음시작
+              handleStartRecording()
+             }}
+             />}
           </div>
+          <div style={{ display: 'none' }}>
+            <AudioRecorder
+            onRecordingComplete={addAudio}
+            recorderControls={recorderControls}
+            // showVisualizer={true}
+            // downloadOnSavePress={true}
+          />
+          </div>
+          <div style={{ display: 'flex', flexDirection:'column',justifyContent: 'center', marginBottom: 24 }}>
+                {!isRecording && audioSourceURL==="" && (
+                <div style={{ margin: 'auto', marginBottom: '10px' }}>
+                  <img onClick={()=>{handlePlayPause()}} src="assets/colmic.png" alt=""  style={isPlay ? {display:'none', }:{width: '40%',margin:'auto'}} />
+                </div>
+                )}
+                {isRecording && audioSourceURL==="" && (
+                <div>
+                    <p>{recorderControls.recordingTime}</p>
+                    <p onClick={recordStop}>녹음 멈춰!!</p>
+                </div>
+                )}
+                {audioSourceURL && (
+                    <MusicPlay audioSourceURL= {audioSourceURL}/>
+                    )}
+                    {isRecording && audioSourceURL && (
+                    <button onClick={handleRestartRecording} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>다시 부르기</button>
+                    )}
+                    {isRecording && audioSourceURL&&(
+                    <button onClick={recordresult} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>
+                        이 노래로 목소리 분석하기
+                    </button>
+                    )}
+            </div>
         </ModalContainer>
       </Background>
   );

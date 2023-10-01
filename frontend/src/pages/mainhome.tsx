@@ -38,7 +38,7 @@ const MainHome: React.FC = () => {
     } else {
       dispatch(setLogin(null))
     }
-  },[isLogin, dispatch])
+  },[dispatch])
 
   useEffect(() => {
     dispatch(setPage(1));

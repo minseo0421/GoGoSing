@@ -3,7 +3,7 @@ import styled, { keyframes } from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { setModal } from "../store/actions";
 import { AppState } from "../store/state";
-import styles from './account/genresurvey.module.css'
+import styles from './genreselect.module.css'
 import { useNavigate } from "react-router-dom";
 
 import axiosInstance from "../axiosinstance";
@@ -80,7 +80,7 @@ const GenreSelect: React.FC = () => {
     const AccessToken = localStorage.getItem('AccessToken')
     axiosInstance({
       method:'get',
-      url:`${process.env.REACT_APP_API_URL}/chart`,
+      url:`${process.env.REACT_APP_API_URL}/genre`,
       headers:{
         Authorization:`Bearer ${AccessToken}`
       }
@@ -97,8 +97,7 @@ const GenreSelect: React.FC = () => {
       // 이미 선택된 genre라면 제거
       setSelGenres(selgenres.filter((item) => item !== sel));
     } else {
-      if (selgenres.length >= 3)
-      {alert('배불렁')}
+      if (selgenres.length >= 3) {alert('최대 3개까지 선택가능합니다.')}
       // 선택되지 않은 genre라면 추가
       else {
         setSelGenres([...selgenres, sel]);
@@ -136,49 +135,61 @@ const GenreSelect: React.FC = () => {
             </div>
             <div className={styles.genrelist}>
               <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',margin:'5% 0',boxSizing:'border-box'}}>
-                <div onClick={()=>{genreSel(1)}} className={`${styles.genre} ${selgenres.includes(1) ? styles.sel_genre : ''}`} style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  발라드
+                <div onClick={()=>{genreSel(1)}} className={styles.genre}>
+                  <img src="assets/genres/1.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(1) ? styles.sel_genre : ''}`} />
+                  {selgenres.includes(1) && <div className={styles.checkmark}>v</div>}
                 </div>
-                <div onClick={()=>{genreSel(2)}} className={`${styles.genre} ${selgenres.includes(2) ? styles.sel_genre : ''}`} style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  댄스
+                <div onClick={()=>{genreSel(2)}} className={styles.genre}>
+                  <img src="assets/genres/2.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(2) ? styles.sel_genre : ''}`} />
+                  {selgenres.includes(2) && <div className={styles.checkmark}>v</div>}
                 </div>
-                <div onClick={()=>{genreSel(3)}} className={`${styles.genre} ${selgenres.includes(3) ? styles.sel_genre : ''}`} style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  POP
-                </div>
-              </div>
-              <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',margin:'5% 0',boxSizing:'border-box'}}>
-                <div onClick={()=>{genreSel(4)}} className={`${styles.genre} ${selgenres.includes(4) ? styles.sel_genre : ''}`} style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  랩/힙합
-                </div>
-                <div onClick={()=>{genreSel(5)}} className={`${styles.genre} ${selgenres.includes(5) ? styles.sel_genre : ''}`} style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  R&B/Soul
-                </div>
-                <div onClick={()=>{genreSel(6)}} className={`${styles.genre} ${selgenres.includes(6) ? styles.sel_genre : ''}`} style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  인디음악
+                <div onClick={()=>{genreSel(3)}} className={styles.genre}>
+                  <img src="assets/genres/3.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(3) ? styles.sel_genre : ''}`} />
+                  {selgenres.includes(3) && <div className={styles.checkmark}>v</div>}
                 </div>
               </div>
               <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',margin:'5% 0',boxSizing:'border-box'}}>
-                <div onClick={()=>{genreSel(7)}} className={`${styles.genre} ${selgenres.includes(7) ? styles.sel_genre : ''}`} style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  록/메탈
+                <div onClick={()=>{genreSel(4)}} className={styles.genre}>
+                  <img src="assets/genres/4.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(4) ? styles.sel_genre : ''}`} />
+                  {selgenres.includes(4) && <div className={styles.checkmark}>v</div>}
                 </div>
-                <div onClick={()=>{genreSel(8)}} className={`${styles.genre} ${selgenres.includes(8) ? styles.sel_genre : ''}`} style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  포크/블루스
+                <div onClick={()=>{genreSel(5)}} className={styles.genre}>
+                  <img src="assets/genres/5.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(5) ? styles.sel_genre : ''}`} />
+                  {selgenres.includes(5) && <div className={styles.checkmark}>v</div>}
                 </div>
-                <div onClick={()=>{genreSel(9)}} className={`${styles.genre} ${selgenres.includes(9) ? styles.sel_genre : ''}`} style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  OST
+                <div onClick={()=>{genreSel(6)}} className={styles.genre}>
+                  <img src="assets/genres/6.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(6) ? styles.sel_genre : ''}`} />
+                  {selgenres.includes(6) && <div className={styles.checkmark}>v</div>}
                 </div>
               </div>
               <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',margin:'5% 0',boxSizing:'border-box'}}>
-                <div onClick={()=>{genreSel(10)}} className={`${styles.genre} ${selgenres.includes(10) ? styles.sel_genre : ''}`} style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  트로트
+                <div onClick={()=>{genreSel(7)}} className={styles.genre}>
+                  <img src="assets/genres/7.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(7) ? styles.sel_genre : ''}`} />
+                  {selgenres.includes(7) && <div className={styles.checkmark}>v</div>}
                 </div>
-                <div onClick={()=>{genreSel(11)}} className={`${styles.genre} ${selgenres.includes(11) ? styles.sel_genre : ''}`} style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  동요
+                <div onClick={()=>{genreSel(8)}} className={styles.genre}>
+                  <img src="assets/genres/8.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(8) ? styles.sel_genre : ''}`} />
+                  {selgenres.includes(8) && <div className={styles.checkmark}>v</div>}
                 </div>
-                <div onClick={()=>{genreSel(12)}} className={`${styles.genre} ${selgenres.includes(12) ? styles.sel_genre : ''}`} style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  CCM
+                <div onClick={()=>{genreSel(9)}} className={styles.genre}>
+                  <img src="assets/genres/9.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(9) ? styles.sel_genre : ''}`} />
+                  {selgenres.includes(9) && <div className={styles.checkmark}>v</div>}
                 </div>
               </div>
+              <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',margin:'5% 0',boxSizing:'border-box'}}>
+                <div onClick={()=>{genreSel(10)}} className={styles.genre}>
+                  <img src="assets/genres/10.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(10) ? styles.sel_genre : ''}`} />
+                  {selgenres.includes(10) && <div className={styles.checkmark}>v</div>}
+                </div>
+                <div onClick={()=>{genreSel(11)}} className={styles.genre}>
+                  <img src="assets/genres/11.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(11) ? styles.sel_genre : ''}`} />
+                  {selgenres.includes(11) && <div className={styles.checkmark}>v</div>}
+                </div>
+                <div onClick={()=>{genreSel(12)}} className={styles.genre}>
+                  <img src="assets/genres/12.png" alt=""  className={`${styles.genreimg} ${selgenres.includes(12) ? styles.sel_genre : ''}`} />
+                  {selgenres.includes(12) && <div className={styles.checkmark}>v</div>}
+                </div>
+              </div>      
             </div>
             {defaultsel === selgenres ? <button className={styles.btn} onClick={()=>navigate('/')}>다음에..</button> 
             : <button className={styles.btn} onClick={submit}>적용하기</button> }
