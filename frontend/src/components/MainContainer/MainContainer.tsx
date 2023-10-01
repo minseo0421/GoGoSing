@@ -27,7 +27,6 @@ const MainContainer: React.FC = () => {
       method:'get',
       url:`${process.env.REACT_APP_API_URL}/music/chart`,
     }).then(res=>{
-      console.log(res)
       setlikechart(res.data)
     }).catch(err=>{
       console.log(err)

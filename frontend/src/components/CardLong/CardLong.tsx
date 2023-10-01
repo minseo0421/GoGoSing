@@ -26,7 +26,7 @@ const CardLong: React.FC<AlbumProps> = ({ album }) => {
 
   return (
     <div onClick={handleAlbumClick} className={styles.container}>
-      <img src={album.songImg!} alt="" className={styles.image} />
+      <img crossOrigin="anonymous" src={album.songImg!} alt="" className={styles.image} />
       <div className={styles.infoContainer}>
         <div className={styles.musicinfo}>
           <span className={styles.title}>{album.title}</span>
