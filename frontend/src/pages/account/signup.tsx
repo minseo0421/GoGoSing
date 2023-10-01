@@ -38,7 +38,7 @@ const validationSchema = Yup.object().shape({
 
 const SignUp: React.FC = () => {
     const navigate = useNavigate();
-    const [firstStep, setStep] = useState(true);
+    const [firstStep, setStep] = useState(false);
     const [isCheckEmail, setCheckEmail] = useState(false) //이메일 유효성 검사 체크변수
     const [isChkModal, setChkModal] = useState(false) // 유효성 검사 모달 오픈
     const [isCheckNickname, setCheckNickname] = useState(false) //닉네임 중복검사 체크변수
@@ -58,19 +58,15 @@ const SignUp: React.FC = () => {
     };
 
     const nicknamecheck = (nickname:string) => {
-        // 지금은 지나가기위한 true 처리 나중에 지워야함
-        setCheckNickname(true)
-        
         // 닉네임 중복 체크 axios 작성
-        // axios({
-        //     method:'get',
-        //     url:`${process.env.REACT_APP_API_URL}/`,
-        // }).then(res=>{
-        //     console.log(res)
-        //     setCheckNickname(true)
-        // }).catch(err=>{
-        //     console.log(err)
-        // })
+        axios({
+            method:'get',
+            url:`${process.env.REACT_APP_API_URL}/user/nicknameCheck?nickname=${nickname}`,
+        }).then(res=>{
+            setCheckNickname(true)
+        }).catch(err=>{
+            alert('중복된 닉네임입니다!')
+        })
     }
     const emailauth = () => {
         axios({
@@ -208,8 +204,8 @@ const SignUp: React.FC = () => {
                 </p>
 
                 {/* 정상적으로 모든 입력이 되었을때 버튼 활성화 */}
-                {isDatePickerOpen ? <button type='button' className={styled.signup_btn} onClick={()=>setIsDatePickerOpen(false)}>완료</button>
-                : isCheckNickname && formik.values.gender!=='' && formik.values.birthday!==null && !formik.errors.gender && !formik.errors.birthday ?
+                {isDatePickerOpen && <button type='button' className={styled.signup_btn} onClick={()=>setIsDatePickerOpen(false)}>완료</button>}               
+                { isDatePickerOpen ? null : isCheckNickname && formik.values.gender!=='' && formik.values.birthday!==null && !formik.errors.gender && !formik.errors.birthday ?
                 <button type='submit' className={styled.signup_btn}>가입완료</button>
                 :
                 <button className={styled.signup_btn} disabled>가입완료</button>}

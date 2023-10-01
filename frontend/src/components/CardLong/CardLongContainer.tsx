@@ -1,9 +1,20 @@
 import CardLong from "./CardLong";
 import React, { useState, useRef } from "react";
 import styles from "./CardLongContainer.module.css";
-import albums from "../album";
 
-const CardLongContainer: React.FC = () => {
+interface AlbumProps {
+  musicId:number;
+  title:string;
+  singer:string|null;
+  songImg:string|null;
+  genreId:number[]|null;
+  genreType:string|null;
+}
+interface Props {
+  albums : AlbumProps[]
+}
+
+const CardLongContainer: React.FC<Props> = ({albums}) => {
   const [startY, setStartY] = useState(0);
   const [scrollTop, setscrollTop] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -65,7 +76,7 @@ const CardLongContainer: React.FC = () => {
       onMouseLeave={handleEnd}
     >
       {albums.map((album) => {
-        return <CardLong key={album.id} album={album} />; // 각 ChartLong 컴포넌트에 album 데이터를 prop으로 전달합니다.
+        return <CardLong album={album} />; // 각 ChartLong 컴포넌트에 album 데이터를 prop으로 전달합니다.
       })}
     </div>
   );

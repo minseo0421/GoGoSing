@@ -14,12 +14,5 @@ export interface AppState {
     profileImg: string | null;
   } | null;
 
-  album: {
-    id: number;
-    title: string;
-    singer: string;
-    image: any;
-    url: string;
-    lyrics: string;
-  };
+  albumId:number|null;
 }
