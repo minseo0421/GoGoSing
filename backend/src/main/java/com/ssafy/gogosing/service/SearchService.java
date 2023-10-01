@@ -16,12 +16,30 @@ import java.util.List;
 public class SearchService {
 
     private final SearchRepository searchRepository;
+
+    /**
+     * 제목 검색에는 띄워쓰기를 구분함
+     */
     public List<SearchResponseDto> searchByTitle(String keyword) {
         // 띄어쓰기로 구분된 단어 추출
         String[] keywords = keyword.split("\\s+");
 
         List<Music> musicList = searchRepository.findAllByTitle(keywords);
 
+        return builder(musicList);
+    }
+
+    /**
+     * 가수 검색에는 띄워쓰기를 구분안함
+     */
+    public List<SearchResponseDto> searchBySinger(String keyword) {
+
+        List<Music> musicList = searchRepository.findBySinger(keyword);
+
+        return builder(musicList);
+    }
+
+    private List<SearchResponseDto> builder(List<Music> musicList) {
         List<SearchResponseDto> result = new ArrayList<>();
 
         for(Music music : musicList) {
