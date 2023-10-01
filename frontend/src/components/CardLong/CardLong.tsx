@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import styles from "./CardLong.module.css";
-import { setModal, selectAlbum } from "../../store/actions";
-import { useDispatch, useSelector } from "react-redux";
+import { setModal, setAlbum } from "../../store/actions";
+import { useDispatch } from "react-redux";
 
 interface AlbumProps {
   album: {
-    id: number;
-    title: string;
-    singer: string;
-    image: any;
-    url: string;
-    lyrics: string;
+    musicId:number;
+    title:string;
+    singer:string|null;
+    songImg:string|null;
+    genreId:number[]|null;
+    genreType:string|null;
   };
 }
 
@@ -21,12 +21,12 @@ const CardLong: React.FC<AlbumProps> = ({ album }) => {
 
   const handleAlbumClick = () => {
     dispatch(setModal("musicDetail")); // 모달 표시 액션
-    dispatch(selectAlbum(album)); // 선택된 앨범 데이터 저장 액션
+    dispatch(setAlbum(album.musicId)); // 선택된 앨범 데이터 저장 액션
   };
 
   return (
     <div onClick={handleAlbumClick} className={styles.container}>
-      <img src={album.image} alt="" className={styles.image} />
+      <img src={album.songImg!} alt="" className={styles.image} />
       <div className={styles.infoContainer}>
         <div className={styles.musicinfo}>
           <span className={styles.title}>{album.title}</span>

@@ -11,7 +11,7 @@ import styles from './musiclike.module.css'
 import BarStyle from "./ContainerBar.module.css";
 import PitchSmall from "../components/CardRecord/PitchSmall";
 import VoiceSmall from "../components/CardRecord/VoiceSmall";
-import CardLongContainer from "../components/CardLong/CardLongContainer";
+// import CardLongContainer from "../components/CardLong/CardLongContainer";
 
 const MusicLike: React.FC = () => {
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const MusicLike: React.FC = () => {
         </div>
         <div>
           <div className={BarStyle.pitch}>❤️ 내가 좋아요 한 노래 !❤️</div>
-          <CardLongContainer/>
+          {/* <CardLongContainer /> */}
         </div>
       </div>
     </div>
