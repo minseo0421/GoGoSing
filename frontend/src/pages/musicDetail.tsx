@@ -5,6 +5,7 @@ import { setModal } from "../store/actions";
 import { AppState } from "../store/state";
 import musicStyle from "./musicDetail.module.css";
 import YouTube from "react-youtube";
+import axios from "axios";
 
 const slideUp = keyframes`
   from {
@@ -67,14 +68,54 @@ const ModalContainer = styled.div<{ open: boolean }>`
   animation: ${(props) => (props.open ? slideUp : slideDown)} 0.3s forwards;
 `;
 
+interface AlbumProps {
+  musicId: number,
+  title: string,
+  singer: string,
+  lyricist: string,
+  composer: string,
+  songImg: string,
+  releaseDate: string,
+  lyric: string,
+  mrUrl: string,
+  musicUrl:string,
+  musicPlayTime: string,
+  genreId: number[]|null,
+  genreType: string|null
+}
+
 const MusicDetail: React.FC = () => {
   const dispatch = useDispatch();
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen === "musicDetail");
-  const album = useSelector((state: AppState) => state.album);
+  const albumId = useSelector((state: AppState) => state.albumId);
   const [isPlay, setIsplay] = useState(false);
+  const [album,setAlbum] = useState<AlbumProps>()
 
-  const youtubeURL = `${album.url}`;
-  const videoId = youtubeURL.split("v=")[1]?.split("&")[0];
+  useEffect(()=>{
+    if (albumId) {
+      axios({
+        method:'get',
+        url:`${process.env.REACT_APP_API_URL}/music/detail/${albumId}`
+      }).then(res=>{
+        setAlbum(res.data)
+        setIsplay(false);
+        setTimeout(() => {
+          const iframe = document.querySelector<HTMLIFrameElement>("#yt");
+          if (iframe) {
+            // alert(iframe.src)
+            const a=iframe.src
+            iframe.setAttribute('credentialless','true')
+            iframe.src=a
+          }
+        }, 500);
+        
+      }).catch(err=>{
+        alert('노래 상세정보 없음')
+      })
+    } else {
+      alert('에러발생')
+    }
+  },[albumId])
 
   const opts = {
     height: "0",
@@ -85,20 +126,6 @@ const MusicDetail: React.FC = () => {
   };
 
   const youtubeRef = React.useRef<YouTube | null>(null);
-  useEffect(()=>{
-    setIsplay(false);
-    if (isModalOpen) {
-      setTimeout(() => {
-        const iframe = document.querySelector<HTMLIFrameElement>("#yt");
-        if (iframe) {
-          // alert(iframe.src)
-          const a=iframe.src
-          iframe.setAttribute('credentialless','true')
-          iframe.src=a
-        }
-      }, 500);
-    }
-  },[isModalOpen])
   const handlePlayPause = () => {
     if (isPlay) {
       // Pause the video
@@ -129,13 +156,13 @@ const MusicDetail: React.FC = () => {
             className={musicStyle.blur}
             style={{
               width: "105%",
-              backgroundImage: `url(${album.image})`,
+              backgroundImage: `url(${album?.songImg})`,
             }}
           ></div>
           <div className={musicStyle.musicContainer}>
-            <img src={album.image} alt="" className={musicStyle.musicImage} />
-            <div className={musicStyle.titleFont}>{album.title}</div>
-            <div className={musicStyle.singerFont}>{album.singer}</div>
+            <img src={album?.songImg} alt="" className={musicStyle.musicImage} />
+            <div className={musicStyle.titleFont}>{album?.title}</div>
+            <div className={musicStyle.singerFont}>{album?.singer}</div>
             <div>
               <div className={musicStyle.iconContainer}>
                 <img src="/assets/previousSong.png" alt="" />
@@ -145,13 +172,13 @@ const MusicDetail: React.FC = () => {
                   onClick={handlePlayPause}
                 />
                 <img src="/assets/nextSong.png" alt="" />
-                <YouTube id='yt' ref={youtubeRef} videoId={videoId} opts={opts} />
+                <YouTube id='yt' ref={youtubeRef} videoId={album?.musicUrl} opts={opts} />
               </div>
               <button onClick={()=>{dispatch(setModal('musicSing'))}} style={{marginTop:40}}>Sing!!</button>
             </div>
             <div className={musicStyle.lyricsContainer}>
               <p className={musicStyle.lyrics}>
-              {album.lyrics.split('\n').map((line, index) => (
+              {album?.lyric.split('\n').map((line, index) => (
               <span key={index}>
                 {line}
                 <br />
