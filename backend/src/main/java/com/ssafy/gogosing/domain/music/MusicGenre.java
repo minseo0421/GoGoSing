@@ -1,6 +1,7 @@
 package com.ssafy.gogosing.domain.music;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,4 +25,10 @@ public class MusicGenre {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "genre_id")
     private Genre genre;
+
+    @Builder
+    public MusicGenre(Music music, Genre genre) {
+        this.music = music;
+        this.genre = genre;
+    }
 }

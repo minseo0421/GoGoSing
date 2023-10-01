@@ -11,8 +11,5 @@ import lombok.Setter;
 @Setter
 public class GenreRequestDto {
 	@NotNull
-	private Long userId;
-
-	@NotNull
 	private List<Long> genres;
 }
