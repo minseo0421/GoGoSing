@@ -1,11 +1,15 @@
 package com.ssafy.gogosing.service;
 
+import com.ssafy.gogosing.domain.music.Genre;
 import com.ssafy.gogosing.domain.music.Music;
+import com.ssafy.gogosing.domain.music.PopularChart;
 import com.ssafy.gogosing.domain.user.User;
 import com.ssafy.gogosing.domain.user.UserLikeMusic;
 import com.ssafy.gogosing.dto.music.request.MusicLikeRequestDto;
 import com.ssafy.gogosing.dto.music.response.MusicDetailResponseDto;
+import com.ssafy.gogosing.dto.music.response.MusicResponseDto;
 import com.ssafy.gogosing.repository.MusicRepository;
+import com.ssafy.gogosing.repository.PopularChartRepository;
 import com.ssafy.gogosing.repository.UserLikeMusicRepository;
 import com.ssafy.gogosing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -26,6 +33,8 @@ public class MusicService {
     private final UserRepository userRepository;
     private final MusicRepository musicRepository;
     private final UserLikeMusicRepository userLikeMusicRepository;
+    private final PopularChartRepository popularChartRepository;
+
     public static final Logger logger = LoggerFactory.getLogger(MusicService.class);
 
     @Transactional
@@ -84,5 +93,27 @@ public class MusicService {
 
         logger.info("*** detail 메소드 종료");
         return musicDetailResponseDto;
+    }
+
+    public List<MusicResponseDto> popularChart() {
+        logger.info("*** popularChart 메소드 호출");
+        List<PopularChart> popularChartList = popularChartRepository.findAllByOrderByRankingAsc();
+        List<MusicResponseDto> popularChart = new ArrayList<>();
+        for(PopularChart chart : popularChartList){
+            // 장르 정보 추가로 받기
+            Optional<Music> optionalMusic = musicRepository.findById(chart.getMusic().getId());
+
+            if (optionalMusic.isEmpty()) {
+                logger.info("*** 존재하지 않는 노래 musicId : " + chart.getMusic().getId() + ", ranking : " + chart.getRanking());
+                continue;
+            }
+
+            Music music = optionalMusic.get();
+            MusicResponseDto musicResponseDto = MusicResponseDto.builder().musicId(music.getId()).title(music.getTitle()).singer(music.getSinger()).songImg(music.getSongImg()).build();
+            popularChart.add(musicResponseDto);
+        }
+        logger.info("*** popularChart 메소드 종료");
+        return popularChart;
+
     }
 }

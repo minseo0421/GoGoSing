@@ -44,4 +44,10 @@ public class MusicController {
         return ResponseEntity.ok().body(musicService.detail(musicId));
     }
 
+    @ApiOperation(value = "노래 인기 차트")
+    @GetMapping("/chart")
+    public ResponseEntity<?> popularChart() throws Exception {
+        return ResponseEntity.ok().body(musicService.popularChart());
+    }
+
 }
