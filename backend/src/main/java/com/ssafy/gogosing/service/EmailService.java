@@ -34,6 +34,15 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String senderEmail;
 
+    public void sendCertificationNumber(String userEmail) throws Exception {
+
+        if(userRepository.findByEmail(userEmail).isPresent())
+            throw new Exception("이미 존재하는 이메일입니다.");
+
+        MailContentDto mailContentDto = createCertificationMailAndSaveRedis(userEmail);
+        sendMail(mailContentDto);
+    }
+
     public MailContentDto createCertificationMailAndSaveRedis(String userEmail) throws NoSuchAlgorithmException {
         String certificationNumber = getCertificationNumber();
 

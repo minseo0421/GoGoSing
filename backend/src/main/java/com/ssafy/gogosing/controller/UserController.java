@@ -83,6 +83,14 @@ public class UserController {
                 .body(userService.getUserDetail(userDetails.getUsername()));
     }
 
+    @ApiOperation(value = "닉네임 중복 확인")
+    @GetMapping("/nicknameCheck")
+    public ResponseEntity<?> nicknameUsefulCheck(@RequestParam("nickname") String nickname) throws Exception {
+
+        userService.nicknameUsefulCheck(nickname);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
+    }
+
     /**
      * 테스트용 추후 삭제하기
      */
