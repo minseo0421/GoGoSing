@@ -76,7 +76,7 @@ interface AlbumProps {
   composer: string,
   songImg: string,
   releaseDate: string,
-  lyric: string,
+  lyric: string|null,
   mrUrl: string,
   musicUrl:string,
   musicPlayTime: string,
@@ -150,13 +150,9 @@ const MusicDetail: React.FC = () => {
           닫기
         </CloseButton>
         <ModalContainer open={isModalOpen}>
-          <div
-            className={musicStyle.blur}
-            style={{
+          <img crossOrigin="anonymous" src={album?.songImg ? album.songImg:'assets/default_album.png'}  alt="" className={musicStyle.blur} style={{
               width: "105%",
-              backgroundImage: `url(${album?.songImg})`,
-            }}
-          ></div>
+            }}/>
           <div className={musicStyle.musicContainer}>
             <img crossOrigin="anonymous" src={album?.songImg} alt="" className={musicStyle.musicImage} />
             <div className={musicStyle.titleFont}>{album?.title}</div>
@@ -177,6 +173,7 @@ const MusicDetail: React.FC = () => {
               <button onClick={()=>{dispatch(setModal('musicSing'))}} style={{marginTop:40}}>Sing!!</button>
             </div>
             <div className={musicStyle.lyricsContainer}>
+              {album?.lyric ? 
               <p className={musicStyle.lyrics}>
               {album?.lyric.split('\n').map((line, index) => (
               <span key={index}>
@@ -184,6 +181,11 @@ const MusicDetail: React.FC = () => {
                 <br />
               </span>))}
               </p>
+              :
+              <p className={musicStyle.lyrics}>
+                <h2>가사 정보가 없습니다.</h2>
+              </p>}
+              
             </div>
           </div>
         </ModalContainer>
