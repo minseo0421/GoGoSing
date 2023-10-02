@@ -40,9 +40,8 @@ public class RedisConfig {
     public RedisTemplate<?, ?> redisTemplate() {
         RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
 
-        // 아래 두 라인을 작성하지 않으면 key 값이 알 수 없는 문자로 작성됨
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());    //key 깨짐 방지
+        redisTemplate.setValueSerializer(new StringRedisSerializer());  //value 깨짐 방지
         redisTemplate.setConnectionFactory(redisConnectionFactory());
 
         return redisTemplate;
