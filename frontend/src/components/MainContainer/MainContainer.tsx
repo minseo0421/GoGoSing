@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import Cardstyles from "../MainContainer/MainContainer.module.css";
-import MainStyles from "../../pages/ContainerBar.module.css";
 import CardSmallContainer from "../CardSmall/CardSmallContainer";
 import PitchLong from "../CardRecord/PitchLong";
 import VoiceLong from "../CardRecord/VoiceLong";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface AlbumProps {
   musicId:number;
@@ -19,7 +19,7 @@ const MainContainer: React.FC = () => {
   const [scrollTop, setscrollTop] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
-
+  const navigate = useNavigate()
   const [likechart, setlikechart] = useState<AlbumProps[]>([])
   // 차트 정보 불러오는 axios 작성
   useEffect(()=>{
@@ -72,16 +72,25 @@ const MainContainer: React.FC = () => {
       onMouseUp={handleEnd}
       onMouseLeave={handleEnd}
     >
-      <div className={MainStyles.pitch}>인기 차트</div>
+      <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
+        <span style={{fontSize:'20px'}}>🎶금주의 인기차트🎶</span>
+        <span style={{fontSize:'16px'}} onClick={()=>{navigate('/chart?type=popular')}}>더보기</span>
+      </div>
       <CardSmallContainer albums={likechart.slice(0,10)} />
-      <div className={MainStyles.pitch}>🕒왓츠 유얼 ETA 왓챠 PPAP ~🕒</div>
+      <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
+        <span style={{fontSize:'20px'}}>❤️당신의 좋아요 추천 노래❤️</span>
+        <span style={{fontSize:'16px'}} onClick={()=>{navigate('/chart?type=like')}}>더보기</span>
+      </div>
       <CardSmallContainer albums={likechart.slice(0,10)} />
-      <div className={MainStyles.pitch}>
-        🎼당신의 음역대에 맞는 노래입니다 !🎼
+
+      <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
+        <span style={{fontSize:'20px'}}>🎼당신의 음역대에 맞는 노래🎼</span>
+        <span style={{fontSize:'16px'}} onClick={()=>{navigate('/chart?type=pitch')}}>더보기</span>
       </div>
       <PitchLong></PitchLong>
-      <div className={MainStyles.pitch}>
-        🎤당신의 목소리에 맞는 노래에요 !🎤
+      <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
+        <span style={{fontSize:'20px'}}>🎤당신의 목소리에 맞는 노래🎤</span>
+        <span style={{fontSize:'16px'}} onClick={()=>{navigate('/chart?type=voice')}}>더보기</span>
       </div>
       <VoiceLong></VoiceLong>
     </div>
