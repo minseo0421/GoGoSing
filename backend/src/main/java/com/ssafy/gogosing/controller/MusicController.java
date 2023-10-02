@@ -38,6 +38,13 @@ public class MusicController {
         return ResponseEntity.ok().body("");
     }
 
+    @ApiOperation(value = "유저 노래 좋아요 리스트")
+    @GetMapping("/like")
+    public ResponseEntity<?> likeMusicList(@AuthenticationPrincipal UserDetails userDetails) throws Exception {
+        musicService.likeMusicList(userDetails);
+        return ResponseEntity.ok().body(musicService.likeMusicList(userDetails));
+    }
+
     @ApiOperation(value = "노래 상세정보")
     @GetMapping("/detail/{musicId}")
     public ResponseEntity<?> detail(@PathVariable("musicId") Long musicId) throws Exception {
