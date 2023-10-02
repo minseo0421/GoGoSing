@@ -6,6 +6,7 @@ import com.ssafy.gogosing.domain.music.PopularChart;
 import com.ssafy.gogosing.domain.user.User;
 import com.ssafy.gogosing.domain.user.UserLikeMusic;
 import com.ssafy.gogosing.dto.music.request.MusicLikeRequestDto;
+import com.ssafy.gogosing.dto.music.response.LikeMusicListResponseDto;
 import com.ssafy.gogosing.dto.music.response.MusicDetailResponseDto;
 import com.ssafy.gogosing.dto.music.response.MusicResponseDto;
 import com.ssafy.gogosing.repository.MusicRepository;
@@ -79,6 +80,31 @@ public class MusicService {
         userLikeMusicRepository.delete(userLikeMusic);
         logger.info("*** 사용자 좋아요한 노래 데이터 delete 종료");
         logger.info("*** unlikeMusic 메소드 종료");
+    }
+
+    public List<LikeMusicListResponseDto> likeMusicList(UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
+
+        List<UserLikeMusic> userLikeMusicList = userLikeMusicRepository.findByUserId(user.getId());
+
+        List<LikeMusicListResponseDto> result = new ArrayList<>();
+
+        for(UserLikeMusic userLikeMusic : userLikeMusicList) {
+            Music music = musicRepository.findById(userLikeMusic.getMusic().getId())
+                    .orElseThrow(() -> new EmptyResultDataAccessException("해당 노래는 존재하지 않습니다.", 1));
+
+            LikeMusicListResponseDto likeMusicListResponseDto = LikeMusicListResponseDto.builder()
+                    .musicId(music.getId())
+                    .title(music.getTitle())
+                    .singer(music.getSinger())
+                    .songImg(music.getSongImg())
+                    .build();
+
+            result.add(likeMusicListResponseDto);
+        }
+
+        return result;
     }
 
     public MusicDetailResponseDto detail(Long musicId) {
