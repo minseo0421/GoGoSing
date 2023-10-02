@@ -1,5 +1,6 @@
 package com.ssafy.gogosing.controller;
 
+import com.ssafy.gogosing.global.redis.service.RedisSearchRankingService;
 import com.ssafy.gogosing.service.SearchService;
 import io.swagger.annotations.ApiOperation;
 import lombok.Getter;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class SearchController {
 
     private final SearchService searchService;
+
+    private final RedisSearchRankingService redisSearchRankingService;
 
     @ApiOperation(value = "제목으로 노래 검색")
     @GetMapping("/title")
@@ -41,5 +44,13 @@ public class SearchController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(searchService.searchByLyric(sentence));
+    }
+
+    @ApiOperation(value = "인기 검색어")
+    @GetMapping("ranking")
+    public ResponseEntity<?> getPopularKeywords(){
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(redisSearchRankingService.getPopularKeywords());
     }
 }
