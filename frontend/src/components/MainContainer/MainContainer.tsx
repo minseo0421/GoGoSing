@@ -87,12 +87,12 @@ const MainContainer: React.FC = () => {
         <span style={{fontSize:'20px'}}>🎼당신의 음역대에 맞는 노래🎼</span>
         <span style={{fontSize:'16px'}} onClick={()=>{navigate('/chart?type=pitch')}}>더보기</span>
       </div>
-      <PitchLong></PitchLong>
+      <PitchLong/>
       <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
         <span style={{fontSize:'20px'}}>🎤당신의 목소리에 맞는 노래🎤</span>
         <span style={{fontSize:'16px'}} onClick={()=>{navigate('/chart?type=voice')}}>더보기</span>
       </div>
-      <VoiceLong></VoiceLong>
+      <VoiceLong/>
     </div>
   );
 };
