@@ -55,8 +55,8 @@
 
 .musicImage {
   margin-top: 10%;
-  max-width: 35%;
-  max-height: 35%;
+  width: 150px;
+  height: 150px;
   border-radius: 20px;
 }
 
