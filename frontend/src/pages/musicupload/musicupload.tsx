@@ -92,7 +92,10 @@ const MusicUpload: React.FC = () => {
         <>
          {loading ? (
                 // 로딩 중인 경우 로딩 화면을 표시
-                <div>Loading...</div>
+                <div>
+                  <p>Loading...</p>
+                  <img src="assets/spinner.gif" alt="" style={{ width: '50%'}} />
+                </div>
             ) : responseData ? (
                 // 응답 데이터가 있는 경우 데이터를 표시
                 <div>
