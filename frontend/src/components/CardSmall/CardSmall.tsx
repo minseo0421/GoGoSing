@@ -26,7 +26,7 @@ const CardSmall: React.FC<AlbumProps> = ({ album }) => {
 
   return (
     <div className={styles.container}>
-      <img crossOrigin="anonymous" onClick={handleAlbumClick} src={album.songImg!} alt="" className={styles.image} />
+      <img crossOrigin="anonymous" onClick={handleAlbumClick} src={album.songImg ? album.songImg:'assets/default_album.png'} alt="" className={styles.image} />
       <div className={styles.infoContainer}>
         <div className={styles.musicinfo} onClick={handleAlbumClick}>
           <span className={styles.title}>{album.title}</span>

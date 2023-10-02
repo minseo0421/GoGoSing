@@ -25,10 +25,13 @@ const CardLong: React.FC<AlbumProps> = ({ album }) => {
   };
 
   return (
-    <div onClick={handleAlbumClick} className={styles.container}>
-      <img crossOrigin="anonymous" src={album.songImg!} alt="" className={styles.image} />
+    <div className={styles.container}>
+      <img crossOrigin="anonymous"  onClick={handleAlbumClick} src={album.songImg ? album.songImg:'assets/default_album.png'} alt="" className={styles.image} />
       <div className={styles.infoContainer}>
-        <div className={styles.musicinfo}>
+        <div className={styles.musicinfo}  onClick={handleAlbumClick}>
+          <div style={{backgroundColor:'white', width:'50px', borderRadius:"20px"}}>
+            <span className={styles.title} style={{color:'black'}}>{album.musicId}</span>
+          </div>
           <span className={styles.title}>{album.title}</span>
           <span>{album.singer}</span>
         </div>
