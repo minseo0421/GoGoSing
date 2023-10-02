@@ -2,6 +2,7 @@ package com.ssafy.gogosing.service;
 
 import com.ssafy.gogosing.domain.music.Music;
 import com.ssafy.gogosing.dto.search.response.SearchResponseDto;
+import com.ssafy.gogosing.global.redis.service.RedisSearchRankingService;
 import com.ssafy.gogosing.repository.SearchRepository.SearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,15 @@ public class SearchService {
 
     private final SearchRepository searchRepository;
 
+    private final RedisSearchRankingService redisSearchRankingService;
+
     /**
      * 제목 검색에는 띄워쓰기를 구분함
      */
     public List<SearchResponseDto> searchByTitle(String keyword) {
+
+        redisSearchRankingService.updateScore(keyword.trim());
+
         // 띄어쓰기로 구분된 단어 추출
         String[] keywords = keyword.split("\\s+");
 
@@ -33,6 +39,8 @@ public class SearchService {
      * 가수 검색에는 띄워쓰기를 구분안함
      */
     public List<SearchResponseDto> searchBySinger(String keyword) {
+
+        redisSearchRankingService.updateScore(keyword);
 
         List<Music> musicList = searchRepository.findBySinger(keyword);
 
