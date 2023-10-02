@@ -15,7 +15,7 @@ const MusicRecord: React.FC = () => {
 
     const [loading, setLoading] = useState(false);
     const [responseData, setResponseData] = useState<any | null>(null);
-    const [progress, setProgress] = useState<number>(0);
+    
     const dispatch = useDispatch();
     const handleAlbumClick = () => {
         dispatch(setModal("musicDetail"));
@@ -91,10 +91,6 @@ const MusicRecord: React.FC = () => {
               'Content-Type': 'multipart/form-data',
               'accessToken': `Bearer ${localStorage.getItem("AccessToken")}`
             },
-            onUploadProgress: (progressEvent) => {
-                let percentCompleted = Math.round((progressEvent.loaded * 100) / (progressEvent.total ?? 1));
-                setProgress(percentCompleted); // 진행 상태 업데이트
-            }
           })
             .then((res) => {
               console.log(res);
@@ -121,7 +117,8 @@ const MusicRecord: React.FC = () => {
         {loading ? (
                 // 로딩 중인 경우 로딩 화면을 표시
                 <div>
-                    <p>Loading: {progress}%</p>
+                    <p>Loading...</p>
+                    <img src="assets/spinner.gif" alt="" style={{ width: '50%'}} />
                 </div>
             ) : responseData ? (
                 // 응답 데이터가 있는 경우 데이터를 표시
