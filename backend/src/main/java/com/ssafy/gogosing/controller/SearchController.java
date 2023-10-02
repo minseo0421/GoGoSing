@@ -24,26 +24,29 @@ public class SearchController {
 
     @ApiOperation(value = "제목으로 노래 검색")
     @GetMapping("/title")
-    public ResponseEntity<?> searchByTitle(@RequestParam("keyword") String keyword) {
+    public ResponseEntity<?> searchByTitle(@RequestParam("keyword") String keyword,
+                                           @RequestParam(value = "page") int page) {
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(searchService.searchByTitle(keyword));
+                .body(searchService.searchByTitle(keyword, page));
     }
 
     @ApiOperation(value = "가수로 노래 검색")
     @GetMapping("/singer")
-    public ResponseEntity<?> searchBySinger(@RequestParam("keyword") String keyword) {
+    public ResponseEntity<?> searchBySinger(@RequestParam("keyword") String keyword,
+                                            @RequestParam(value = "page") int page) {
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(searchService.searchBySinger(keyword));
+                .body(searchService.searchBySinger(keyword, page));
     }
 
     @ApiOperation(value = "가사로 노래 검색")
     @GetMapping("/lyric")
-    public ResponseEntity<?> searchByLyric(@RequestParam("keyword") String sentence) {
+    public ResponseEntity<?> searchByLyric(@RequestParam("keyword") String sentence,
+                                           @RequestParam(value = "page") int page) {
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(searchService.searchByLyric(sentence));
+                .body(searchService.searchByLyric(sentence, page));
     }
 
     @ApiOperation(value = "인기 검색어")
