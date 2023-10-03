@@ -1,6 +1,7 @@
 package com.ssafy.gogosing.service;
 
 import com.ssafy.gogosing.domain.user.User;
+import com.ssafy.gogosing.dto.user.request.UserPasswordUpdateRequestDto;
 import com.ssafy.gogosing.dto.user.request.UserSignUpRequestDto;
 import com.ssafy.gogosing.dto.user.request.UserSingUpPlusRequestDto;
 import com.ssafy.gogosing.dto.user.response.UserMypageResponseDto;
@@ -116,6 +117,25 @@ public class UserService {
     }
 
     /**
+     * 회원 탈퇴
+     * 성공 시 accessToken blacklist 추가 및 refreshToken 삭제
+     */
+    @Transactional
+    public Long quit(String accessToken, UserDetails userDetails) {
+
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
+
+        user.updateDeletedDate();
+        userRepository.save(user);
+
+        redisRefreshTokenService.deleteRefreshToken(user.getEmail());
+        redisAccessTokenService.setRedisAccessToken(accessToken.replace("Bearer ", ""), "QUIT");
+
+        return user.getId();
+    }
+
+    /**
      * 마이페이지에 제공할 회원 상세정보 가져오기
      */
     public UserMypageResponseDto getUserDetail(String userEmail) {
@@ -144,5 +164,22 @@ public class UserService {
         user.updateNickname(nickname);
         userRepository.save(user);
         logger.info("*** updateNickname 메소드 종료");
+    }
+
+    @Transactional
+    public Long updatePassword(UserPasswordUpdateRequestDto userPasswordUpdateRequestDto, UserDetails userDetails) throws Exception {
+
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+        // 비밀번호 유효성 검사
+        if (!Pattern.matches("^.*(?=^.{9,15}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$", userPasswordUpdateRequestDto.getPassword())) {
+            throw new IllegalStateException("비밀번호 형식이 맞지않습니다.");
+        }
+
+        user.updatePassword(userPasswordUpdateRequestDto.getPassword(), passwordEncoder);
+        userRepository.save(user);
+
+        return user.getId();
     }
 }

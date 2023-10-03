@@ -123,14 +123,6 @@ public class User extends BaseTimeEntity {
     }
 
     /**
-     * 닉네임 변경
-     */
-    public void updateNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-
-    /**
      * 내 목소리 파일 변경
      */
     public Long updateVoiceFile(String voiceFile) {
@@ -143,5 +135,19 @@ public class User extends BaseTimeEntity {
         this.voiceRangeHighest = voiceRangeHighest;
         this.voiceRangeLowest = voiceRangeLowest;
         this.maxPitch = Double.valueOf(voiceRangeNum);
+    }
+
+    /**
+     * 회원탈퇴 날짜 등록
+     */
+    public void updateDeletedDate() {
+        this.deletedDate = LocalDateTime.now();
+    }
+
+    /**
+     * 닉네임 변경
+     */
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
     }
 }
