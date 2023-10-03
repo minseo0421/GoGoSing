@@ -30,20 +30,26 @@ const MusicLike: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    axiosInstance({
-      method: "get",
-      url: `${process.env.REACT_APP_API_URL}/music/like`,
-      headers: {
-        accessToken: `Bearer ${localStorage.getItem("AccessToken")}`,
-      },
-    })
-      .then((res) => {
-        setAlbums(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const token = localStorage.getItem("AccessToken");
+    if (token) {
+      getLikeList();
+    }
   }, []);
+
+  const getLikeList = async () => {
+    try {
+      const res = await axiosInstance({
+        method: "get",
+        url: `${process.env.REACT_APP_API_URL}/music/like`,
+        headers: {
+          accessToken: `Bearer ${localStorage.getItem("AccessToken")}`,
+        },
+      });
+      setAlbums(res.data);
+    } catch (error) {
+      console.log("좋아요 노래 불러오기 에러");
+    }
+  };
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
