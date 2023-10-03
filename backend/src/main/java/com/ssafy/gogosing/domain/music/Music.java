@@ -46,4 +46,11 @@ public class Music {
 
     @Column(name = "music_play_time")
     private String musicPlayTime;
+
+    @Column(name = "view_count")
+    private Long viewCount;
+
+    public void changeViewCount(Long viewCount) {
+        this.viewCount = viewCount;
+    }
 }
