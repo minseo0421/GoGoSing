@@ -12,6 +12,7 @@ import BarStyle from "./ContainerBar.module.css";
 import PitchSmall from "../components/CardRecord/PitchSmall";
 import VoiceSmall from "../components/CardRecord/VoiceSmall";
 import CardLikedContainer from "../components/CardLiked/CardLikedContainer";
+import { useNavigate } from "react-router-dom";
 
 interface AlbumProps {
   musicId: number;
@@ -24,6 +25,7 @@ interface AlbumProps {
 
 const MusicLike: React.FC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [albums, setAlbums] = useState<AlbumProps[]>([]);
   useEffect(() => {
     dispatch(setPage(4));
@@ -33,28 +35,31 @@ const MusicLike: React.FC = () => {
     const token = localStorage.getItem("AccessToken");
     if (token) {
       getLikeList();
+    } else {
+      alert('로그인이 필요한 기능입니다.')
+      navigate('/login')
     }
-  }, []);
+  }, [navigate]);
 
   const getLikeList = async () => {
-    try {
-      const res = await axiosInstance({
+    axiosInstance({
         method: "get",
         url: `${process.env.REACT_APP_API_URL}/music/like`,
         headers: {
-          accessToken: `Bearer ${localStorage.getItem("AccessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
         },
+      }).then(res=>{
+        setAlbums(res.data);
+        console.log(res.data)
+      }).catch(() =>{
+        console.log("좋아요 노래 불러오기 에러");
       });
-      setAlbums(res.data);
-    } catch (error) {
-      console.log("좋아요 노래 불러오기 에러");
-    }
-  };
-
+  }  
+  
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div className={styles.topbar}>
-        <p>보관함</p>
+        <p>좋아요</p>
       </div>
       <div style={{ height: "90%", overflow: "scroll" }}>
         <div className={RecordStyle.largeContainer}>
@@ -63,7 +68,7 @@ const MusicLike: React.FC = () => {
         </div>
         <div>
           <div className={BarStyle.pitch}>❤️ 내가 좋아요 한 노래 !❤️</div>
-          <CardLikedContainer albums={albums}></CardLikedContainer>
+          <CardLikedContainer albums={albums} />
         </div>
       </div>
     </div>
