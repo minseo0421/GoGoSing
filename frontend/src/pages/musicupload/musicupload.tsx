@@ -11,6 +11,7 @@ const MusicUpload: React.FC = () => {
     const [file, setFile] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
     const [responseData, setResponseData] = useState<any | null>(null);
+    const [imgErr, setImgErr] = useState<boolean>(false)
     const dispatch = useDispatch();
     const handleAlbumClick = () => {
         dispatch(setModal("musicDetail"));
@@ -102,7 +103,8 @@ const MusicUpload: React.FC = () => {
                     <p>노래방 번호: {responseData.musicId}</p>
                     <p>Singer: {responseData.singer}</p>
                     <p>Title: {responseData.title}</p>
-                    <img src={responseData.songImg} alt={responseData.title} onClick={handleAlbumClick}/>
+                    {imgErr ? <img crossOrigin="anonymous"  onClick={handleAlbumClick} src='assets/default_album.png' alt="" style={{ width: '60%' }} />
+                    :<img src={responseData.songImg} alt={responseData.title} onClick={handleAlbumClick} crossOrigin="anonymous" onError={()=>setImgErr(true)}/>}
                     <button onClick={Home} style={{ width: '50%', margin: 'auto', borderRadius:'10px'}}>Go home</button>
                 </div>
             ) : (
