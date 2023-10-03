@@ -31,7 +31,7 @@ const CardLongSearchContainer: React.FC<Props> = ({albums,keyword,selectedValue}
   const [albumdata, setAlbumData] = useState<AlbumProps[]>([]);
   const [pluspage, setpluspage] = useState(true);
   const [searchpage, setSearchPage] = useState(2);
-  const [last, setlast] = useState(false);
+
   useEffect(()=>{
     setAlbumData(albums)
     const AccessToken = localStorage.getItem('AccessToken')
@@ -79,58 +79,35 @@ const CardLongSearchContainer: React.FC<Props> = ({albums,keyword,selectedValue}
       return; // X축의 움직임이 더 클 경우 이벤트를 중지
     }
 
-    e.preventDefault();
-    console.log(containerRef.current.scrollTop)
+    // e.preventDefault();
     const walk = currentY - startY;
     containerRef.current.scrollTop = scrollTop - walk;
-  
+
   };
 
   const handleEnd = () => {
     setIsDragging(false); 
-  };
-  useEffect(()=>{
-    const containerRefCurrent = containerRef.current;
-    const handleScroll = () => {
-
-      if (containerRefCurrent) { 
-        const container = containerRefCurrent;
-        const isAtBottom = container.scrollTop + container.clientHeight >= container.scrollHeight;
-        if (isAtBottom && pluspage) {
-          // 스크롤이 제일 하단에 도달했을 때 loading 함수를 호출합니다.
-          setlast(true)
-        }
-      }
-    };
-  
-    // 이벤트 핸들러를 등록합니다.
-    containerRefCurrent?.addEventListener("scroll", handleScroll);
-  
-    // 컴포넌트가 언마운트 될 때 이벤트 핸들러를 제거합니다.
-    return () => {
-      containerRefCurrent?.removeEventListener("scroll", handleScroll);
-    };
-  },[pluspage])
-  useEffect(()=>{
-    if (last) {
-      const sel = selectedValue==='제목' ? 'title' : selectedValue==='가수' ? 'singer': 'lyric'
-      axios({
-        method:'get',
-        url:`${process.env.REACT_APP_API_URL}/search/${sel}?page=${searchpage}&keyword=${keyword}`,
-      }).then(res=>{
-        if (res.data.length>0) {
-          setAlbumData((prevAlbumData) => [...prevAlbumData, ...res.data]); // 이전 상태를 이용하여 업데이트
-          setSearchPage((prevSearchPage) => prevSearchPage + 1); // 이전 상태를 이용하여 업데이트
-        } else {
+    if (containerRef.current) {
+      const isAtBottom = containerRef.current.scrollTop + containerRef.current.clientHeight >= containerRef.current.scrollHeight;
+      if (isAtBottom && pluspage) {
+        // 스크롤이 제일 하단에 도달했을 때 loading 함수를 호출합니다.
+        const sel = selectedValue==='제목' ? 'title' : selectedValue==='가수' ? 'singer': 'lyric'
+        axios({
+          method:'get',
+          url:`${process.env.REACT_APP_API_URL}/search/${sel}?page=${searchpage}&keyword=${keyword}`,
+        }).then(res=>{
+          if (res.data.length>0) {
+            setAlbumData((prevAlbumData) => [...prevAlbumData, ...res.data]); // 이전 상태를 이용하여 업데이트
+            setSearchPage((prevSearchPage) => prevSearchPage + 1); // 이전 상태를 이용하여 업데이트
+          } else {
+            setpluspage(false)
+          }
+        }).catch(err=>{
           setpluspage(false)
-        }
-        setlast(false)
-      }).catch(err=>{
-        setpluspage(false)
-        console.log(err)
-      })
+        })
+      }
     }
-  },[last,selectedValue,keyword,searchpage])
+  };
   /* onTouch 관련은 Mobile 환경에서 터치가 있을 때, onMouse는 Web 환경에서 Mobile 처럼 클릭하고 이동 할 때의 케이스 */
   return (
     <div
