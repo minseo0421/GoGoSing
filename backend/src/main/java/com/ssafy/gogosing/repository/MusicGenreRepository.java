@@ -8,4 +8,6 @@ import com.ssafy.gogosing.domain.music.MusicGenre;
 
 public interface MusicGenreRepository extends JpaRepository<MusicGenre, Long> {
 	List<MusicGenre> findByGenreId(Long genreId);
+	List<MusicGenre> findByMusicId(Long musicId);
 }
+
