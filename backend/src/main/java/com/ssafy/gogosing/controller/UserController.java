@@ -1,5 +1,6 @@
 package com.ssafy.gogosing.controller;
 
+import com.ssafy.gogosing.dto.user.request.UserPasswordUpdateRequestDto;
 import com.ssafy.gogosing.dto.user.request.UserSignUpRequestDto;
 import com.ssafy.gogosing.dto.user.request.UserSingUpPlusRequestDto;
 import com.ssafy.gogosing.global.jwt.service.JwtService;
@@ -58,6 +59,17 @@ public class UserController {
         return ResponseEntity.ok().body(result);
     }
 
+    @ApiOperation(value = "회원 탈퇴")
+    @GetMapping("/quit")
+    public ResponseEntity<?> quit(HttpServletRequest httpServletRequest,
+                                  @AuthenticationPrincipal UserDetails userDetails) {
+
+        Long result = userService.quit(jwtService.extractAccessToken(httpServletRequest)
+                .orElseThrow(() -> new IllegalArgumentException("비정상적인 access token 입니다.")), userDetails);
+
+        return ResponseEntity.ok().body(result);
+    }
+
     @ApiOperation(value = "사용자 프로필 이미지 변경")
     @PostMapping("/update/profileImage")
     public ResponseEntity<?> updateProfileImage(@RequestParam("s3upload") MultipartFile multipartFile,
@@ -96,6 +108,15 @@ public class UserController {
     public ResponseEntity<?> updateNickname(@RequestParam("nickname") String nickname, @AuthenticationPrincipal UserDetails userDetails) throws Exception {
         userService.updateNickname(nickname, userDetails);
         return ResponseEntity.ok().body("");
+    }
+
+    @ApiOperation(value = "비밀번호 변경")
+    @PutMapping("/update/password")
+    public ResponseEntity<?> updatePassword(@Valid @RequestBody UserPasswordUpdateRequestDto userPasswordUpdateRequestDto,
+                                            @AuthenticationPrincipal UserDetails userDetails) throws Exception {
+
+        return ResponseEntity.ok()
+                .body(userService.updatePassword(userPasswordUpdateRequestDto, userDetails));
     }
 
     /**
