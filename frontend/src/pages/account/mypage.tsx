@@ -4,7 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../axiosinstance";
 import { useDispatch } from "react-redux";
 import { setModal } from "../../store/actions";
-
+import PitchSmall from "../../components/CardRecord/PitchSmall";
+import VoiceSmall from "../../components/CardRecord/VoiceSmall";
+import RecordStyle from "../../components/CardRecord/RecordSmall.module.css";
 
 interface userdata { 
     socialType: string;
@@ -179,8 +181,10 @@ const MyPage: React.FC = () => {
             <div style={{display:'flex', width:'90%', justifyContent:'space-between', padding:'0 5%', alignItems:'center'}}>
                 <h2>나의 음역대, 음색 데이터 관리</h2>
             </div>
-            <div style={{flexDirection:'row',width:'90%', display:'flex', justifyContent:'space-around', alignItems:'center', padding:'0 5%'}}>
-                <div style={{borderRadius:10,width:'48%',height:120,backgroundColor:'rgba(217,217,217,0.2)',justifyContent:'center',alignItems:'center',display:'flex',flexDirection:'column'}}>
+            <div className={RecordStyle.largeContainer}>
+                <PitchSmall />
+                <VoiceSmall />
+                {/* <div style={{borderRadius:10,width:'48%',height:120,backgroundColor:'rgba(217,217,217,0.2)',justifyContent:'center',alignItems:'center',display:'flex',flexDirection:'column'}}>
                     <span style={{color:'#C0CEFF',fontSize:12}}>{isLogin?.nickname}님의</span>
                     <span style={{color:'#C0CEFF',fontSize:12}}>음역대는 레3 ~ 도4 입니다.</span>
                     <span style={{color:'white', marginTop:10}}>음역대 수정하기 →</span>
@@ -190,7 +194,7 @@ const MyPage: React.FC = () => {
                     <span style={{color:'#C0CEFF',fontSize:12}}>{isLogin?.nickname}님의 음색</span>
                     <span style={{color:'#C0CEFF',fontSize:12}}>{isLogin?.nickname}이 부른 노래.mp3</span>
                     <span style={{color:'white', marginTop:10}}>목소리 수정하기 →</span>
-                </div>
+                </div> */}
             </div>
             <hr style={{marginTop:20, width:'90%', border:'white 1px solid', marginBottom:0}} />
             <div style={{justifyContent:'right',display:'flex',marginRight:'5vw'}}>

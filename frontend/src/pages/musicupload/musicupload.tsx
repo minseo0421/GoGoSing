@@ -20,7 +20,7 @@ const MusicUpload: React.FC = () => {
 
     
     const Home = () => {
-        navigate("/");
+        navigate(-1); // 뒤로가기
     };
 
     const MymusicUpload = () => {
