@@ -123,6 +123,14 @@ public class User extends BaseTimeEntity {
     }
 
     /**
+     * 닉네임 변경
+     */
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+
+    /**
      * 내 목소리 파일 변경
      */
     public Long updateVoiceFile(String voiceFile) {
