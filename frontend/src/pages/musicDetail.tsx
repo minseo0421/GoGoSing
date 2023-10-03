@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { setModal } from "../store/actions";
+import { setAlbum, setModal } from "../store/actions";
 import { AppState } from "../store/state";
 import musicStyle from "./musicDetail.module.css";
 import YouTube from "react-youtube";
@@ -76,7 +76,7 @@ interface AlbumProps {
   composer: string,
   songImg: string,
   releaseDate: string,
-  lyric: string,
+  lyric: string|null,
   mrUrl: string,
   musicUrl:string,
   musicPlayTime: string,
@@ -89,7 +89,7 @@ const MusicDetail: React.FC = () => {
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen === "musicDetail");
   const albumId = useSelector((state: AppState) => state.albumId);
   const [isPlay, setIsplay] = useState(false);
-  const [album,setAlbum] = useState<AlbumProps>()
+  const [album,setAlbumData] = useState<AlbumProps>()
 
   useEffect(()=>{
     if (albumId) {
@@ -97,17 +97,17 @@ const MusicDetail: React.FC = () => {
         method:'get',
         url:`${process.env.REACT_APP_API_URL}/music/detail/${albumId}`
       }).then(res=>{
-        setAlbum(res.data)
+        setAlbumData(res.data)
         setIsplay(false);
         setTimeout(() => {
-          const iframe = document.querySelector<HTMLIFrameElement>("#yt");
-          if (iframe) {
-            // alert(iframe.src)
-            const a=iframe.src
-            iframe.setAttribute('credentialless','true')
-            iframe.src=a
-          }
-        }, 500);
+        const iframe = document.querySelector<HTMLIFrameElement>("#yt");
+        if (iframe) {
+          // alert(iframe.src)
+          const a=iframe.src
+          iframe.setAttribute('credentialless','true')
+          iframe.src=a
+        }
+        }, 300);
         
       }).catch(err=>{
         alert('노래 상세정보 없음')
@@ -146,17 +146,13 @@ const MusicDetail: React.FC = () => {
 
   return (
       <Background $imageUrl="../../assets/background.png">
-        <CloseButton onClick={() => dispatch(setModal(null))}>
+        <CloseButton onClick={() => {dispatch(setAlbum(null)); dispatch(setModal(null))}}>
           닫기
         </CloseButton>
         <ModalContainer open={isModalOpen}>
-          <div
-            className={musicStyle.blur}
-            style={{
+          <img crossOrigin="anonymous" src={album?.songImg ? album.songImg:'assets/default_album.png'}  alt="" className={musicStyle.blur} style={{
               width: "105%",
-              backgroundImage: `url(${album?.songImg})`,
-            }}
-          ></div>
+            }}/>
           <div className={musicStyle.musicContainer}>
             <img crossOrigin="anonymous" src={album?.songImg} alt="" className={musicStyle.musicImage} />
             <div className={musicStyle.titleFont}>{album?.title}</div>
@@ -170,11 +166,14 @@ const MusicDetail: React.FC = () => {
                   onClick={handlePlayPause}
                 />
                 <img src="/assets/nextSong.png" alt="" />
-                <YouTube id='yt' ref={youtubeRef} videoId={album?.musicUrl} opts={opts} />
+                <YouTube id='yt' ref={youtubeRef} videoId={album?.musicUrl} opts={opts} onEnd={()=>{
+                  setIsplay(false)
+                }} />
               </div>
               <button onClick={()=>{dispatch(setModal('musicSing'))}} style={{marginTop:40}}>Sing!!</button>
             </div>
             <div className={musicStyle.lyricsContainer}>
+              {album?.lyric ? 
               <p className={musicStyle.lyrics}>
               {album?.lyric.split('\n').map((line, index) => (
               <span key={index}>
@@ -182,6 +181,11 @@ const MusicDetail: React.FC = () => {
                 <br />
               </span>))}
               </p>
+              :
+              <p className={musicStyle.lyrics}>
+                <h2>가사 정보가 없습니다.</h2>
+              </p>}
+              
             </div>
           </div>
         </ModalContainer>

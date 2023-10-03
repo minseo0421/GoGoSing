@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { setModal } from "../store/actions";
+import { setAlbum, setModal } from "../store/actions";
 import { AppState } from "../store/state";
 import musicStyle from "./musicDetail.module.css";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
@@ -93,14 +93,14 @@ const MusicSing: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioSourceURL, setAudioSourceURL] = React.useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [album,setAlbum] = useState<AlbumProps>()
+  const [album,setAlbumData] = useState<AlbumProps>()
   useEffect(()=>{
     if (albumId) {
       axios({
         method:'get',
         url:`${process.env.REACT_APP_API_URL}/music/detail/${albumId}`
       }).then(res=>{
-        setAlbum(res.data)
+        setAlbumData(res.data)
         setIsplay(false);
       }).catch(err=>{
         alert('노래 상세정보 없음')
@@ -216,7 +216,7 @@ const MusicSing: React.FC = () => {
   }
   return (
       <Background $imageUrl="../../assets/background.png">
-        <CloseButton onClick={() => dispatch(setModal(null))}>
+        <CloseButton onClick={() => {dispatch(setAlbum(null)); dispatch(setModal(null))}}>
           닫기
         </CloseButton>
         <ModalContainer open={isModalOpen}>

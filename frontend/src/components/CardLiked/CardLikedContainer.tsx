@@ -1,6 +1,6 @@
 import CardLiked from "./CardLiked";
 import React, { useState, useRef } from "react";
-import styles from "./CardLongContainer.module.css";
+import styles from "./CardLikedContainer.module.css";
 
 interface AlbumProps {
   musicId: number;
@@ -14,7 +14,7 @@ interface Props {
   albums: AlbumProps[];
 }
 
-const CardLongContainer: React.FC<Props> = ({ albums }) => {
+const CardLikedContainer: React.FC<Props> = ({ albums }) => {
   const [startY, setStartY] = useState(0);
   const [scrollTop, setscrollTop] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -82,4 +82,4 @@ const CardLongContainer: React.FC<Props> = ({ albums }) => {
   );
 };
 
-export default CardLongContainer;
+export default CardLikedContainer;

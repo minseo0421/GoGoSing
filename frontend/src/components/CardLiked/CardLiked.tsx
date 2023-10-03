@@ -4,7 +4,6 @@ import styles from "./CardLiked.module.css";
 import { setModal, setAlbum } from "../../store/actions";
 import { useDispatch } from "react-redux";
 import axiosInstance from "../../axiosinstance";
-import axios from "axios";
 
 interface AlbumProps {
   album: {

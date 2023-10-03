@@ -3,18 +3,19 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axiosInstance from '../../axiosinstance';
 import { AudioPlayer }  from '../../components/musicrecord/audioplay';
-
+import { setModal, setAlbum } from "../../store/actions";
+import { useDispatch } from "react-redux";
 
 const MusicUpload: React.FC = () => {
     const navigate = useNavigate();
-    // const Token = localStorage.getItem('accessToken');
-    // if (!Token) {
-    //   console.log('토큰없음')
-      
-    //   navigate('/pages/account/login');
-    // }
-
     const [file, setFile] = useState<File | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [responseData, setResponseData] = useState<any | null>(null);
+    const dispatch = useDispatch();
+    const handleAlbumClick = () => {
+        dispatch(setModal("musicDetail"));
+        dispatch(setAlbum(responseData.musicId)) // 모달 표시 액션
+      };
 
     
     const Home = () => {
@@ -22,6 +23,14 @@ const MusicUpload: React.FC = () => {
     };
 
     const MymusicUpload = () => {
+      const Token = localStorage.getItem('AccessToken');
+      if (!Token) {
+        alert('회원이 아닙니다.')
+        console.log('회원이 아닙니다.')
+        
+        return navigate('/login');
+      }
+      setLoading(true);
       if (file) {
         const formData = new FormData();
         formData.append('file', file); 
@@ -30,7 +39,7 @@ const MusicUpload: React.FC = () => {
 
         axiosInstance({
           method: 'post',
-          url: `${process.env.REACT_APP_API_URL}/music/analyze`,
+          url: `${process.env.REACT_APP_API_URL}/analyze/waveResult`,
           data: formData,
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -39,14 +48,18 @@ const MusicUpload: React.FC = () => {
         })
           .then((res) => {
             console.log(res);
+            setResponseData(res.data);
+            setLoading(false)
             alert('업로드 완료!')
-            navigate("/uploadresult");
+            // navigate("/uploadresult");
           })
           .catch((err) => {
             console.log(err);
+            setLoading(false);
           });
       } else {
         console.log('파일이 선택되지 않았습니다.');
+        setLoading(false);
       }
     };
 
@@ -77,42 +90,61 @@ const MusicUpload: React.FC = () => {
     
     return (
         <>
-        <p onClick={ Home }>X</p>
-        <h1>자신이 부른 노래를</h1>
-        <h1>업로드해 주세요!</h1>
-        <br />
-        <p>업로드 해주신 노래를 기반으로</p>
-        <p>주토끼님의 목소리와</p>
-        <p>유사한 노래를 추천합니다.</p>
-          <div style={{ display: 'flex', flexDirection:'column',justifyContent: 'center', marginBottom: 30 }}>
-            <div style={{ margin: 'auto', marginBottom: '10px' }}>
-            
-            {file===null && (
-              <div style={divStyle}>
-                <input
-                  type="file"
-                  accept="audio/*"
-                  id="fileInput"
-                  style={{ display: 'none' }}
-                  onChange={({ target: { files } }) => files && files[0] && setFile(files[0])}
-                />
-                <img
-                  src="assets/file.png"
-                  alt=""
-                  style={{ width: '30%', height: '30%', cursor: 'pointer' }}
-                  onClick={() => document.getElementById('fileInput')?.click()}
-                />
-              </div>
-            )}
-            {file && (
+         {loading ? (
+                // 로딩 중인 경우 로딩 화면을 표시
+                <div>
+                  <p>Loading...</p>
+                  <img src="assets/spinner.gif" alt="" style={{ width: '50%'}} />
+                </div>
+            ) : responseData ? (
+                // 응답 데이터가 있는 경우 데이터를 표시
+                <div>
+                    <p>노래방 번호: {responseData.musicId}</p>
+                    <p>Singer: {responseData.singer}</p>
+                    <p>Title: {responseData.title}</p>
+                    <img src={responseData.songImg} alt={responseData.title} onClick={handleAlbumClick}/>
+                    <button onClick={Home} style={{ width: '50%', margin: 'auto', borderRadius:'10px'}}>Go home</button>
+                </div>
+            ) : (
               <div>
-                <AudioPlayer audioSourceURL={window.URL.createObjectURL(file)} />
-                <button onClick={removeAudio} style={buttonStyle}>재 업로드</button>
-                <button onClick={MymusicUpload} style={buttonStyle}>업로드</button>
+              <p onClick={ Home }>X</p>
+              <h1>자신이 부른 노래를</h1>
+              <h1>업로드해 주세요!</h1>
+              <br />
+              <p>업로드 해주신 노래를 기반으로</p>
+              <p>주토끼님의 목소리와</p>
+              <p>유사한 노래를 추천합니다.</p>
+                <div style={{ display: 'flex', flexDirection:'column',justifyContent: 'center', marginBottom: 30 }}>
+                  <div style={{ margin: 'auto', marginBottom: '10px' }}>
+                  
+                  {file===null && (
+                    <div style={divStyle}>
+                      <input
+                        type="file"
+                        accept="audio/*"
+                        id="fileInput"
+                        style={{ display: 'none' }}
+                        onChange={({ target: { files } }) => files && files[0] && setFile(files[0])}
+                      />
+                      <img
+                        src="assets/file.png"
+                        alt=""
+                        style={{ width: '30%', height: '30%', cursor: 'pointer' }}
+                        onClick={() => document.getElementById('fileInput')?.click()}
+                      />
+                    </div>
+                  )}
+                  {file && (
+                    <div>
+                      <AudioPlayer audioSourceURL={window.URL.createObjectURL(file)} />
+                      <button onClick={removeAudio} style={buttonStyle}>재 업로드</button>
+                      <button onClick={MymusicUpload} style={buttonStyle}>업로드</button>
+                    </div>
+                  )}
+                  </div>
+                </div>
               </div>
-            )}
-            </div>
-          </div>
+          )}
         </>
       );
 }

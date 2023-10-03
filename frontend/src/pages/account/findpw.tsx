@@ -21,10 +21,9 @@ const FindPassWord: React.FC = () => {
   }
   return (
     <div>
-      <img src="assets/logo.png" alt="" style={{margin:'40% 0 30% 0'}}/>
-      <h1>패스워드 찾기</h1>
+      <img src="assets/logo.png" alt="" style={{margin:'40% 0 20% 0', width:'50%'}}/>
+      <h2>패스워드 찾기</h2>
       <input className={styles.input_account} type="email" placeholder="이메일" value={email} onChange={(e)=>setEmail(e.target.value)} autoComplete='current-password' />
-      <p></p>
       <button type='button' onClick={()=>findpw()}  className={styles.findbtn}>로그인</button>
     </div>
   );

@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import MusicPlay from '../../components/musicrecord/musicplay';
 import axiosInstance from '../../axiosinstance';
+import { setModal, setAlbum } from "../../store/actions";
+import { useDispatch } from "react-redux";
+
 
 const MusicRecord: React.FC = () => {
     const recorderControls = useAudioRecorder();
@@ -10,7 +13,23 @@ const MusicRecord: React.FC = () => {
     const [audioSourceURL, setAudioSourceURL] = React.useState("");
     const [file, setFile] = useState<File | null>(null);
 
+    const [loading, setLoading] = useState(false);
+    const [responseData, setResponseData] = useState<any | null>(null);
+    
+    const dispatch = useDispatch();
+    const handleAlbumClick = () => {
+        dispatch(setModal("musicDetail"));
+        dispatch(setAlbum(responseData.voiceRangeMatchingMusic.musicId)) // 모달 표시 액션
+      };
+
     const handleStartRecording = () => {
+        const Token = localStorage.getItem('AccessToken');
+            if (!Token) {
+            alert('회원이 아닙니다.')
+            console.log('회원이 아닙니다.')
+            
+            return navigate('/login');
+            }
         // 미디어 액세스 권한 확인 및 요청
         navigator.mediaDevices.getUserMedia({ audio: true })
             .then(function (stream) {
@@ -51,9 +70,13 @@ const MusicRecord: React.FC = () => {
       console.log(isRecording)
     };
 
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
+    const Home = () => {
+        navigate("/");
+    };
 
     const MyrecordUpload = () => {
+        setLoading(true);
         if (file) {
           const formData = new FormData();
           formData.append('file', file); 
@@ -62,7 +85,7 @@ const MusicRecord: React.FC = () => {
   
           axiosInstance({
             method: 'post',
-            url: `${process.env.REACT_APP_API_URL}/music/analyze/rangeResult`,
+            url: `${process.env.REACT_APP_API_URL}/analyze/rangeResult`,
             data: formData,
             headers: {
               'Content-Type': 'multipart/form-data',
@@ -71,14 +94,17 @@ const MusicRecord: React.FC = () => {
           })
             .then((res) => {
               console.log(res);
+              setResponseData(res.data);
+                setLoading(false)
               alert('업로드 완료!')
-            //   navigate("/uploadresult");
             })
             .catch((err) => {
               console.log(err);
+              setLoading(false);
             });
         } else {
-          console.log('파일이 선택되지 않았습니다.');
+          console.log('error발생.');
+          setLoading(false);
         }
       };
 
@@ -88,6 +114,26 @@ const MusicRecord: React.FC = () => {
 
     return (
         <>
+        {loading ? (
+                // 로딩 중인 경우 로딩 화면을 표시
+                <div>
+                    <p>Loading...</p>
+                    <img src="assets/spinner.gif" alt="" style={{ width: '50%'}} />
+                </div>
+            ) : responseData ? (
+                // 응답 데이터가 있는 경우 데이터를 표시
+                <div>
+                    <h1>음역대 분석 결과입니다.</h1>
+                    <p>높은 음: {responseData.voiceRangeHighest}</p>
+                    <p>낮은 음: {responseData.voiceRangeLowest}</p>
+                    <p>당신이 편하게 부를 수 있는 노래는</p>
+                    <img src={responseData.voiceRangeMatchingMusic.songImg} alt={responseData.voiceRangeMatchingMusic.title} onClick={handleAlbumClick} />
+                    <p>노래방 번호 : {responseData.voiceRangeMatchingMusic.musicId}</p>
+                    <p>가수 : {responseData.voiceRangeMatchingMusic.singer}</p>
+                    <p>노래 제목: {responseData.voiceRangeMatchingMusic.title}</p>
+                    <button onClick={Home} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>Go home</button>
+                </div>
+            ) : (
         <div>
             <div style={{ display: 'none' }}>
                     <AudioRecorder
@@ -107,7 +153,7 @@ const MusicRecord: React.FC = () => {
                 )}
                 {isRecording && audioSourceURL==="" && (
                 <div>
-                    <p>{recorderControls.recordingTime}</p>
+                    <h1>{recorderControls.recordingTime}</h1>
                     <p onClick={recorderControls.stopRecording}>녹음 멈춰!!</p>
                 </div>
                 )}
@@ -127,6 +173,7 @@ const MusicRecord: React.FC = () => {
                     )}
             </div>
         </div>
+        )}
         </>
 
       );
