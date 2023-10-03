@@ -144,4 +144,8 @@ public class User extends BaseTimeEntity {
         this.voiceRangeLowest = voiceRangeLowest;
         this.maxPitch = Double.valueOf(voiceRangeNum);
     }
+
+    public void updateDeletedDate() {
+        this.deletedDate = LocalDateTime.now();
+    }
 }
