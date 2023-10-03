@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 
 import RecordStyle from "../components/CardRecord/RecordSmall.module.css";
 
-import styles from './musiclike.module.css'
+import styles from "./musiclike.module.css";
 
 import BarStyle from "./ContainerBar.module.css";
 import PitchSmall from "../components/CardRecord/PitchSmall";
@@ -26,14 +26,14 @@ const MusicLike: React.FC = () => {
   // };
 
   return (
-    <div style={{width:'100%', height:'100%'}}>
-      <div  className={styles.topbar}>
+    <div style={{ width: "100%", height: "100%" }}>
+      <div className={styles.topbar}>
         <p>보관함</p>
       </div>
-      <div style={{height:'90%', overflow:'scroll'}}>
+      <div style={{ height: "90%", overflow: "scroll" }}>
         <div className={RecordStyle.largeContainer}>
-          <PitchSmall/>
-          <VoiceSmall/>
+          <PitchSmall />
+          <VoiceSmall />
         </div>
         <div>
           <div className={BarStyle.pitch}>❤️ 내가 좋아요 한 노래 !❤️</div>

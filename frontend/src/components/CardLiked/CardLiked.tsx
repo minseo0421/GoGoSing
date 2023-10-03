@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import styles from "./CardLong.module.css";
+import styles from "./CardLiked.module.css";
 import { setModal, setAlbum } from "../../store/actions";
 import { useDispatch } from "react-redux";
 import axiosInstance from "../../axiosinstance";
