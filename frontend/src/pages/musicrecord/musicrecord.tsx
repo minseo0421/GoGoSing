@@ -15,6 +15,7 @@ const MusicRecord: React.FC = () => {
 
     const [loading, setLoading] = useState(false);
     const [responseData, setResponseData] = useState<any | null>(null);
+    const [imgErr, setImgErr] = useState<boolean>(false)
     
     const dispatch = useDispatch();
     const handleAlbumClick = () => {
@@ -127,7 +128,8 @@ const MusicRecord: React.FC = () => {
                     <p>높은 음: {responseData.voiceRangeHighest}</p>
                     <p>낮은 음: {responseData.voiceRangeLowest}</p>
                     <p>당신이 편하게 부를 수 있는 노래는</p>
-                    <img src={responseData.voiceRangeMatchingMusic.songImg} alt={responseData.voiceRangeMatchingMusic.title} onClick={handleAlbumClick} />
+                    {imgErr ? <img crossOrigin="anonymous"  onClick={handleAlbumClick} src='assets/default_album.png' alt="" style={{ width: '60%' }} />
+                    :<img src={responseData.voiceRangeMatchingMusic.songImg || 'assets/default_album.png'} alt={responseData.voiceRangeMatchingMusic.title} onClick={handleAlbumClick} crossOrigin="anonymous" onError={()=>setImgErr(true)}/>}
                     <p>노래방 번호 : {responseData.voiceRangeMatchingMusic.musicId}</p>
                     <p>가수 : {responseData.voiceRangeMatchingMusic.singer}</p>
                     <p>노래 제목: {responseData.voiceRangeMatchingMusic.title}</p>
