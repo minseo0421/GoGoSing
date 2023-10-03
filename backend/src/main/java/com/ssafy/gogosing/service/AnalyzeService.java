@@ -41,10 +41,10 @@ import org.apache.commons.exec.CommandLine;
 @RequiredArgsConstructor
 public class AnalyzeService {
 
-    @Value("${python.file.path}")
+    @Value("${python.file.path2}")
     private String voiceWaveAnalyzePythonPath;
 
-    @Value("${python.file.path2}")
+    @Value("${python.file.path}")
     private String voiceRangeAnalyzePythonPath;
 
     @Value("${python.file.path3}")
@@ -82,7 +82,7 @@ public class AnalyzeService {
 
         try {
 
-            String fileName = generateFileName(multipartFile, user.getNickname());
+            String fileName = generateFileName(multipartFile, String.valueOf(user.getId()));
 
             byte[] fileBytes = multipartFile.getBytes();
 
@@ -114,7 +114,7 @@ public class AnalyzeService {
 
         try {
 
-            String fileName = generateTempFileName(multipartFile, user.getNickname());
+            String fileName = generateTempFileName(multipartFile, String.valueOf(user.getId()));
 
             byte[] fileBytes = multipartFile.getBytes();
 
@@ -134,11 +134,15 @@ public class AnalyzeService {
     @Transactional
     public VoiceRangeMatchingResponseDto getVoiceRangeMatching(String voiceFile, UserDetails userDetails) throws IOException {
 
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
+
         System.out.println("Python Call");
-        String[] command = new String[4];
+        String[] command = new String[5];
         command[0] = pythonPath;
         command[1] = voiceRangeAnalyzePythonPath;
         command[2] = voiceFile;
+        command[3] = String.valueOf(user.getId());
 
         String result = execPython(command);
 
@@ -160,9 +164,6 @@ public class AnalyzeService {
                 .songImg(music.getSongImg())
                 .title(music.getTitle())
                 .build();
-
-        User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
 
         user.updateVoiceRange(voiceRangeHighest, voiceRangeLowest, voiceRangeNum);
         userRepository.save(user);
@@ -209,11 +210,15 @@ public class AnalyzeService {
      */
     public VoiceWaveMatchingResponseDto getVoiceWaveMatchingMusic(String voiceFile, UserDetails userDetails) throws IOException {
 
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
+
         System.out.println("Python Call");
         String[] command = new String[4];
         command[0] = pythonPath;
         command[1] = voiceWaveAnalyzePythonPath;
         command[2] = voiceFile;
+        command[3] = String.valueOf(user.getId());
 
         String result = execPython(command);
 
@@ -240,9 +245,6 @@ public class AnalyzeService {
                 e.printStackTrace();
             }
         }
-
-        User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
 
         // 기존 데이터를 삭제합니다.
         userVoiceWaveMatchingRepository.deleteByUserId(user.getId());
@@ -338,19 +340,19 @@ public class AnalyzeService {
     /**
      * 파일 이름 생성 메서드
      */
-    private String generateFileName(MultipartFile multipartFile, String userNickname) {
+    private String generateFileName(MultipartFile multipartFile, String userId) {
         String originalName = multipartFile.getOriginalFilename();
         String fileExtension = getFileExtension(originalName);
-        return userNickname + "_voicefile" + fileExtension;
+        return userId + "_voicefile" + fileExtension;
     }
 
     /**
      * 임시 파일 이름 생성 메서드
      */
-    private String generateTempFileName(MultipartFile multipartFile, String userNickname) {
+    private String generateTempFileName(MultipartFile multipartFile, String userId) {
         String originalName = multipartFile.getOriginalFilename();
         String fileExtension = getFileExtension(originalName);
-        return userNickname + "_voiceTempfile" + fileExtension;
+        return "temp/" + userId + "_voiceTempfile" + fileExtension;
     }
 
     /**
