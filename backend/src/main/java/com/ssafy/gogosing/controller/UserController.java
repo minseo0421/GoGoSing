@@ -58,6 +58,17 @@ public class UserController {
         return ResponseEntity.ok().body(result);
     }
 
+    @ApiOperation(value = "회원 탈퇴")
+    @GetMapping("/quit")
+    public ResponseEntity<?> quit(HttpServletRequest httpServletRequest,
+                                  @AuthenticationPrincipal UserDetails userDetails) {
+
+        Long result = userService.quit(jwtService.extractAccessToken(httpServletRequest)
+                .orElseThrow(() -> new IllegalArgumentException("비정상적인 access token 입니다.")), userDetails);
+
+        return ResponseEntity.ok().body(result);
+    }
+
     @ApiOperation(value = "사용자 프로필 이미지 변경")
     @PostMapping("/update/profileImage")
     public ResponseEntity<?> updateProfileImage(@RequestParam("s3upload") MultipartFile multipartFile,
