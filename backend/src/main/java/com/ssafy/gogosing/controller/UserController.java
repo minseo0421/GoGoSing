@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "회원 탈퇴")
-    @GetMapping("/quit")
+    @PostMapping("/quit")
     public ResponseEntity<?> quit(HttpServletRequest httpServletRequest,
                                   @AuthenticationPrincipal UserDetails userDetails) {
 
