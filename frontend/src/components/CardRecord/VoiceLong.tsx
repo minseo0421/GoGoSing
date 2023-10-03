@@ -18,29 +18,27 @@ const VoiceLong: React.FC = () => {
   const getPitchList = async () => {
     try {
       const res = await axiosInstance({
-        method: 'get',
-        url: `${process.env.REACT_APP_API_URL}/analyze/waveMusicList`, 
+        method: "get",
+        url: `${process.env.REACT_APP_API_URL}/analyze/waveMusicList`,
         headers: {
-          'accessToken': `Bearer ${localStorage.getItem("AccessToken")}`,
+          accessToken: `Bearer ${localStorage.getItem("AccessToken")}`,
         },
       });
-      console.log(res)
+      console.log(res);
       console.log(res.data);
       setPitchData(res.data);
       setPitch(true);
-    } catch(error) {
-      console.error(error)
+    } catch (error) {
+      console.error(error);
     }
-  }
+  };
 
-
-    useEffect(() => {
-      const token = localStorage.getItem("AccessToken");
-      if (token) {
-        getPitchList();
-      }
-    }, []);
-
+  useEffect(() => {
+    const token = localStorage.getItem("AccessToken");
+    if (token) {
+      getPitchList();
+    }
+  }, []);
 
   // 음역대 등록, 그 상태 저장이 생기면 toggleShow는 음역대 등록하는 페이지로 이동하는 걸로 수정
   // const toggleShow = () => {
@@ -61,9 +59,9 @@ const VoiceLong: React.FC = () => {
   return (
     <div>
       {pitch ? (
-        <div>{pitch ? <CardSmallContainer albums={pitchData}/> : null}</div>
-        // <div>{pitch ? null : null}</div>
+        <div>{pitch ? <CardSmallContainer albums={pitchData} /> : null}</div>
       ) : (
+        // <div>{pitch ? null : null}</div>
         <div className={RecordLong.container}>
           {!show && !pitch ? (
             <div>
