@@ -5,6 +5,7 @@ const initialState: AppState = {
   isModalOpen: null,
   isGenreSel: false,
   albumId: null,
+  likelist:null
 };
 
 const reducer = (
@@ -20,6 +21,8 @@ const reducer = (
       return { ...state, isGenreSel: action.payload };
     case "SET_ALBUM":
       return { ...state, albumId: action.payload };
+    case "SET_LIKE":
+      return { ...state, likelist: action.payload };
     default:
       return state;
   }

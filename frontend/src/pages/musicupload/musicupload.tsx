@@ -43,8 +43,8 @@ const MusicUpload: React.FC = () => {
           url: `${process.env.REACT_APP_API_URL}/analyze/waveResult`,
           data: formData,
           headers: {
-            'Content-Type': 'multipart/form-data',
-            'accessToken': `Bearer ${localStorage.getItem("AccessToken")}`
+            "Content-Type":'multipart/form-data',
+            Authorization: `Bearer ${localStorage.getItem("AccessToken")}`
           },
         })
           .then((res) => {

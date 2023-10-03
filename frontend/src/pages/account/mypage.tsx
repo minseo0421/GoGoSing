@@ -139,7 +139,7 @@ const MyPage: React.FC = () => {
                 </div>
                 <div className={styles.info}>
                     <p style={{display:'flex',justifyContent:'start',alignItems:'center',textAlign:'center'}}>
-                        <img src={isLogin?.socialType==='KAKAO' ? "assets/kakao_logo.png": isLogin?.socialType==='GOOGLE' ? "assets/google_logo.png" : isLogin?.socialType==='NAVER' ? "assets/kakao_logo.png":"assets/ggs_logo.png"} 
+                        <img src={isLogin?.socialType==='KAKAO' ? "assets/kakao_logo.png": isLogin?.socialType==='GOOGLE' ? "assets/google_logo.png" : isLogin?.socialType==='NAVER' ? "assets/naver_logo.png":"assets/ggs_logo.png"} 
                             style={{borderRadius:'50%', width:'25px', marginRight:'10px',marginTop:'5px', boxShadow:'5px 5px 5px rgba(0, 0, 0, 0.2)'}} alt="" />
                         <span style={{fontSize:'25px', fontWeight:'bold', marginRight:'10px'}}>{isLogin?.nickname} 님</span>
                         <img src="assets/account_edit.png" alt="" onClick={()=>{alert('닉네임 변경')}} />
