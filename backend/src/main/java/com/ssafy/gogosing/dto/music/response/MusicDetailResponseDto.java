@@ -1,11 +1,13 @@
 package com.ssafy.gogosing.dto.music.response;
 
+import com.ssafy.gogosing.dto.genre.response.MusicGenreResponseDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
+import java.util.List;
+
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,12 +35,13 @@ public class MusicDetailResponseDto {
 
     private String musicPlayTime;
 
-    private Long genreId;
+    private List<MusicGenreResponseDto> genreInfo;
 
-    private String genreType;
+    private Long viewCount;
 
     @Builder
-    public MusicDetailResponseDto(Long musicId, String title, String singer, String lyricist, String composer, String songImg, String releaseDate, String lyric, String mrUrl, String musicUrl, String musicPlayTime, Long genreId, String genreType) {
+
+    public MusicDetailResponseDto(Long musicId, String title, String singer, String lyricist, String composer, String songImg, String releaseDate, String lyric, String mrUrl, String musicUrl, String musicPlayTime, List<MusicGenreResponseDto> genreInfo, Long viewCount) {
         this.musicId = musicId;
         this.title = title;
         this.singer = singer;
@@ -50,7 +53,7 @@ public class MusicDetailResponseDto {
         this.mrUrl = mrUrl;
         this.musicUrl = musicUrl;
         this.musicPlayTime = musicPlayTime;
-        this.genreId = genreId;
-        this.genreType = genreType;
+        this.genreInfo = genreInfo;
+        this.viewCount = viewCount;
     }
 }
