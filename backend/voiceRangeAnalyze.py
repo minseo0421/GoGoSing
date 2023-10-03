@@ -6,7 +6,10 @@ from pydub import AudioSegment
 import urllib.request
 import os
 
-def main(image_path):
+def main(request):
+    # 파일 이름 생성
+    userId = request[2]
+
     def convert(input_file, input_prop, output_file):
         try:
             audio = AudioSegment.from_file(input_file, format=input_prop)
@@ -20,13 +23,13 @@ def main(image_path):
     # output_wav_file = "output.wav"  # WAV로 변환된 파일 저장 경로
 
     # 웹 오디오 파일 경로 설정
-    web_url = image_path[1]
+    web_url = request[1]
     file_extension = web_url.split(".")[-1]  # URL에서 파일 확장자 추출
-    input_web_file = f"temp.{file_extension}"
+    input_web_file = f"{userId}_temp.{file_extension}"
 
     # input_web_file = 'temp.webm'
     urllib.request.urlretrieve(web_url, input_web_file)
-    output_wav_file = "change_1.wav"
+    output_wav_file = f"{userId}_change_1.wav"
 
     if ".weba" in input_web_file:
         convert(input_web_file, 'weba', output_wav_file)

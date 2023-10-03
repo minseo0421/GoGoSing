@@ -12,7 +12,9 @@ from sqlalchemy import create_engine
 import urllib.request
 from urllib.parse import quote
 
-def main(image_path):
+def main(request):
+    # 파일 이름 생성
+    userId = request[2]
 
     # 파일을 읽어올 경로
     file_path = 'config.txt'
@@ -62,13 +64,13 @@ def main(image_path):
             print(f"Error converting {input_file} to {output_file}")
 
     # 웹 오디오 파일 경로 및 출력 파일 경로 설정
-    web_url = image_path[1]
+    web_url = request[1]
     file_extension = web_url.split(".")[-1]  # URL에서 파일 확장자 추출
-    input_web_file = f"temp.{file_extension}"
+    input_web_file = f"{userId}_temp.{file_extension}"
 
     # input_web_file = 'temp.webm'
     urllib.request.urlretrieve(web_url, input_web_file)
-    output_wav_file = "change_1.wav"
+    output_wav_file = f"{userId}_change_1.wav"
 
     if ".weba" in input_web_file:
         convert(input_web_file, 'weba', output_wav_file)
@@ -121,8 +123,8 @@ def main(image_path):
     for i in range(len(mfccs)):
       df.loc[100000, 'mfcc'+str(i)+'_mean'] = mfccs[i].mean()
       df.loc[100000, 'mfcc'+str(i)+'_var'] = mfccs[i].var()
-    if os.path.exists('change_1.wav'):
-      os.remove('change_1.wav')
+    if os.path.exists(f'{userId}_change_1.wav'):
+      os.remove(f'{userId}_change_1.wav')
     labels = df[['music_id']]
     df = df.drop(columns=['music_id'])
 
