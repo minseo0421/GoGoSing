@@ -2,17 +2,16 @@ package com.ssafy.gogosing.service;
 
 import com.ssafy.gogosing.domain.music.Genre;
 import com.ssafy.gogosing.domain.music.Music;
+import com.ssafy.gogosing.domain.music.MusicGenre;
 import com.ssafy.gogosing.domain.music.PopularChart;
 import com.ssafy.gogosing.domain.user.User;
 import com.ssafy.gogosing.domain.user.UserLikeMusic;
+import com.ssafy.gogosing.dto.genre.response.MusicGenreResponseDto;
 import com.ssafy.gogosing.dto.music.request.MusicLikeRequestDto;
 import com.ssafy.gogosing.dto.music.response.LikeMusicListResponseDto;
 import com.ssafy.gogosing.dto.music.response.MusicDetailResponseDto;
 import com.ssafy.gogosing.dto.music.response.MusicResponseDto;
-import com.ssafy.gogosing.repository.MusicRepository;
-import com.ssafy.gogosing.repository.PopularChartRepository;
-import com.ssafy.gogosing.repository.UserLikeMusicRepository;
-import com.ssafy.gogosing.repository.UserRepository;
+import com.ssafy.gogosing.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +35,8 @@ public class MusicService {
     private final MusicRepository musicRepository;
     private final UserLikeMusicRepository userLikeMusicRepository;
     private final PopularChartRepository popularChartRepository;
+    private final MusicGenreRepository musicGenreRepository;
+    private final GenreRepository genreRepository;
 
     public static final Logger logger = LoggerFactory.getLogger(MusicService.class);
 
@@ -90,7 +92,7 @@ public class MusicService {
 
         List<LikeMusicListResponseDto> result = new ArrayList<>();
 
-        for(UserLikeMusic userLikeMusic : userLikeMusicList) {
+        for (UserLikeMusic userLikeMusic : userLikeMusicList) {
             Music music = musicRepository.findById(userLikeMusic.getMusic().getId())
                     .orElseThrow(() -> new EmptyResultDataAccessException("해당 노래는 존재하지 않습니다.", 1));
 
@@ -107,26 +109,59 @@ public class MusicService {
         return result;
     }
 
+    @Transactional
     public MusicDetailResponseDto detail(Long musicId) {
         logger.info("*** detail 메소드 호출");
         Music music = musicRepository.findById(musicId).orElseThrow(() -> {
             logger.info("*** 존재하지 않는 노래");
             return new EmptyResultDataAccessException("해당 노래는 존재하지 않습니다.", 1);
         });
-
-        // 장르 정보 추가로 받기
-        MusicDetailResponseDto musicDetailResponseDto = MusicDetailResponseDto.builder().musicId(music.getId()).title(music.getTitle()).singer(music.getSinger()).lyricist(music.getLyricist()).composer(music.getComposer()).songImg(music.getSongImg()).releaseDate(music.getReleaseDate()).lyric(music.getLyric()).mrUrl(music.getMrUrl()).musicUrl(music.getMusicUrl()).musicPlayTime(music.getMusicPlayTime()).build();
-
+        List<MusicGenreResponseDto> genreInfo = new ArrayList<>();
+        List<MusicGenre> musicGenreList = musicGenreRepository.findByMusicId(music.getId());
+        if (musicGenreList.isEmpty()) {
+            logger.info("*** 노래의 장르가 존재하지 않음 musicId : " + music.getId());
+        }
+        for (MusicGenre musicGenre : musicGenreList) {
+            MusicGenreResponseDto musicGenreResponseDto = MusicGenreResponseDto.builder()
+                    .genreId(musicGenre.getGenre().getId())
+                    .genreType(musicGenre.getGenre().getType()).build();
+            genreInfo.add(musicGenreResponseDto);
+        }
+        MusicDetailResponseDto musicDetailResponseDto = MusicDetailResponseDto.builder()
+                .musicId(music.getId())
+                .title(music.getTitle())
+                .singer(music.getSinger())
+                .lyricist(music.getLyricist())
+                .composer(music.getComposer())
+                .songImg(music.getSongImg())
+                .releaseDate(music.getReleaseDate())
+                .lyric(music.getLyric())
+                .mrUrl(music.getMrUrl())
+                .musicUrl(music.getMusicUrl())
+                .musicPlayTime(music.getMusicPlayTime())
+                .viewCount(music.getViewCount())
+                .genreInfo(genreInfo).build();
+        incrementViewCount(music.getId());
         logger.info("*** detail 메소드 종료");
         return musicDetailResponseDto;
+    }
+
+    public void incrementViewCount(Long musicId) {
+        logger.info("*** incrementViewCount 메소드 호출");
+        Music music = musicRepository.findById(musicId).orElseThrow(() -> {
+            logger.info("*** 존재하지 않는 노래");
+            return new EmptyResultDataAccessException("해당 노래는 존재하지 않습니다.", 1);
+        });
+        music.changeViewCount(music.getViewCount() + 1);
+        musicRepository.save(music);
+        logger.info("*** incrementViewCount 메소드 종료");
     }
 
     public List<MusicResponseDto> popularChart() {
         logger.info("*** popularChart 메소드 호출");
         List<PopularChart> popularChartList = popularChartRepository.findAllByOrderByRankingAsc();
         List<MusicResponseDto> popularChart = new ArrayList<>();
-        for(PopularChart chart : popularChartList){
-            // 장르 정보 추가로 받기
+        for (PopularChart chart : popularChartList) {
             Optional<Music> optionalMusic = musicRepository.findById(chart.getMusic().getId());
 
             if (optionalMusic.isEmpty()) {
@@ -135,7 +170,24 @@ public class MusicService {
             }
 
             Music music = optionalMusic.get();
-            MusicResponseDto musicResponseDto = MusicResponseDto.builder().musicId(music.getId()).title(music.getTitle()).singer(music.getSinger()).songImg(music.getSongImg()).build();
+            List<MusicGenreResponseDto> genreInfo = new ArrayList<>();
+            List<MusicGenre> musicGenreList = musicGenreRepository.findByMusicId(music.getId());
+            if (musicGenreList.isEmpty()) {
+                logger.info("*** 노래의 장르가 존재하지 않음 musicId : " + music.getId());
+            }
+            for (MusicGenre musicGenre : musicGenreList) {
+                MusicGenreResponseDto musicGenreResponseDto = MusicGenreResponseDto.builder()
+                        .genreId(musicGenre.getGenre().getId())
+                        .genreType(musicGenre.getGenre().getType()).build();
+                genreInfo.add(musicGenreResponseDto);
+            }
+            MusicResponseDto musicResponseDto = MusicResponseDto.builder()
+                    .musicId(music.getId())
+                    .title(music.getTitle())
+                    .singer(music.getSinger())
+                    .songImg(music.getSongImg())
+                    .viewCount(music.getViewCount())
+                    .genreInfo(genreInfo).build();
             popularChart.add(musicResponseDto);
         }
         logger.info("*** popularChart 메소드 종료");
