@@ -90,7 +90,7 @@ const MusicDetail: React.FC = () => {
   const albumId = useSelector((state: AppState) => state.albumId);
   const [isPlay, setIsplay] = useState(false);
   const [album,setAlbumData] = useState<AlbumProps>()
-
+  const [imgErr, setImgErr] = useState<boolean>(false)
   useEffect(()=>{
     if (albumId) {
       axios({
@@ -150,11 +150,15 @@ const MusicDetail: React.FC = () => {
           닫기
         </CloseButton>
         <ModalContainer open={isModalOpen}>
-          <img crossOrigin="anonymous" src={album?.songImg ? album.songImg:'assets/default_album.png'}  alt="" className={musicStyle.blur} style={{
+        {imgErr ? <img crossOrigin="anonymous" src='assets/default_album.png' alt="" className={musicStyle.blur} style={{
               width: "105%",
             }}/>
+          :<img crossOrigin="anonymous" src={album?.songImg} alt="" className={musicStyle.blur} style={{
+            width: "105%",
+          }} onError={()=>setImgErr(true)} />}
           <div className={musicStyle.musicContainer}>
-            <img crossOrigin="anonymous" src={album?.songImg} alt="" className={musicStyle.musicImage} />
+          {imgErr ? <img crossOrigin="anonymous" src='assets/default_album.png' alt="" className={musicStyle.musicImage}  />
+          :<img crossOrigin="anonymous" src={album?.songImg} alt="" className={musicStyle.musicImage}  onError={()=>setImgErr(true)} />}
             <div className={musicStyle.titleFont}>{album?.title}</div>
             <div className={musicStyle.singerFont}>{album?.singer}</div>
             <div>

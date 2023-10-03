@@ -21,7 +21,7 @@ const CardLong: React.FC<AlbumProps> = ({ album,like }) => {
 
   const dispatch = useDispatch(); // 이 위치로 변경
   const [islike, setLike] = useState<boolean|null>(null)
-  
+  const [imgErr, setImgErr] = useState<boolean>(false)
   const handleAlbumClick = () => {
     dispatch(setModal("musicDetail")); // 모달 표시 액션
     dispatch(setAlbum(album.musicId)); // 선택된 앨범 데이터 저장 액션
@@ -51,7 +51,8 @@ const CardLong: React.FC<AlbumProps> = ({ album,like }) => {
  
   return (
     <div className={styles.container}>
-      <img crossOrigin="anonymous"  onClick={handleAlbumClick} src={album.songImg ? album.songImg:'assets/default_album.png'} alt="" className={styles.image} />
+      {imgErr ? <img crossOrigin="anonymous"  onClick={handleAlbumClick} src='assets/default_album.png' alt="" className={styles.image} />
+      :<img crossOrigin="anonymous"  onClick={handleAlbumClick} src={album?.songImg!} alt="" className={styles.image} onError={()=>setImgErr(true)} />}
       <div className={styles.infoContainer}>
         <div className={styles.musicinfo}  onClick={handleAlbumClick}>
           <div style={{backgroundColor:'white', width:'50px', borderRadius:"20px"}}>

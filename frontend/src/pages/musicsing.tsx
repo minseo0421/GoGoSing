@@ -94,6 +94,7 @@ const MusicSing: React.FC = () => {
   const [audioSourceURL, setAudioSourceURL] = React.useState("");
   const [file, setFile] = useState<File | null>(null);
   const [album,setAlbumData] = useState<AlbumProps>()
+  const [imgErr, setImgErr] = useState<boolean>(false)
   useEffect(()=>{
     if (albumId) {
       axios({
@@ -222,7 +223,8 @@ const MusicSing: React.FC = () => {
         <ModalContainer open={isModalOpen}>
           <h1>SING</h1>
           <div style={{display:'flex', justifyContent:'start', width:'90%', alignItems:'center', height:'10%', marginTop:15, padding:'0 5px', backgroundColor:'rgba(255, 255, 255, 0.2)', borderRadius:20}}>
-            <img crossOrigin="anonymous" src={album?.songImg} alt="" style={{height:'80%', borderRadius:10, marginRight:10}} />
+          {imgErr ? <img crossOrigin="anonymous" src='assets/default_album.png' alt="" style={{height:'80%', borderRadius:10, marginRight:10}}  />
+          :<img crossOrigin="anonymous" src={album?.songImg} alt="" style={{height:'80%', borderRadius:10, marginRight:10}}  onError={()=>setImgErr(true)} />}
             <div style={{textAlign:'start'}}>
               <div className={musicStyle.titleFont}>{album?.title}</div>
               <div className={musicStyle.singerFont}>{album?.singer}</div>
