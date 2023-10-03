@@ -14,3 +14,7 @@ export const setAlbum = (value: number|null) => ({
   type: "SET_ALBUM",
   payload: value,
 });
+export const setLike = (value: number[]|null) => ({
+  type: "SET_LIKE",
+  payload: value,
+});
