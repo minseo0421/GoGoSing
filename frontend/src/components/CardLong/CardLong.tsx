@@ -11,9 +11,12 @@ interface AlbumProps {
     title:string;
     singer:string|null;
     songImg:string|null;
-    genreId:number[]|null;
-    genreType:string|null;
-  };
+    genreInfo:{
+      genreId:number[];
+      genreType:string;
+    }[];
+    viewCount:number;
+  }
   like:boolean|null
 }
 
