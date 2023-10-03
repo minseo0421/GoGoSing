@@ -61,6 +61,17 @@ public class AnalyzeController {
                 .body(musicAnalyzeService.getVoiceWaveAnalyzeMusicList(userDetails));
     }
 
+    @ApiOperation(value = "사용자의 목소리와 mr 합쳐주기")
+    @PostMapping("/singingRoomResult")
+    public ResponseEntity<?> getSingingRoomVoice(@RequestParam("file") MultipartFile multipartFile,
+                                                  @RequestParam("url") String url,
+                                                  @AuthenticationPrincipal UserDetails userDetails) throws IOException {
+
+        String voiceTempFile = musicAnalyzeService.saveVoiceTemp(multipartFile, userDetails);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(musicAnalyzeService.getSingingRoomVoice(voiceTempFile, url, userDetails));
+    }
+
     @ApiOperation(value = "일단 임시로 영인님 드릴려고 만든 api")
     @GetMapping("/voiceFile")
     public ResponseEntity<?> getVoiceFile(@AuthenticationPrincipal UserDetails userDetails) {
