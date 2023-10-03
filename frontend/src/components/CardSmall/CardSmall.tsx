@@ -7,14 +7,17 @@ import axiosInstance from "../../axiosinstance";
 import { AppState } from "../../store/state";
 
 interface AlbumProps {
-  album: {
+  album :{
     musicId:number;
     title:string;
     singer:string|null;
     songImg:string|null;
-    genreId:number[]|null;
-    genreType:string|null;
-  };
+    genreInfo:{
+      genreId:number[];
+      genreType:string;
+    }[];
+    viewCount:number;
+  }
 }
 
 const CardSmall: React.FC<AlbumProps> = ({ album }) => {

@@ -11,10 +11,12 @@ interface AlbumProps {
   title:string;
   singer:string|null;
   songImg:string|null;
-  genreId:number[]|null;
-  genreType:string|null;
+  genreInfo:{
+    genreId:number[];
+    genreType:string;
+  }[];
+  viewCount:number;
 }
-
 const MusicChart: React.FC = () => {
   const [chartpage, setChartPage] = useState('인기차트')
   const [albums, setAlbums] = useState<AlbumProps[]>([])
