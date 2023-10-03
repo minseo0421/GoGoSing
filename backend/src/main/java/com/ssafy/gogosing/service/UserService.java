@@ -9,6 +9,8 @@ import com.ssafy.gogosing.global.redis.service.RedisAccessTokenService;
 import com.ssafy.gogosing.global.redis.service.RedisRefreshTokenService;
 import com.ssafy.gogosing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +35,8 @@ public class UserService {
     private final EmailService emailCertificationService;
 
     private final CertificationNumberDao certificationNumberDao;
+
+    public static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     /**
      * 일반 회원 가입
@@ -127,4 +131,18 @@ public class UserService {
             throw new Exception("이미 존재하는 닉네임입니다.");
     }
 
+    @Transactional
+    public void updateNickname(String nickname, UserDetails userDetails) throws Exception {
+        logger.info("*** updateNickname 메소드 호출");
+
+        User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(() ->
+        {
+            logger.info("*** 존재하지 않는 유저");
+            return new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1);
+        });
+        nicknameUsefulCheck(nickname);
+        user.updateNickname(nickname);
+        userRepository.save(user);
+        logger.info("*** updateNickname 메소드 종료");
+    }
 }
