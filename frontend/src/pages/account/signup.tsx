@@ -58,19 +58,15 @@ const SignUp: React.FC = () => {
     };
 
     const nicknamecheck = (nickname:string) => {
-        // 지금은 지나가기위한 true 처리 나중에 지워야함
-        setCheckNickname(true)
-        
         // 닉네임 중복 체크 axios 작성
-        // axios({
-        //     method:'get',
-        //     url:`${process.env.REACT_APP_API_URL}/`,
-        // }).then(res=>{
-        //     console.log(res)
-        //     setCheckNickname(true)
-        // }).catch(err=>{
-        //     console.log(err)
-        // })
+        axios({
+            method:'get',
+            url:`${process.env.REACT_APP_API_URL}/user/nicknameCheck?nickname=${nickname}`,
+        }).then(res=>{
+            setCheckNickname(true)
+        }).catch(err=>{
+            alert('중복된 닉네임입니다!')
+        })
     }
     const emailauth = () => {
         axios({
@@ -108,7 +104,7 @@ const SignUp: React.FC = () => {
                 'birth':values.birthday},
             }).then(res=>{
                 console.log(res)
-                navigate('/')
+                navigate('/locallogin')
             }).catch(err=>{
                 console.log(err)
                 alert('회원가입 실패!')
@@ -119,10 +115,11 @@ const SignUp: React.FC = () => {
     
     return (
       <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', width:'100%'}}>
-        {isDatePickerOpen ? <span style={{margin:'30px'}}></span>:<img src="assets/logo.png" alt="" style={{margin:'40% 0 30% 0'}}/>}
+        <img src="assets/logo.png" alt="" style={{margin:'40% 0 10% 0', width:'50%'}}/>
+        <h2>회원가입</h2>
         {/* 회원가입 form */}
         {isChkModal && <EmailCheck email={formik.values.email} closemodal={()=>setChkModal(false)} success={(value:string)=>{formik.setFieldValue('emailCertificationNumber',value); setCheckEmail(true);}} />}
-        <form onSubmit={formik.handleSubmit} style={{width:'80%'}}>
+        <form onSubmit={formik.handleSubmit} style={{width:'70%'}}>
             {firstStep ? 
             <>
                 {/* 이메일 input */}
@@ -185,22 +182,26 @@ const SignUp: React.FC = () => {
                 </button>
 
                 {isDatePickerOpen && (
-                    <DatePicker
-                    selected={selectedDate}
-                    onChange={handleDateChange}
-                    dateFormat="yyyy/MM/dd"
-                    locale={ko}
-                    inline
-                    readOnly
-                    minDate={new Date('1900-01-01')}
-                    maxDate={new Date()}
-                    // scrollableYearDropdown
-                    // scrollableMonthYearDropdown
-                    // scrollableYearDropdown
-                    showMonthDropdown
-                    showYearDropdown
-                    dropdownMode="select"
-                    />
+                    <div style={{position:'absolute', top:'50%', left:'10%', width:'80%', height:'50%'}}>
+                        <DatePicker
+                        selected={selectedDate}
+                        onChange={handleDateChange}
+                        dateFormat="yyyy/MM/dd"
+                        locale={ko}
+                        inline
+                        readOnly
+                        minDate={new Date('1900-01-01')}
+                        maxDate={new Date()}
+                        // scrollableYearDropdown
+                        // scrollableMonthYearDropdown
+                        // scrollableYearDropdown
+                        showMonthDropdown
+                        showYearDropdown
+                        dropdownMode="select"
+                        />
+                    { isDatePickerOpen && <button type='button' className={styled.signup_btn} onClick={()=>setIsDatePickerOpen(false)}>완료</button>}      
+
+                    </div>
                 )}
 
                 <p style={{fontSize:'8px', fontWeight:'bold', textAlign:'left'}}>
@@ -208,8 +209,7 @@ const SignUp: React.FC = () => {
                 </p>
 
                 {/* 정상적으로 모든 입력이 되었을때 버튼 활성화 */}
-                {isDatePickerOpen ? <button type='button' className={styled.signup_btn} onClick={()=>setIsDatePickerOpen(false)}>완료</button>
-                : isCheckNickname && formik.values.gender!=='' && formik.values.birthday!==null && !formik.errors.gender && !formik.errors.birthday ?
+                { isDatePickerOpen ? null: isCheckNickname && formik.values.gender!=='' && formik.values.birthday!==null && !formik.errors.gender && !formik.errors.birthday ?
                 <button type='submit' className={styled.signup_btn}>가입완료</button>
                 :
                 <button className={styled.signup_btn} disabled>가입완료</button>}

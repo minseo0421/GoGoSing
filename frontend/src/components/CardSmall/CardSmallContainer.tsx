@@ -1,9 +1,21 @@
 import CardSmall from "./CardSmall";
 import React, { useState, useRef } from "react";
 import styles from "./CardSmallContainer.module.css";
-import albums from "../album";
 
-const CardSmallContainer: React.FC = () => {
+
+interface AlbumProps {
+  musicId:number;
+  title:string;
+  singer:string|null;
+  songImg:string|null;
+  genreId:number[]|null;
+  genreType:string|null;
+}
+interface Props {
+  albums : AlbumProps[]
+}
+
+const CardSmallContainer: React.FC<Props> = ({albums}) => {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -34,7 +46,6 @@ const CardSmallContainer: React.FC = () => {
   const handleEnd = () => {
     setIsDragging(false);
   };
-
   /* onTouch 관련은 Mobile 환경에서 터치가 있을 때, onMouse는 Web 환경에서 Mobile 처럼 클릭하고 이동 할 때의 케이스 */
   return (
     <div
@@ -49,7 +60,7 @@ const CardSmallContainer: React.FC = () => {
       onMouseLeave={handleEnd}
     >
       {albums.map((album) => {
-        return <CardSmall key={album.id} album={album} />; // 각 ChartLong 컴포넌트에 album 데이터를 prop으로 전달합니다.
+        return <CardSmall album={album} />; // 각 ChartLong 컴포넌트에 album 데이터를 prop으로 전달합니다.
       })}
     </div>
   );

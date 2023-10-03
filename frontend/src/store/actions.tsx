@@ -10,19 +10,11 @@ export const setGenreSel = (value: boolean) => ({
   type: "SET_GENRE",
   payload: value,
 });
-export const setLogin = (
-  value: {
-    socialType: string;
-    nickname: string;
-    gender: string;
-    birth: string;
-    profileImg: string | null;
-  } | null
-) => ({
-  type: "SET_LOGIN",
+export const setAlbum = (value: number|null) => ({
+  type: "SET_ALBUM",
   payload: value,
 });
-export const selectAlbum = (album: any) => ({
-  type: "SELECT_ALBUM",
-  payload: album,
+export const setLike = (value: number[]|null) => ({
+  type: "SET_LIKE",
+  payload: value,
 });

@@ -2,8 +2,8 @@
 declare namespace YT {
   class Player {
     constructor(container: Element | string, options: PlayerOptions);
-    playVideo(): void;
-    pauseVideo(): void;
+    playVideo(): any;
+    pauseVideo(): any;
     // 필요한 기타 메서드들도 여기에 추가할 수 있습니다.
   }
 }

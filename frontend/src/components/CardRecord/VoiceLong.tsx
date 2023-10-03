@@ -2,58 +2,67 @@ import React, { useState, useEffect } from "react";
 import RecordLong from "./RecordLong.module.css";
 import CardSmallContainer from "../CardSmall/CardSmallContainer";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../axiosinstance";
 
 const VoiceLong: React.FC = () => {
-  const [show, setShow] = useState(false);
-  const [pitch, setPitch] = useState(false);
-
+  const [pitchData, setPitchData] = useState<any[]|null>(null);
   const navigate = useNavigate();
 
   const musicupload = () => {
-    navigate("/musicupload");
+    if (localStorage.getItem("AccessToken")) {
+      navigate("/musicupload");
+    } else {
+      alert('로그인 후 이용가능합니다.')
+      navigate('/login')
+    }
   };
 
-
-  // 음역대 등록, 그 상태 저장이 생기면 toggleShow는 음역대 등록하는 페이지로 이동하는 걸로 수정
-  // const toggleShow = () => {
-  //   console.log("toggleShow is triggered");
-  //   setShow(!show);
-  // };
-
-  const pitchShow = () => {
-    console.log("pitchShow is triggered");
-    setPitch(true);
-    setShow(false);
-  };
+  const getPitchList = () => {
+    axiosInstance({
+        method: 'get',
+        url: `${process.env.REACT_APP_API_URL}/analyze/waveMusicList`, 
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+        },
+      }).then(res=>{
+        setPitchData(res.data);
+      }).catch(err=>{
+        console.log(err)
+      })
+    }
 
   useEffect(() => {
-    console.log("Component updated with show:", show, " and pitch:", pitch);
-  }, [show, pitch]);
+    const token = localStorage.getItem("AccessToken");
+    if (token) {
+      getPitchList();
+    }
+  }, []);
 
   return (
     <div>
-      {pitch ? (
-        <div>{pitch ? <CardSmallContainer /> : null}</div>
-      ) : (
+      {pitchData===null ? 
         <div className={RecordLong.container}>
-          {!show && !pitch ? (
-            <div>
-              <p>등록된 목소리가 없으세요 !</p>
-              <img
-                className={RecordLong.PitchIcon}
-                onClick={musicupload}
-                src="assets/addButton.svg"
-                alt=""
-              />
-              <p>등록하러 가기</p>
-            </div>
-          ) : null}
-
-          {show && !pitch ? (
-            <button onClick={pitchShow}>목소리 등록했다 치기</button>
-          ) : null}
+            <p>등록된 목소리가 없으세요 !</p>
+            <img
+              className={RecordLong.PitchIcon}
+              onClick={musicupload}
+              src="assets/addButton.svg"
+              alt=""
+            />
+            <p onClick={musicupload}>등록하러 가기</p>
+      </div>
+       : pitchData.length===0 ? 
+        <div className={RecordLong.container}>
+          <p>다른 목소리를 등록해주세요!</p>
+            <img
+              className={RecordLong.PitchIcon}
+              onClick={musicupload}
+              src="assets/addButton.svg"
+              alt=""
+            />
+          <p onClick={musicupload}>등록하러 가기</p>
         </div>
-      )}
+         : <CardSmallContainer albums={pitchData} />}
     </div>
   );
 };

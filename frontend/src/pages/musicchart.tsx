@@ -1,25 +1,67 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CardLongContainer from "../components/CardLong/CardLongContainer";
 import styles from "./musicchart.module.css";
 
 import { setPage } from "../store/actions";
 import { useDispatch } from "react-redux";
+import axios from "axios";
+
+interface AlbumProps {
+  musicId:number;
+  title:string;
+  singer:string|null;
+  songImg:string|null;
+  genreId:number[]|null;
+  genreType:string|null;
+}
 
 const MusicChart: React.FC = () => {
+  const [chartpage, setChartPage] = useState('인기차트')
+  const [albums, setAlbums] = useState<AlbumProps[]>([])
   const dispatch = useDispatch();
+
+  useEffect(()=>{
+    const params = new URL(document.location.toString()).searchParams;
+    const type = params.get('type')
+    if (type==='popular') {
+      setChartPage('인기차트')
+    } else if (type==='voice') {
+      setChartPage('목소리추천')
+    } else if (type==='pitch') {
+      setChartPage('음역대추천')
+    } else if (type==='like') {
+      setChartPage('좋아요추천')
+    }
+  },[])
+  useEffect(()=>{
+    axios({
+      method:'get',
+      url:`${process.env.REACT_APP_API_URL}/music/chart`,
+    }).then(res=>{
+      setAlbums(res.data)
+    }).catch(err=>{
+      console.log(err)
+    })
+  },[chartpage])
+  
   useEffect(() => {
     dispatch(setPage(2));
   }, [dispatch]);
   return (
-    <>
-      <div  className={styles.topbar}>
-        <p>차트</p>
+    <div style={{height:'100%', width:'100%'}}>
+      <div className={styles.topbar}>
+        <span style={{fontSize:'20px',marginBottom:'5px'}}>{chartpage}</span>
+        <span style={{display:'flex', width:'100%',justifyContent:'space-between'}}>
+          <span onClick={()=>setChartPage('인기차트')} style={chartpage==='인기차트' ? {borderBottom:'2px solid white'}:{}}>인기차트</span>
+          <span onClick={()=>setChartPage('목소리추천')} style={chartpage==='목소리추천' ? {borderBottom:'2px solid white'}:{}}>목소리추천</span>
+          <span onClick={()=>setChartPage('음역대추천')} style={chartpage==='음역대추천' ? {borderBottom:'2px solid white'}:{}}>음역대추천</span>
+          <span onClick={()=>setChartPage('좋아요추천')} style={chartpage==='좋아요추천' ? {borderBottom:'2px solid white'}:{}}>좋아요추천</span>
+        </span>
       </div>
-      <div style={{height:'75vh', overflow:'auto'}}>
-        <div className={styles.pitch}>🍪내가 만든 http only 쿠키 ~🍪</div>
-        <CardLongContainer></CardLongContainer>
+      <div style={{height:'87%',marginTop:'3%', overflow:'auto'}}>
+        <CardLongContainer albums={albums} />
       </div>
-    </>
+    </div>
   );
 };
 export default MusicChart;

@@ -5,21 +5,7 @@ export interface AppState {
   // 장르 설문 (마이페이지에서 설문 접근이 가능해서 따로해야함)
   isGenreSel: boolean;
 
-  // 로그인 성공시 유저 정보
-  isLogin: {
-    socialType: string;
-    nickname: string;
-    gender: string;
-    birth: string;
-    profileImg: string | null;
-  } | null;
+  albumId:number|null;
 
-  album: {
-    id: number;
-    title: string;
-    singer: string;
-    image: any;
-    url: string;
-    lyrics: string;
-  };
+  likelist:number[]|null;
 }

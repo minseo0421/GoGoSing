@@ -77,7 +77,7 @@ public class SecurityConfig {
 //                .and()
                 .frameOptions().disable()
                 .addHeaderWriter((request, response) -> {
-                    response.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+                    response.setHeader("Cross-Origin-Embedder-Policy", "credentialless");
                     response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
                     response.setHeader("Access-Control-Allow-Origin", "*"); // 모든 출처에서 접근 허용
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import "./App.css";
 
@@ -12,18 +12,23 @@ import SignUp from "./pages/account/signup";
 import Login from "./pages/account/login";
 import LocalLogin from "./pages/account/locallogin";
 
-import MusicRecord from "./pages/musicrecord";
-import MusicUpload from "./pages/musicupload";
+import MusicRecord from "./pages/musicrecord/musicrecord";
+import MusicUpload from "./pages/musicupload/musicupload";
+import RecordResult from "./pages/musicrecord/recordresult";
+import UploadResult from "./pages/musicupload/uploadresult";
 
 import BottomBar from "./components/Bottombar";
 import { AnimatePresence, motion } from "framer-motion";
 import { PageVariants, PageTransition } from "./components/pageTransition";
-import GenreSurvey from "./pages/account/genresurvey";
+
 import SocialSignUp from "./pages/account/socialsignup";
 import MyPage from "./pages/account/mypage";
 import FindPassWord from "./pages/account/findpw";
 import SocialLogin from "./pages/account/sociallogin";
 import MusicDetail from "./pages/musicDetail";
+import GenreSelect from "./pages/genreselect";
+import MusicSing from "./pages/musicsing";
+
 
 function App() {
   // BottomBar 관련 상태
@@ -37,27 +42,15 @@ function App() {
     navigate(pageRoutes[clickedNumber]);
     setPageNumber(clickedNumber);
   };
-
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-  useEffect(() => {
-    // 창의 너비가 변경될 때마다 상태를 업데이트합니다.
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-      setWindowHeight(window.innerHeight);
-    };
-    window.addEventListener("resize", handleResize);
-    // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   return (
-    <div className="App" style={{height:windowHeight,width:windowWidth}}>
-      <AnimatePresence initial={false} mode="wait">
-        {location.pathname!=='/mypage' && <div style={{marginTop:'3vh'}}></div>}
-        
+    <div className="App" style={{height:'100vh',width:'100vw', overflow:'hidden'}}>
+      <div id='modals'>
+        <MusicDetail />
+        <GenreSelect />
+        <MusicSing />
+      </div>
+
+      <AnimatePresence initial={false} mode="wait"> 
         <motion.div
           key={location.pathname}
           initial="initial"
@@ -67,7 +60,7 @@ function App() {
           transition={PageTransition}
           custom={isForwardDirection}
           id="motiondiv"
-          style={{ height: "75%" }}
+          style={{ height: "88%", width:'100%' }}
         >
           <Routes location={location}>
             {/* Bottom Bar */}
@@ -82,18 +75,21 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/socialsignup" element={<SocialSignUp />} />
             <Route path="/sociallogin" element={<SocialLogin />} />
-            <Route path="/genresurvey" element={<GenreSurvey />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/findpw" element={<FindPassWord />} />
 
             {/* Music Record */}
             <Route path="/record" element={<MusicRecord />} />
+            <Route path="/recordresult" element={<RecordResult />} />
             <Route path="/musicupload" element={<MusicUpload />} />
+            <Route path="/uploadresult" element={<UploadResult />} />
+            
           </Routes>
         </motion.div>
+        <div style={{height:'12%', width:'100%'}}>
+          <BottomBar onClickButton={cl}/>
+        </div>
       </AnimatePresence>
-      <BottomBar onClickButton={cl} />
-      <MusicDetail windowWidth={windowWidth} windowHeight={windowHeight} />
     </div>
   );
 }

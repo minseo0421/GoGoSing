@@ -2,57 +2,58 @@ import React, { useState, useEffect } from "react";
 import RecordLong from "./RecordLong.module.css";
 import CardSmallContainer from "../CardSmall/CardSmallContainer";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../axiosinstance";
 
 const PitchLong: React.FC = () => {
-  const [show, setShow] = useState(false);
-  const [pitch, setPitch] = useState(false);
-
+  const [pitchData, setPitchData] = useState<any[]|null>(null);
   const navigate = useNavigate();
 
   const musicrecord = () => {
-    navigate("/record");
+    if (localStorage.getItem("AccessToken")) {
+      navigate("/record");
+    } else {
+      alert('로그인 후 이용가능합니다.')
+      navigate('/login')
+    }
   };
 
-  // 음역대 등록, 그 상태 저장이 생기면 toggleShow는 음역대 등록하는 페이지로 이동하는 걸로 수정
-  // const toggleShow = () => {
-  //   console.log("toggleShow is triggered");
-  //   setShow(!show);
-  // };
+  const getPitchList = () => {
+    axiosInstance({
+      method: 'get',
+      url: `${process.env.REACT_APP_API_URL}/analyze/rangeMusicList`, 
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+      },
+    }).then(res=>{
+      setPitchData(res.data);
+    }).catch(err=>{
+      console.log(err)
+    })
+  }
 
-  const pitchShow = () => {
-    console.log("pitchShow is triggered");
-    setPitch(true);
-    setShow(false);
-  };
 
-  useEffect(() => {
-    console.log("Component updated with show:", show, " and pitch:", pitch);
-  }, [show, pitch]);
+    useEffect(() => {
+      const token = localStorage.getItem("AccessToken");
+      if (token) {
+        getPitchList();
+      }
+    }, []);
 
   return (
     <div>
-      {pitch ? (
-        <div>{pitch ? <CardSmallContainer /> : null}</div>
-      ) : (
-        <div className={RecordLong.container}>
-          {!show && !pitch ? (
-            <div>
-              <p>등록된 음역대가 없으세요 !</p>
-              <img
-                className={RecordLong.PitchIcon}
-                onClick={musicrecord}
-                src="assets/addButton.svg"
-                alt=""
-              />
-              <p>등록하러 가기</p>
-            </div>
-          ) : null}
+      {pitchData===null ? 
+          <div className={RecordLong.container}>
+            <p>등록된 음역대가 없으세요 !</p>
+            <img
+              className={RecordLong.PitchIcon}
+              onClick={musicrecord}
+              src="assets/addButton.svg"
+              alt=""
+            />
+            <p onClick={musicrecord}>등록하러 가기</p>
+          </div>
+       : <CardSmallContainer albums={pitchData} />}
 
-          {show && !pitch ? (
-            <button onClick={pitchShow}>음역대 등록했다 치기</button>
-          ) : null}
-        </div>
-      )}
     </div>
   );
 };
