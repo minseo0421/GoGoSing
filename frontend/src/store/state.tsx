@@ -6,4 +6,6 @@ export interface AppState {
   isGenreSel: boolean;
 
   albumId:number|null;
+
+  likelist:number[]|null;
 }

@@ -75,7 +75,7 @@ const CardLongContainer: React.FC<Props> = ({albums}) => {
   };
 
   const handleEnd = () => {
-    setIsDragging(false);
+    setIsDragging(false); 
   };
 
   /* onTouch 관련은 Mobile 환경에서 터치가 있을 때, onMouse는 Web 환경에서 Mobile 처럼 클릭하고 이동 할 때의 케이스 */
