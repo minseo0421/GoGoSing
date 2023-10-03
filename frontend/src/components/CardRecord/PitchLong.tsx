@@ -5,33 +5,30 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../axiosinstance";
 
 const PitchLong: React.FC = () => {
-  const [show, setShow] = useState(false);
-  const [pitch, setPitch] = useState(false);
-  const [pitchData, setPitchData] = useState<any[]>([]);
-
+  const [pitchData, setPitchData] = useState<any[]|null>(null);
   const navigate = useNavigate();
 
   const musicrecord = () => {
-    navigate("/record");
+    if (localStorage.getItem("AccessToken")) {
+      navigate("/record");
+    } else {
+      alert('로그인 후 이용가능합니다.')
+      navigate('/login')
+    }
   };
 
-  
-  const getPitchList = async () => {
-    try {
-      const res = await axiosInstance({
-        method: 'get',
-        url: `${process.env.REACT_APP_API_URL}/analyze/rangeMusicList`, 
-        headers: {
-          'accessToken': `Bearer ${localStorage.getItem("AccessToken")}`,
-        },
-      });
-      console.log(res)
-      console.log(res.data);
+  const getPitchList = () => {
+    axiosInstance({
+      method: 'get',
+      url: `${process.env.REACT_APP_API_URL}/analyze/rangeMusicList`, 
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+      },
+    }).then(res=>{
       setPitchData(res.data);
-      setPitch(true);
-    } catch(error) {
-      console.error(error)
-    }
+    }).catch(err=>{
+      console.log(err)
+    })
   }
 
 
@@ -41,51 +38,22 @@ const PitchLong: React.FC = () => {
         getPitchList();
       }
     }, []);
-  
-
-    
-
-  // 음역대 등록, 그 상태 저장이 생기면 toggleShow는 음역대 등록하는 페이지로 이동하는 걸로 수정
-  // const toggleShow = () => {
-  //   console.log("toggleShow is triggered");
-  //   setShow(!show);
-  // };
-
-  const pitchShow = () => {
-    console.log("pitchShow is triggered");
-    setPitch(true);
-    setShow(false);
-  };
-
-  useEffect(() => {
-    console.log("Component updated with show:", show, " and pitch:", pitch);
-  }, [show, pitch]);
 
   return (
     <div>
-      {pitch ? (
-        <div>{pitch ? <CardSmallContainer albums={pitchData}/> : null}</div>
-        // <div>{pitch ? null : null}</div>
-      ) : (
-        <div className={RecordLong.container}>
-          {!show && !pitch ? (
-            <div>
-              <p>등록된 음역대가 없으세요 !</p>
-              <img
-                className={RecordLong.PitchIcon}
-                onClick={musicrecord}
-                src="assets/addButton.svg"
-                alt=""
-              />
-              <p>등록하러 가기</p>
-            </div>
-          ) : null}
+      {pitchData===null ? 
+          <div className={RecordLong.container}>
+            <p>등록된 음역대가 없으세요 !</p>
+            <img
+              className={RecordLong.PitchIcon}
+              onClick={musicrecord}
+              src="assets/addButton.svg"
+              alt=""
+            />
+            <p onClick={musicrecord}>등록하러 가기</p>
+          </div>
+       : <CardSmallContainer albums={pitchData} />}
 
-          {show && !pitch ? (
-            <button onClick={pitchShow}>음역대 등록했다 치기</button>
-          ) : null}
-        </div>
-      )}
     </div>
   );
 };
