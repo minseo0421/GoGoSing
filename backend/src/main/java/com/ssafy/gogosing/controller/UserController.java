@@ -91,6 +91,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
     }
 
+    @ApiOperation(value = "닉네임 변경")
+    @PutMapping("/update/nickname")
+    public ResponseEntity<?> updateNickname(@RequestParam("nickname") String nickname, @AuthenticationPrincipal UserDetails userDetails) throws Exception {
+        userService.updateNickname(nickname, userDetails);
+        return ResponseEntity.ok().body("");
+    }
+
     /**
      * 테스트용 추후 삭제하기
      */
