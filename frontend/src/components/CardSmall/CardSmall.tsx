@@ -20,6 +20,7 @@ interface AlbumProps {
 
 const CardSmall: React.FC<AlbumProps> = ({ album,like }) => {
   const [islike, setLike] = useState<boolean|null>(null)
+  const [imgErr, setImgErr] = useState<boolean>(false)
   const dispatch = useDispatch();
 
   const handleAlbumClick = () => {
@@ -50,8 +51,9 @@ const CardSmall: React.FC<AlbumProps> = ({ album,like }) => {
 
   return (
     <div className={styles.container}>
-      <img crossOrigin="anonymous" onClick={handleAlbumClick} src={album.songImg ? album.songImg:'assets/default_album.png'} alt="" className={styles.image} />
-      <div className={styles.infoContainer}>
+      {imgErr ? <img crossOrigin="anonymous"  onClick={handleAlbumClick} src='assets/default_album.png' alt="" className={styles.image} />
+      :<img crossOrigin="anonymous"  onClick={handleAlbumClick} src={album?.songImg!} alt="" className={styles.image} onError={()=>setImgErr(true)} />}
+        <div className={styles.infoContainer}>
         <div className={styles.musicinfo} onClick={handleAlbumClick}>
           <span className={styles.title}>{album.title}</span>
           <span>{album.singer}</span>
