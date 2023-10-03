@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ssafy.gogosing.domain.music.Music;
 import com.ssafy.gogosing.domain.analyze.MusicRangeAnalyze;
 import com.ssafy.gogosing.domain.user.User;
+import com.ssafy.gogosing.dto.analyze.response.SingingRoomVoiceResponseDto;
 import com.ssafy.gogosing.dto.analyze.response.VoiceRangeMatchingMusicDto;
 import com.ssafy.gogosing.dto.analyze.response.VoiceRangeMatchingResponseDto;
 import com.ssafy.gogosing.dto.analyze.response.VoiceWaveMatchingResponseDto;
@@ -22,9 +23,11 @@ import org.apache.commons.exec.PumpStreamHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -39,10 +42,13 @@ import org.apache.commons.exec.CommandLine;
 public class AnalyzeService {
 
     @Value("${python.file.path}")
-    private String voiceAnalyzePythonPath;
+    private String voiceWaveAnalyzePythonPath;
 
     @Value("${python.file.path2}")
     private String voiceRangeAnalyzePythonPath;
+
+    @Value("${python.file.path3}")
+    private String singingRoomVoicePythonPath;
 
     @Value("${python.exe.path}")
     private String pythonPath;
@@ -206,7 +212,7 @@ public class AnalyzeService {
         System.out.println("Python Call");
         String[] command = new String[4];
         command[0] = pythonPath;
-        command[1] = voiceAnalyzePythonPath;
+        command[1] = voiceWaveAnalyzePythonPath;
         command[2] = voiceFile;
 
         String result = execPython(command);
@@ -263,6 +269,28 @@ public class AnalyzeService {
                 .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 분석을 진행하지 않았습니다.", 1));
 
         return userVoiceWaveMatching.getVoiceWaveMatchingResponseDtoList();
+    }
+
+    public SingingRoomVoiceResponseDto getSingingRoomVoice(String voiceFile, String url, UserDetails userDetails) throws IOException {
+
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EmptyResultDataAccessException("존재하지 않는 유저 입니다.", 1));
+
+        System.out.println("Python Call");
+        String[] command = new String[5];
+        command[0] = pythonPath;
+        command[1] = singingRoomVoicePythonPath;
+        command[2] = voiceFile;
+        command[3] = url;
+        command[4] = String.valueOf(user.getId());
+
+        String result = execPython(command);
+
+        SingingRoomVoiceResponseDto singingRoomVoiceResponseDto = SingingRoomVoiceResponseDto.builder()
+                .voiceUrl(result.replace("\r\n", ""))
+                .build();
+
+        return singingRoomVoiceResponseDto;
     }
 
     /**
