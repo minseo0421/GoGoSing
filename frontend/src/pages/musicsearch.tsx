@@ -4,15 +4,18 @@ import { setPage } from "../store/actions";
 import { useDispatch } from "react-redux";
 import styles from "./musicsearch.module.css";
 import axios from "axios";
-import CardLongContainer from "../components/CardLong/CardLongContainer";
+import CardLongSearchContainer from "../components/CardLong/CardLongSearchContainer";
 
 interface AlbumProps {
   musicId:number;
   title:string;
   singer:string|null;
   songImg:string|null;
-  genreId:number[]|null;
-  genreType:string|null;
+  genreInfo:{
+    genreId:number[];
+    genreType:string;
+  }[];
+  viewCount:number;
 }
 
 const MusicSearch: React.FC = () => {
@@ -43,17 +46,11 @@ const MusicSearch: React.FC = () => {
       alert('검색어를 입력해주세요')
       return
     }
-    // const token = localStorage.getItem('AccessToken')
-
     const sel = selectedValue==='제목' ? 'title' : selectedValue==='가수' ? 'singer': 'lyric'
     axios({
       method:'get',
-      url:`${process.env.REACT_APP_API_URL}/search/${sel}?keyword=${keyword}`,
-      // headers:{
-      //   Authorization:`Bearer ${token}`
-      // }
+      url:`${process.env.REACT_APP_API_URL}/search/${sel}?page=1&keyword=${keyword}`,
     }).then(res=>{
-      console.log(res)
       setSearchData(res.data)
     }).catch(err=>{
       console.log(err)
@@ -81,7 +78,7 @@ const MusicSearch: React.FC = () => {
           <img style={{marginLeft:'-30px'}} src="assets/search_icon.png" alt="" onClick={()=>search()} />
         </div>
       </div>
-      <div style={isInputFocused ? {height: "71%", overflow: "auto", margin:'2% 0' ,boxSizing:'border-box'}: { height: "88%", overflow: "auto", margin:'2% 0' ,boxSizing:'border-box'}}>
+      <div style={isInputFocused ? {height: "71%", margin:'2% 0' ,boxSizing:'border-box'}: { height: "88%", margin:'2% 0' ,boxSizing:'border-box'}}>
         {/* 여기가 메인 영역 */}
           
           {isInputFocused || searchdata===null ? 
@@ -100,8 +97,8 @@ const MusicSearch: React.FC = () => {
           <div>
             <p>검색 결과가 없습니다.</p>
           </div>
-        : <div>
-            <CardLongContainer albums={searchdata} />
+        : <div style={{height:'100%'}}>
+            <CardLongSearchContainer albums={searchdata} keyword={keyword} selectedValue={selectedValue} />
           </div> 
         }
       </div>
