@@ -40,8 +40,9 @@ public class MusicDetailResponseDto {
     private Long viewCount;
 
     @Builder
-
-    public MusicDetailResponseDto(Long musicId, String title, String singer, String lyricist, String composer, String songImg, String releaseDate, String lyric, String mrUrl, String musicUrl, String musicPlayTime, List<MusicGenreResponseDto> genreInfo, Long viewCount) {
+    public MusicDetailResponseDto(Long musicId, String title, String singer, String lyricist, String composer,
+        String songImg, String releaseDate, String lyric, String mrUrl, String musicUrl, String musicPlayTime,
+        List<MusicGenreResponseDto> genreInfo, Long viewCount) {
         this.musicId = musicId;
         this.title = title;
         this.singer = singer;
