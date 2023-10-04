@@ -77,7 +77,11 @@ const SignUp: React.FC = () => {
             setChkModal(true)
         })
         .catch(err=>{
-            alert('인증번호 전송 실패, 다시 시도해주세요')
+            if (err.response.data==='이미 존재하는 이메일입니다.') {
+                alert('이미 존재하는 이메일입니다.')
+            } else {
+                alert('인증번호 전송 실패, 다시 시도해주세요')
+            }
         })
     }
     const formik = useFormik({
