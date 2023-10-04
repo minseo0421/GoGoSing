@@ -18,6 +18,7 @@ import com.ssafy.gogosing.domain.music.MusicGenre;
 import com.ssafy.gogosing.domain.user.User;
 import com.ssafy.gogosing.domain.user.UserLikeGenre;
 import com.ssafy.gogosing.dto.genre.request.GenreRequestDto;
+import com.ssafy.gogosing.dto.music.response.GenreMusicListResponseDto;
 import com.ssafy.gogosing.dto.music.response.LikeMusicListResponseDto;
 import com.ssafy.gogosing.repository.GenreRepository;
 import com.ssafy.gogosing.repository.MusicGenreRepository;
@@ -77,22 +78,13 @@ public class GenreService {
 		registGenre(genreRequestDto, userDetails);
 	}
 
-	public List<LikeMusicListResponseDto> findGenreList(Long genreId, Pageable pageable) {
-		List<MusicGenre> genreList = musicGenreRepository.findByGenreId(genreId, pageable);
-		List<LikeMusicListResponseDto> result = new ArrayList<>();
+	public List<GenreMusicListResponseDto> findGenreList(Long genreId) {
+		List<Music> musicList = musicRepository.findMusicByGenreId(genreId);
 
-		for (MusicGenre musicGenre : genreList) {
-			Music music = musicRepository.findById(musicGenre.getMusic().getId())
-				.orElseThrow(() -> new EmptyResultDataAccessException("해당 노래는 존재하지 않습니다.", 1));
-			LikeMusicListResponseDto likeMusicListResponseDto = LikeMusicListResponseDto.builder()
-				.musicId(music.getId())
-				.title(music.getTitle())
-				.singer(music.getSinger())
-				.songImg(music.getSongImg())
-				.build();
-			result.add(likeMusicListResponseDto);
+		List<GenreMusicListResponseDto> result = new ArrayList<>();
+		for (Music music : musicList) {
+			result.add(new GenreMusicListResponseDto(music.getId(), music.getTitle(), music.getSinger(), music.getSongImg(), music.getViewCount()));
 		}
-		return  result;
+		return result;
 	}
-
 }
