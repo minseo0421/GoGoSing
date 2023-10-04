@@ -1,6 +1,8 @@
 package com.ssafy.gogosing.controller;
 
 import com.ssafy.gogosing.dto.music.request.MusicLikeRequestDto;
+import com.ssafy.gogosing.dto.music.response.MusicDetailResponseDto;
+import com.ssafy.gogosing.dto.music.response.MusicResponseDto;
 import com.ssafy.gogosing.service.MusicService;
 import io.swagger.annotations.ApiOperation;
 import lombok.Getter;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
