@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import MusicPlay from '../components/musicrecord/musicplay';
 import { useNavigate } from "react-router-dom";
 import axiosInstance from '../../axiosinstance';
 import { AudioPlayer }  from '../../components/musicrecord/audioplay';
@@ -68,6 +67,7 @@ const MusicUpload: React.FC = () => {
       const removeAudio = () => {
         console.log(file)
         setFile(null)
+        console.log(file)
       };
       const divStyle: React.CSSProperties = {
         // width: '100%',
@@ -100,11 +100,12 @@ const MusicUpload: React.FC = () => {
             ) : responseData ? (
                 // 응답 데이터가 있는 경우 데이터를 표시
                 <div>
+                    <p>당신의 음색과 가장 잘 맞는 노래</p>
+                    {imgErr ? <img crossOrigin="anonymous"  onClick={handleAlbumClick} src='assets/default_album.png' alt="" style={{ width: '60%' }} />
+                    :<img src={responseData.songImg} alt={responseData.title} onClick={handleAlbumClick} crossOrigin="anonymous" onError={()=>setImgErr(true)}/>}
                     <p>노래방 번호: {responseData.musicId}</p>
                     <p>Singer: {responseData.singer}</p>
                     <p>Title: {responseData.title}</p>
-                    {imgErr ? <img crossOrigin="anonymous"  onClick={handleAlbumClick} src='assets/default_album.png' alt="" style={{ width: '60%' }} />
-                    :<img src={responseData.songImg} alt={responseData.title} onClick={handleAlbumClick} crossOrigin="anonymous" onError={()=>setImgErr(true)}/>}
                     <button onClick={Home} style={{ width: '50%', margin: 'auto', borderRadius:'10px'}}>Go home</button>
                 </div>
             ) : (
@@ -114,7 +115,7 @@ const MusicUpload: React.FC = () => {
               <h1>업로드해 주세요!</h1>
               <br />
               <p>업로드 해주신 노래를 기반으로</p>
-              <p>주토끼님의 목소리와</p>
+              <p>당신의 목소리와</p>
               <p>유사한 노래를 추천합니다.</p>
                 <div style={{ display: 'flex', flexDirection:'column',justifyContent: 'center', marginBottom: 30 }}>
                   <div style={{ margin: 'auto', marginBottom: '10px' }}>
