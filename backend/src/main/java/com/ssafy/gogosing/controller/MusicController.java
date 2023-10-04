@@ -1,6 +1,8 @@
 package com.ssafy.gogosing.controller;
 
 import com.ssafy.gogosing.dto.music.request.MusicLikeRequestDto;
+import com.ssafy.gogosing.dto.music.response.MusicDetailResponseDto;
+import com.ssafy.gogosing.dto.music.response.MusicResponseDto;
 import com.ssafy.gogosing.service.MusicService;
 import io.swagger.annotations.ApiOperation;
 import lombok.Getter;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,6 +46,12 @@ public class MusicController {
     public ResponseEntity<?> likeMusicList(@AuthenticationPrincipal UserDetails userDetails) throws Exception {
         musicService.likeMusicList(userDetails);
         return ResponseEntity.ok().body(musicService.likeMusicList(userDetails));
+    }
+
+    @ApiOperation(value = "유저 노래 좋아요 기반 추천 리스트")
+    @GetMapping("/like/list")
+    public ResponseEntity<?> recommendListMusicOnLike(@AuthenticationPrincipal UserDetails userDetails) throws Exception {
+        return ResponseEntity.ok().body(musicService.recommendListMusicOnLike(userDetails));
     }
 
     @ApiOperation(value = "노래 상세정보")
