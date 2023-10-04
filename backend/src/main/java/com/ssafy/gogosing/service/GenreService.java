@@ -1,13 +1,13 @@
 package com.ssafy.gogosing.service;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,7 @@ import com.ssafy.gogosing.domain.music.MusicGenre;
 import com.ssafy.gogosing.domain.user.User;
 import com.ssafy.gogosing.domain.user.UserLikeGenre;
 import com.ssafy.gogosing.dto.genre.request.GenreRequestDto;
-import com.ssafy.gogosing.dto.music.response.MusicDetailResponseDto;
+import com.ssafy.gogosing.dto.music.response.LikeMusicListResponseDto;
 import com.ssafy.gogosing.repository.GenreRepository;
 import com.ssafy.gogosing.repository.MusicGenreRepository;
 import com.ssafy.gogosing.repository.MusicRepository;
@@ -75,6 +75,24 @@ public class GenreService {
 		// 사용자의 좋아하는 장르를 모두 삭제
 		userLikeGenreRepository.deleteByUser(user);
 		registGenre(genreRequestDto, userDetails);
+	}
+
+	public List<LikeMusicListResponseDto> findGenreList(Long genreId, Pageable pageable) {
+		List<MusicGenre> genreList = musicGenreRepository.findByGenreId(genreId, pageable);
+		List<LikeMusicListResponseDto> result = new ArrayList<>();
+
+		for (MusicGenre musicGenre : genreList) {
+			Music music = musicRepository.findById(musicGenre.getMusic().getId())
+				.orElseThrow(() -> new EmptyResultDataAccessException("해당 노래는 존재하지 않습니다.", 1));
+			LikeMusicListResponseDto likeMusicListResponseDto = LikeMusicListResponseDto.builder()
+				.musicId(music.getId())
+				.title(music.getTitle())
+				.singer(music.getSinger())
+				.songImg(music.getSongImg())
+				.build();
+			result.add(likeMusicListResponseDto);
+		}
+		return  result;
 	}
 
 }
