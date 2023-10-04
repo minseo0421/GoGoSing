@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
-import MusicPlay from '../../components/musicrecord/musicplay';
+// import MusicPlay from '../../components/musicrecord/musicplay';
+import { AudioPlayer } from '../../components/musicrecord/audioplay';
 import axiosInstance from '../../axiosinstance';
 import { setModal, setAlbum } from "../../store/actions";
 import { useDispatch } from "react-redux";
@@ -90,7 +91,7 @@ const MusicRecord: React.FC = () => {
             data: formData,
             headers: {
               'Content-Type': 'multipart/form-data',
-              'accessToken': `Bearer ${localStorage.getItem("AccessToken")}`
+              Authorization: `Bearer ${localStorage.getItem("AccessToken")}`
             },
           })
             .then((res) => {
@@ -160,7 +161,8 @@ const MusicRecord: React.FC = () => {
                 </div>
                 )}
                 {audioSourceURL && (
-                    <MusicPlay audioSourceURL= {audioSourceURL}/>
+                    // <MusicPlay audioSourceURL= {audioSourceURL}/>
+                    <AudioPlayer audioSourceURL= {audioSourceURL}/>
                     )}
                     {isRecording && audioSourceURL && (
                     <button onClick={handleRestartRecording} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>다시하기</button>
