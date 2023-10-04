@@ -65,9 +65,9 @@ const MusicUpload: React.FC = () => {
 
 
       const removeAudio = () => {
-        console.log(file)
         setFile(null)
         console.log(file)
+        window.location.reload();
       };
       const divStyle: React.CSSProperties = {
         // width: '100%',
