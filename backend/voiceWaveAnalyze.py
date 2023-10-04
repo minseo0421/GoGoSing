@@ -133,14 +133,21 @@ def main(request):
     similar = cosine_similarity(sound_df.iloc[:-1], sound_df.iloc[-1:])
     sim_df = pd.DataFrame(similar,index=labels['music_id'][:-1])
 
+    # # sim_df = sim_df[sim_df[0] > 0]
+    # # result=sim_df[0].sort_values(ascending=False).head(100)
+    # # print(result)
     # sim_df = sim_df[sim_df[0] > 0]
-    # result=sim_df[0].sort_values(ascending=False).head(100)
-    # print(result)
+    # result = sim_df[0].sort_values(ascending=False).head(100)
+    #
+    # result = result.index.tolist()
+    # print("\n".join(map(str, result)))
     sim_df = sim_df[sim_df[0] > 0]
     result = sim_df[0].sort_values(ascending=False).head(100)
-
-    result = result.index.tolist()
-    print("\n".join(map(str, result)))
+    result_lst = ''
+    for i, j in zip(result.index.tolist(), result.values.tolist()):
+        a = int(i)
+        result_lst += str(a) + ':' + str(j) + '\n'
+    print(result_lst)
 
 
 if __name__ == "__main__":
