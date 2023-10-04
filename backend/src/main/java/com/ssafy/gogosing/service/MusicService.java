@@ -109,6 +109,21 @@ public class MusicService {
         return result;
     }
 
+    public List<Object> recommendListMusicOnLike(UserDetails userDetails) {
+        logger.info("*** recommendListMusicOnLike 메소드 호출");
+        List<Music> musicList = new ArrayList<>();
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
+
+        List<Object> objectMusic = userLikeMusicRepository.recommendListOnLike(user.getId());
+        for(Object object : objectMusic){
+//            object.getClass()
+        }
+
+        logger.info("*** recommendListMusicOnLike 메소드 종료");
+        return objectMusic;
+    }
+
     @Transactional
     public MusicDetailResponseDto detail(Long musicId) {
         logger.info("*** detail 메소드 호출");
@@ -194,4 +209,6 @@ public class MusicService {
         return popularChart;
 
     }
+
+
 }

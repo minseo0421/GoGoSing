@@ -45,6 +45,12 @@ public class MusicController {
         return ResponseEntity.ok().body(musicService.likeMusicList(userDetails));
     }
 
+    @ApiOperation(value = "유저 노래 좋아요 기반 추천 리스트")
+    @GetMapping("/like/list")
+    public ResponseEntity<?> recommendListMusicOnLike(@AuthenticationPrincipal UserDetails userDetails) throws Exception {
+        return ResponseEntity.ok().body(musicService.recommendListMusicOnLike(userDetails));
+    }
+
     @ApiOperation(value = "노래 상세정보")
     @GetMapping("/detail/{musicId}")
     public ResponseEntity<?> detail(@PathVariable("musicId") Long musicId) throws Exception {
