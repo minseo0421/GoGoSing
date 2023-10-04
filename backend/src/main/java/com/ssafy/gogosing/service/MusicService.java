@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -104,6 +105,28 @@ public class MusicService {
                     .build();
 
             result.add(likeMusicListResponseDto);
+        }
+
+        return result;
+    }
+
+    public List<MusicResponseDto> recommendListMusicOnLike(UserDetails userDetails) {
+        logger.info("*** recommendListMusicOnLike 메소드 호출");
+        User user = userRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
+
+        List<Object[]> objectMusic = userLikeMusicRepository.recommendListOnLike(user.getId());
+
+        List<MusicResponseDto> result = new ArrayList<>();
+        for (Object[] row : objectMusic) {
+            MusicResponseDto musicResponseDto = MusicResponseDto.builder()
+                .musicId(((BigInteger) row[0]).longValue()) // BigInteger를 long으로 변환
+                .title((String) row[1])
+                .singer((String) row[2])
+                .songImg((String) row[3])
+                .viewCount(((BigInteger) row[4]).longValue()) // BigInteger를 long으로 변환
+                .build();
+            result.add(musicResponseDto);
         }
 
         return result;
@@ -194,4 +217,6 @@ public class MusicService {
         return popularChart;
 
     }
+
+
 }
