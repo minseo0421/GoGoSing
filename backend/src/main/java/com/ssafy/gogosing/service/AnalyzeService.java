@@ -227,24 +227,62 @@ public class AnalyzeService {
 
         List<VoiceWaveMatchingResponseDto> voiceMatchingList = new ArrayList<>();
 
-        // 일단 10개 추천
-        for (int i = 0; i < 10; i++) {
+        Double maxValue = 0.0;
+        List<Long> sameMusicIdList = new ArrayList<>();
+        List<VoiceWaveMatchingResponseDto> otherList = new ArrayList<>();
+
+        // 우리는 top 100
+        for (int i = 0; i < 100; i++) {
             try {
-                Long value = Long.valueOf(resultLines[i].split("\\.")[0]);
-                Music music = musicRepository.findById(value)
-                        .orElseThrow(() -> new EmptyResultDataAccessException("해당 노래는 존재하지 않습니다.", 1));
-                VoiceWaveMatchingResponseDto voiceWaveMatchingResponseDto = VoiceWaveMatchingResponseDto.builder()
-                        .musicId(music.getId())
-                        .singer(music.getSinger())
-                        .songImg(music.getSongImg())
-                        .title(music.getTitle())
-                        .build();
-                voiceMatchingList.add(voiceWaveMatchingResponseDto);
+                String[] parts = resultLines[i].split(":"); // ":"로 문자열을 분할
+
+                if (parts.length >= 2) {
+                    Long music_id = Long.valueOf(parts[0]); // 첫 번째 부분은 music_id
+                    // 두 번째 부분을 소수점 둘째 자리에서 반올림하여 Double로 변환
+                    Double value = Double.valueOf(String.format("%.2f", Double.valueOf(parts[1])));
+
+                    if (i == 0) {
+                        maxValue = value;
+                    }
+
+                    // value가 maxValue와 같은 경우
+                    if (maxValue.equals(value)) {
+                        sameMusicIdList.add(music_id);
+                    } else {
+                        // 다른 경우
+                        Music music = musicRepository.findById(music_id)
+                                .orElseThrow(() -> new EmptyResultDataAccessException("해당 노래는 존재하지 않습니다.", 1));
+
+                        VoiceWaveMatchingResponseDto voiceWaveMatchingResponseDto = VoiceWaveMatchingResponseDto.builder()
+                                .musicId(music.getId())
+                                .singer(music.getSinger())
+                                .songImg(music.getSongImg())
+                                .title(music.getTitle())
+                                .build();
+
+                        otherList.add(voiceWaveMatchingResponseDto);
+                    }
+                }
             } catch (NumberFormatException e) {
                 // 파싱 오류 처리
                 e.printStackTrace();
             }
         }
+
+        // sameList 정렬
+        List<Music> sameMusicList = musicRangeAnalyzeRepository.musicOrderByViewCount(sameMusicIdList);
+
+        for(Music music : sameMusicList) {
+            VoiceWaveMatchingResponseDto voiceWaveMatchingResponseDto = VoiceWaveMatchingResponseDto.builder()
+                    .musicId(music.getId())
+                    .singer(music.getSinger())
+                    .songImg(music.getSongImg())
+                    .title(music.getTitle())
+                    .build();
+            voiceMatchingList.add(voiceWaveMatchingResponseDto);
+        }
+
+        voiceMatchingList.addAll(otherList);
 
         // 기존 데이터를 삭제합니다.
         userVoiceWaveMatchingRepository.deleteByUserId(user.getId());
