@@ -195,7 +195,7 @@ const MusicDetail: React.FC = () => {
                 }} />
               </div>
               <div className={musicStyle.iconContainer}>
-                  {!album ? null : likelist===null ? null :
+                  {!album ? null : likelist===null ? <p></p> :
                 likelist.includes(album.musicId) ? (
                   <AiFillHeart
                     className={musicStyle.icon}
@@ -214,7 +214,7 @@ const MusicDetail: React.FC = () => {
                     onClick={handlePlayPause}
                   />
                   :<p>Loading...</p>}
-                  {album?.mrUrl===null ? null:
+                  {album?.mrUrl===null ? <span></span>:
                   <img
                   src={"/assets/gosing.svg"}
                   alt="gogosing"
