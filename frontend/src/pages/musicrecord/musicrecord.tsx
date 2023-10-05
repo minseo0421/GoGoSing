@@ -99,7 +99,7 @@ const MusicRecord: React.FC = () => {
               console.log(res);
               setResponseData(res.data);
                 setLoading(false)
-              alert('업로드 완료!')
+              alert('완료!')
             })
             .catch((err) => {
               console.log(err);
@@ -111,31 +111,35 @@ const MusicRecord: React.FC = () => {
         }
       };
 
-    // const recordresult = () => {
-        // navigate("/recordresult");
-    // };
+      const removeDecimal = (value: string) => {
+        return value.replace(/\.0$/, ''); // .0로 끝나는 부분을 빈 문자열로 대체
+      };
 
     return (
         <>
         {loading ? (
                 // 로딩 중인 경우 로딩 화면을 표시
                 <div style={{ marginTop: '150px' }}>
-                    <p>Loading...</p>
+                    <h2>음성 분석 중입니다.</h2>
+                    <h3>Loading...</h3>
                     <img src="assets/spinner.gif" alt="" style={{ width: '50%'}} />
                 </div>
             ) : responseData ? (
                 // 응답 데이터가 있는 경우 데이터를 표시
                 <div>
                     <h1>음역대 분석 결과입니다.</h1>
-                    <p>높은 음: {responseData.voiceRangeHighest}</p>
-                    <p>낮은 음: {responseData.voiceRangeLowest}</p>
+                    <div style={{ display: 'flex', flexDirection:'row',justifyContent: 'space-evenly' }}>
+                      <h3 style={{ padding: '0 0 0 50px' }}>높은 음: <span style={{ color: 'purple' }}>{removeDecimal(responseData.voiceRangeHighest)}</span></h3>
+                      <h3 style={{ padding: '0 50px 0 0' }}>낮은 음: <span style={{ color: '#BB8DFF' }}>{removeDecimal(responseData.voiceRangeLowest)}</span></h3>
+                    </div>
                     <p>사용자님에게 추천드리는 노래는</p>
                     {imgErr ? <img crossOrigin="anonymous"  onClick={handleAlbumClick} src='assets/default_album.png' alt="" style={{ width: '60%' }} />
                     :<img src={responseData.voiceRangeMatchingMusic.songImg || 'assets/default_album.png'} alt={responseData.voiceRangeMatchingMusic.title} onClick={handleAlbumClick} crossOrigin="anonymous" onError={()=>setImgErr(true)}/>}
+                    <h2>{responseData.voiceRangeMatchingMusic.title}</h2>
+                    <p>{responseData.voiceRangeMatchingMusic.singer}</p>
                     <p>노래방 번호 : {responseData.voiceRangeMatchingMusic.musicId}</p>
-                    <p>가수 : {responseData.voiceRangeMatchingMusic.singer}</p>
-                    <p>노래 제목: {responseData.voiceRangeMatchingMusic.title}</p>
-                    <button onClick={Home} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>Go home</button>
+                    <p style={{ background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',borderRadius: '50px',border: 'none', color: '#fff', margin:'auto',height:'30px',display:'flex',justifyContent:'center',alignItems:'center',width:'35%'}} 
+                      onClick={Home}>Go home</p>
                 </div>
             ) : (
         <div style={{marginTop:'20%'}}>

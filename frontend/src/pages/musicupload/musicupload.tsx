@@ -83,20 +83,22 @@ const MusicUpload: React.FC = () => {
          {loading ? (
                 // 로딩 중인 경우 로딩 화면을 표시
                 <div style={{ marginTop: '150px' }}>
-                  <p>Loading...</p>
+                  <h2>노래 분석 중입니다.</h2>
+                  <h3>Loading...</h3>
                   <img src="assets/spinner.gif" alt="" style={{ width: '50%'}} />
                 </div>
             ) : responseData ? (
                 // 응답 데이터가 있는 경우 데이터를 표시
                 <div style={{marginTop:'35%'}}>
                   <h2>당신의 음색과</h2>
-                    <h2>가장 잘 맞는 노래</h2>
+                  <h2>가장 잘 맞는 노래입니다.</h2>
                     {imgErr ? <img crossOrigin="anonymous"  onClick={handleAlbumClick} src='assets/default_album.png' alt="" style={{ width: '60%' }} />
                     :<img src={responseData.songImg} alt={responseData.title} onClick={handleAlbumClick} crossOrigin="anonymous" onError={()=>setImgErr(true)}/>}
+                    <h2>{responseData.title}</h2>
+                    <h3>{responseData.singer}</h3>
                     <p>노래방 번호: {responseData.musicId}</p>
-                    <p>Singer: {responseData.singer}</p>
-                    <p>Title: {responseData.title}</p>
-                    <button onClick={Home} style={{ width: '30%', margin: 'auto', borderRadius:'10px', height:'40px'}}>Go home</button>
+                    <p style={{ background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',borderRadius: '50px',border: 'none', color: '#fff', margin:'auto',height:'30px',display:'flex',justifyContent:'center',alignItems:'center',width:'35%'}} 
+                      onClick={Home}>Go home</p>
                 </div>
             ) : (
               <div style={{marginTop:'20%'}}>
