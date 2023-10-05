@@ -110,23 +110,22 @@ public class MusicService {
         return result;
     }
 
-    public List<MusicResponseDto> recommendListMusicOnLike(UserDetails userDetails) {
+    public List<LikeMusicListResponseDto> recommendListMusicOnLike(UserDetails userDetails) {
         logger.info("*** recommendListMusicOnLike 메소드 호출");
         User user = userRepository.findByEmail(userDetails.getUsername())
             .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
 
         List<Object[]> objectMusic = userLikeMusicRepository.recommendListOnLike(user.getId());
 
-        List<MusicResponseDto> result = new ArrayList<>();
+        List<LikeMusicListResponseDto> result = new ArrayList<>();
         for (Object[] row : objectMusic) {
-            MusicResponseDto musicResponseDto = MusicResponseDto.builder()
+            LikeMusicListResponseDto likeMusicListResponseDto = LikeMusicListResponseDto.builder()
                 .musicId(((BigInteger) row[0]).longValue()) // BigInteger를 long으로 변환
                 .title((String) row[1])
                 .singer((String) row[2])
                 .songImg((String) row[3])
-                .viewCount(((BigInteger) row[4]).longValue()) // BigInteger를 long으로 변환
                 .build();
-            result.add(musicResponseDto);
+            result.add(likeMusicListResponseDto);
         }
 
         return result;
@@ -180,10 +179,10 @@ public class MusicService {
         logger.info("*** incrementViewCount 메소드 종료");
     }
 
-    public List<MusicResponseDto> popularChart() {
+    public List<LikeMusicListResponseDto> popularChart() {
         logger.info("*** popularChart 메소드 호출");
         List<PopularChart> popularChartList = popularChartRepository.findAllByOrderByRankingAsc();
-        List<MusicResponseDto> popularChart = new ArrayList<>();
+        List<LikeMusicListResponseDto> popularChart = new ArrayList<>();
         for (PopularChart chart : popularChartList) {
             Optional<Music> optionalMusic = musicRepository.findById(chart.getMusic().getId());
 
@@ -193,25 +192,16 @@ public class MusicService {
             }
 
             Music music = optionalMusic.get();
-            List<MusicGenreResponseDto> genreInfo = new ArrayList<>();
             List<MusicGenre> musicGenreList = musicGenreRepository.findByMusicId(music.getId());
             if (musicGenreList.isEmpty()) {
                 logger.info("*** 노래의 장르가 존재하지 않음 musicId : " + music.getId());
             }
-            for (MusicGenre musicGenre : musicGenreList) {
-                MusicGenreResponseDto musicGenreResponseDto = MusicGenreResponseDto.builder()
-                        .genreId(musicGenre.getGenre().getId())
-                        .genreType(musicGenre.getGenre().getType()).build();
-                genreInfo.add(musicGenreResponseDto);
-            }
-            MusicResponseDto musicResponseDto = MusicResponseDto.builder()
+            LikeMusicListResponseDto likeMusicListResponseDto = LikeMusicListResponseDto.builder()
                     .musicId(music.getId())
                     .title(music.getTitle())
                     .singer(music.getSinger())
-                    .songImg(music.getSongImg())
-                    .viewCount(music.getViewCount())
-                    .genreInfo(genreInfo).build();
-            popularChart.add(musicResponseDto);
+                    .songImg(music.getSongImg()).build();
+            popularChart.add(likeMusicListResponseDto);
         }
         logger.info("*** popularChart 메소드 종료");
         return popularChart;
