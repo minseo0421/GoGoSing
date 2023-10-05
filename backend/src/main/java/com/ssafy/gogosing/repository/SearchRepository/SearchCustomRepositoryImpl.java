@@ -40,7 +40,7 @@ public class SearchCustomRepositoryImpl implements SearchCustomRepository{
                 .offset(pageable.getOffset()) // 페이지 번호
                 .limit(pageable.getPageSize()) // 페이지 사이즈
                 .orderBy(
-                        music.title.length().asc(),
+//                        music.title.length().asc(),
                         music.viewCount.desc()
                 )
                 .fetch();
