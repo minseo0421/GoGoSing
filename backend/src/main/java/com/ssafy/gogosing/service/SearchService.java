@@ -33,7 +33,7 @@ public class SearchService {
         String[] keywords = keyword.split("\\s+");
 
         // 10개씩 페이징 처리해줌
-        PageRequest pageRequest = PageRequest.of(page-1, 10);
+        PageRequest pageRequest = PageRequest.of(page-1, 20);
 
         List<Music> musicList = searchRepository.findAllByTitle(keywords, pageRequest);
 
@@ -48,7 +48,7 @@ public class SearchService {
         redisSearchRankingService.updateScore(keyword.trim());
 
         // 10개씩 페이징 처리해줌
-        PageRequest pageRequest = PageRequest.of(page-1, 10);
+        PageRequest pageRequest = PageRequest.of(page-1, 20);
 
         List<Music> musicList = searchRepository.findBySinger(keyword, pageRequest);
 
@@ -58,7 +58,7 @@ public class SearchService {
     public List<SearchResponseDto> searchByLyric(String sentence, int page) {
 
         // 10개씩 페이징 처리해줌
-        PageRequest pageRequest = PageRequest.of(page-1, 10);
+        PageRequest pageRequest = PageRequest.of(page-1, 20);
 
         List<Music> musicList = searchRepository.findAllByLyric(sentence, pageRequest);
 

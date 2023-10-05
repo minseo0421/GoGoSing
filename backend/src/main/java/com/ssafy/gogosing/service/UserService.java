@@ -5,6 +5,8 @@ import com.ssafy.gogosing.dto.user.request.UserPasswordUpdateRequestDto;
 import com.ssafy.gogosing.dto.user.request.UserSignUpRequestDto;
 import com.ssafy.gogosing.dto.user.request.UserSingUpPlusRequestDto;
 import com.ssafy.gogosing.dto.user.response.UserMypageResponseDto;
+import com.ssafy.gogosing.dto.user.response.UserMypageVoiceFileResponseDto;
+import com.ssafy.gogosing.dto.user.response.UserMypageVoiceRangeResponseDto;
 import com.ssafy.gogosing.global.redis.repository.CertificationNumberDao;
 import com.ssafy.gogosing.global.redis.service.RedisAccessTokenService;
 import com.ssafy.gogosing.global.redis.service.RedisRefreshTokenService;
@@ -143,6 +145,26 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 
         return new UserMypageResponseDto(user);
+    }
+
+    /**
+     * 마이페이지에 제공할 회원 음역대정보 가져오기
+     */
+    public UserMypageVoiceRangeResponseDto getUserVocieRange(String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+        return new UserMypageVoiceRangeResponseDto(user);
+    }
+
+    /**
+     * 마이페이지에 제공할 회원 목소리 파일 가져오기
+     */
+    public UserMypageVoiceFileResponseDto getUserVocieFile(String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+        return new UserMypageVoiceFileResponseDto(user);
     }
 
     public void nicknameUsefulCheck(String nickname) throws Exception {
