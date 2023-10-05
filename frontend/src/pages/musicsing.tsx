@@ -107,6 +107,8 @@ const MusicSing: React.FC = () => {
       setAudioSave("");
       setResponseData(null);
       setIsRecording(false);
+      setLoading(false)
+      stopMicrophone()
     }
   },[isModalOpen])
 
@@ -114,6 +116,11 @@ const MusicSing: React.FC = () => {
   const handleAlbumClick = () => {
     dispatch(setModal("musicDetail"));
     dispatch(setAlbum(responseData.musicId)) // 모달 표시 액션
+    setAudioSave("")
+    setAudioSourceURL("")
+    setResponseData(null);
+    setIsRecording(false);
+    setLoading(false)
   };
 
   useEffect(()=>{
@@ -208,9 +215,11 @@ const MusicSing: React.FC = () => {
   
         } catch (error) {
           console.error(error);
+          alert('닫기를 누르고 다시 실행해주세요!')
         }
       } else {
         console.log('파일이 선택되지 않았습니다.');
+        alert('닫기를 누르고 다시 실행해주세요!')
       }
     }
     // useEffect(() => {
@@ -263,9 +272,11 @@ const MusicSing: React.FC = () => {
             })
             .catch((err) => {
               console.log(err);
+              alert('닫기를 누르고 다시 실행해주세요!')
             });
         } else {
           console.log('파일이 선택되지 않았습니다.');
+          alert('닫기를 누르고 다시 실행해주세요!')
         }
       };
     // const recordresult = () => {
@@ -297,22 +308,26 @@ const MusicSing: React.FC = () => {
   }
   // 여기부터 터치 이벤트 관련 start
 
+  const stopMicrophone = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const tracks = stream.getTracks();
+      tracks.forEach(track => {
+        track.stop();
+      });
+      // 마이크 스트림 해제 후 모달을 나가는 코드를 이곳에 추가
+    } catch (error) {
+      console.error('마이크 스트림 해제 오류:', error);
+    }
+  };
+
   // 터치 이벤트 end
   const recordStop = ()=>{
     setIsplay(false);
     setIsRecording(false); // 녹음 중지
     recorderControls.stopRecording()
     // 마이크 스트림을 가져올 때 사용한 스트림을 해제
-    navigator.mediaDevices.getUserMedia({ audio: true })
-    .then((stream) => {
-      const tracks = stream.getTracks();
-      tracks.forEach(track => {
-        track.stop();
-      });
-    })
-    .catch((error) => {
-      console.error('마이크 스트림 해제 오류:', error);
-    });
+    stopMicrophone()
 
     // const blob = new Blob([], {});
     // addAudio(blob)
@@ -321,12 +336,15 @@ const MusicSing: React.FC = () => {
   }
 
   const handleCloseModal = () => {
+    recorderControls.stopRecording()
     setAudioSourceURL(""); // audioSave 초기화
     setAudioSave(""); // audioSave 초기화
     setResponseData(null);
     setIsRecording(false);
+    setLoading(false)
     dispatch(setAlbum(null));
     dispatch(setModal(null));
+    stopMicrophone()
     // window.location.reload();
   };
 
