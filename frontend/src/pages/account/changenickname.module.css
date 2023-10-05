@@ -23,6 +23,8 @@
     background-image:url('../../../public/assets/background.png');
     padding:20px;
     box-sizing:border-box;
+    animation-name: fadeIn;
+    animation-duration: 0.5s;
 }
 
 .input {
@@ -76,4 +78,13 @@
     background-color: #D7D7D7;
     border:1px solid white;
     color:gray;
+}
+/* fadeIn 애니메이션 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }

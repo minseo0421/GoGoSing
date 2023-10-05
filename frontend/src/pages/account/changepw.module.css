@@ -22,7 +22,9 @@
     flex-direction:column;
     background-image:url('../../../public/assets/background.png');
     padding:20px;
-    box-sizing:border-box
+    box-sizing:border-box;
+    animation-name: fadeIn;
+    animation-duration: 0.5s;
 }
 
 .input {
@@ -53,4 +55,13 @@
     padding:0 20px;
     box-sizing: border-box;
     cursor: pointer;
+}
+/* fadeIn 애니메이션 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
