@@ -9,6 +9,7 @@
     justify-content: center; /* 오버레이 내의 내용을 가운데 정렬합니다 */
     align-items: center;
 }
+
 .modal {
     position: fixed;
     top:35%;
@@ -41,12 +42,13 @@
     border-radius: 10px;
     color:white;
 }
+
 .input_account {
     background-color: #D7D7D7;
     border:1px solid white;
     border-radius: 1rem;
-    margin:0 5% ;
     width: 90%;
+    margin:0 5%;
     height: 40px;
     padding:0 20px;
     box-sizing: border-box;
