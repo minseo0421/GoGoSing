@@ -13,7 +13,7 @@ public interface SearchRepository
     /**
      * JPQL 이용
      */
-    @Query("SELECT m FROM Music m WHERE (m.singer = :keyword) ORDER BY m.releaseDate DESC")
+    @Query("SELECT m FROM Music m WHERE (m.singer = :keyword) ORDER BY m.viewCount DESC")
     List<Music> findBySinger(String keyword, Pageable pageable);
 
     /**
