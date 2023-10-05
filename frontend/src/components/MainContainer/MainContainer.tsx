@@ -15,28 +15,38 @@ interface AlbumProps {
   title:string;
   singer:string|null;
   songImg:string|null;
-  genreInfo:{
-    genreId:number[];
-    genreType:string;
-  }[];
-  viewCount:number;
 }
+
 const MainContainer: React.FC = () => {
   const [startY, setStartY] = useState(0);
   const [scrollTop, setscrollTop] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate()
+  const [popularchart, setpopularchart] = useState<AlbumProps[]>([])
   const [likechart, setlikechart] = useState<AlbumProps[]>([])
   const [plusview, setplusview] = useState(false);
   const dispatch = useDispatch()
+  const AccessToken = localStorage.getItem('AccessToken')
   // 차트 정보 불러오는 axios 작성
   useEffect(()=>{
+    const AccessToken = localStorage.getItem('AccessToken')
     axios({
       method:'get',
       url:`${process.env.REACT_APP_API_URL}/music/chart`,
     }).then(res=>{
-      setlikechart(res.data)
+      setpopularchart(res.data)
+    }).catch(err=>{
+      console.log(err)
+    })
+    axiosInstance({
+      method:'get',
+      url:`${process.env.REACT_APP_API_URL}/music/like/list`,
+      headers:{
+        Authorization:`Bearer ${AccessToken}`
+      }
+    }).then(res=>{
+      setlikechart(res.data)  
     }).catch(err=>{
       console.log(err)
     })
@@ -44,7 +54,6 @@ const MainContainer: React.FC = () => {
 
   useEffect(()=>{
     const AccessToken = localStorage.getItem('AccessToken')
-
     axiosInstance({
       method:'get',
       url:`${process.env.REACT_APP_API_URL}/music/like`,
@@ -58,6 +67,7 @@ const MainContainer: React.FC = () => {
       console.log(err)
     })
   },[dispatch])
+
   const handleStart = (
     e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>
   ) => {
@@ -98,16 +108,16 @@ const MainContainer: React.FC = () => {
       onMouseLeave={handleEnd}
     >
       <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
-        <span style={{fontSize:'20px'}}>🎶금주의 인기차트🎶</span>
+        <span style={{fontSize:'20px'}}>노래방 인기차트🎶</span>
         <span style={{fontSize:'16px'}} onClick={()=>{navigate('/chart?type=popular')}}>더보기</span>
       </div>
-      <CardSmallContainer albums={likechart.slice(0,10)} />
+      <CardSmallContainer albums={popularchart.slice(0,10)} />
       <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
         <span style={{fontSize:'20px'}}>이 노래는 어떠신가요?</span>
       </div>
       <CarouselComponent />
       <div style={{display:'flex', width:'90%', margin:'0 5%', marginTop:'-10%', justifyContent:'space-between',alignItems:'center'}}>
-        <span style={{fontSize:'20px'}}>장르 조회</span>
+        <span style={{fontSize:'20px'}}>장르별 인기차트</span>
       </div>
       <div style={{display:'flex', width:'90%', margin:'2% 5%', justifyContent:'space-between',alignItems:'center'}}>
         <div onClick={()=>{navigate('/genremusic?type=발라드')}} style={{backgroundColor:'#FFBD59',width:'30%',height:'40px', justifyContent:'center',alignItems:'center', display:'flex',fontSize:'18px',borderRadius:10,border:'0.5px solid white'}}>발라드</div> 
@@ -134,24 +144,41 @@ const MainContainer: React.FC = () => {
         </div>
       </>
       : null}
-      {plusview ? <p onClick={()=>setplusview(false)} style={{margin:0,marginBottom:20}}>⇧숨기기</p>: <p onClick={()=>setplusview(true)} style={{margin:0,marginBottom:20}}>⇩더보기</p> }
+      {plusview ? <p onClick={()=>setplusview(false)} style={{margin:0,marginBottom:20}}>⇧ 숨기기</p>: <p onClick={()=>setplusview(true)} style={{margin:0,marginBottom:20}}>더보기 ⇩</p> }
       <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
-        <span style={{fontSize:'20px'}}>🎤당신의 목소리에 맞는 노래🎤</span>
-        <span style={{fontSize:'16px'}} onClick={()=>{navigate('/chart?type=voice')}}>더보기</span>
+        <span style={{fontSize:'20px'}}>당신의 목소리에 맞는 노래🎤</span>
+        <span style={{fontSize:'16px'}} onClick={()=>{
+          if (AccessToken) {
+            navigate('/chart?type=voice')
+          } else {
+            alert('로그인이 필요합니다')
+            navigate('/login')
+          }}}>더보기</span>
       </div>
       <VoiceLong />
       <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
-        <span style={{fontSize:'20px'}}>🎼당신의 음역대에 맞는 노래🎼</span>
-        <span style={{fontSize:'16px'}} onClick={()=>{navigate('/chart?type=pitch')}}>더보기</span>
+        <span style={{fontSize:'20px'}}>당신의 음역대에 맞는 노래🎼</span>
+        <span style={{fontSize:'16px'}} onClick={()=>{
+          if (AccessToken) {
+            navigate('/chart?type=pitch')
+          } else {
+            alert('로그인이 필요합니다')
+            navigate('/login')
+          }}}>더보기</span>
       </div>
       <PitchLong />
       <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
-        <span style={{fontSize:'20px'}}>❤️당신의 좋아요 추천 노래❤️</span>
-        <span style={{fontSize:'16px'}} onClick={()=>{navigate('/chart?type=like')}}>더보기</span>
+        <span style={{fontSize:'20px'}}>당신의 좋아요 추천 노래❤️</span>
+        <span style={{fontSize:'16px'}} onClick={()=>{
+          if (AccessToken) {
+            navigate('/chart?type=like')
+          } else {
+            alert('로그인이 필요합니다')
+            navigate('/login')
+          }
+          }}>더보기</span>
       </div>
       <CardSmallContainer albums={likechart.slice(0,10)} />
-
-
     </div>
     
   );

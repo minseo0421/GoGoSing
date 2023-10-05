@@ -78,6 +78,9 @@ const GenreSelect: React.FC = () => {
   const location = useLocation();
 
   useEffect(()=>{
+    if (!isModalOpen) {
+      return
+    }
     const AccessToken = localStorage.getItem('AccessToken')
     axiosInstance({
         method:'get',
@@ -91,7 +94,7 @@ const GenreSelect: React.FC = () => {
     }).catch(err=>{
         console.log(err)
     })
-  },[])
+  },[isModalOpen])
 
   const genreSel = (sel:number) => {
     if (selgenres.includes(sel)) {
@@ -196,7 +199,7 @@ const GenreSelect: React.FC = () => {
                 </div>
               </div>      
             </div>
-            {defaultsel === selgenres ? <button className={styles.btn} onClick={()=>navigate('/')}>다음에..</button> 
+            {defaultsel === selgenres ? <button className={styles.btn} onClick={()=>{dispatch(setModal(null))}}>다음에..</button> 
             : <button className={styles.btn} onClick={submit}>적용하기</button> }
         </div>
         </ModalContainer>
