@@ -4,17 +4,17 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../axiosinstance";
 
 const VoiceSmall: React.FC = () => {
-  const [voice, setVoice] = useState<any[]>([]);
-
+  const [voice, setVoice] = useState<{nickname:string;voiceFileName:string;}|null>(null);
   const navigate = useNavigate();
 
   const musicupload = () => {
     navigate("/musicupload");
   };
-  const getVoiceList = () => {
+
+  useEffect(() => {
     axiosInstance({
       method: 'get',
-      url: `${process.env.REACT_APP_API_URL}/analyze/waveMusicList`, 
+      url: `${process.env.REACT_APP_API_URL}/user/detail/voiceFile`, 
       headers: {
         Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
       },
@@ -23,10 +23,6 @@ const VoiceSmall: React.FC = () => {
     }).catch(err=>{
       console.log(err)
     })
-  }
-
-  useEffect(() => {
-    getVoiceList()
   }, []);
 
   return (
@@ -44,8 +40,8 @@ const VoiceSmall: React.FC = () => {
       ) : (
         <div>
           <p>목소리 정보</p>
-          <p style={{color:'#C0CEFF',fontSize:12,margin:0}}>nickname님의 음색(수정필요)</p>
-          <p style={{color:'#C0CEFF',fontSize:12,margin:0}}>IU - 겨울잠.wav</p>
+          <p style={{color:'#C0CEFF',fontSize:12,margin:0}}>{voice.nickname}님이 등록한 노래</p>
+          <p style={{color:'#C0CEFF',fontSize:12,margin:0}}>{voice.voiceFileName}</p>
           <p style={{color:'white', marginTop:10}} onClick={musicupload}>목소리 수정하기 →</p>
         </div>
       )}
