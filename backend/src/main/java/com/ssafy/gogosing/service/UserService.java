@@ -2,6 +2,7 @@ package com.ssafy.gogosing.service;
 
 import com.ssafy.gogosing.domain.user.User;
 import com.ssafy.gogosing.dto.user.request.UserPasswordUpdateRequestDto;
+import com.ssafy.gogosing.dto.user.request.UserQuitRequestDto;
 import com.ssafy.gogosing.dto.user.request.UserSignUpRequestDto;
 import com.ssafy.gogosing.dto.user.request.UserSingUpPlusRequestDto;
 import com.ssafy.gogosing.dto.user.response.UserMypageResponseDto;
@@ -123,10 +124,11 @@ public class UserService {
      * 성공 시 accessToken blacklist 추가 및 refreshToken 삭제
      */
     @Transactional
-    public Long quit(String accessToken, UserDetails userDetails) {
-
+    public Long quit(String accessToken, UserQuitRequestDto userQuitRequestDto, UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
+
+        user.checkPassword(userQuitRequestDto.getCheckPassword(), passwordEncoder);
 
         user.updateDeletedDate();
         userRepository.save(user);
@@ -194,12 +196,14 @@ public class UserService {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 
+        user.checkPassword(userPasswordUpdateRequestDto.getCheckPassword(), passwordEncoder);
+
         // 비밀번호 유효성 검사
-        if (!Pattern.matches("^.*(?=^.{9,15}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$", userPasswordUpdateRequestDto.getPassword())) {
+        if (!Pattern.matches("^.*(?=^.{9,15}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$", userPasswordUpdateRequestDto.getNewPassword())) {
             throw new IllegalStateException("비밀번호 형식이 맞지않습니다.");
         }
 
-        user.updatePassword(userPasswordUpdateRequestDto.getPassword(), passwordEncoder);
+        user.updatePassword(userPasswordUpdateRequestDto.getNewPassword(), passwordEncoder);
         userRepository.save(user);
 
         return user.getId();

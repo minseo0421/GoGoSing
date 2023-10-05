@@ -2,6 +2,7 @@ package com.ssafy.gogosing.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -79,12 +80,42 @@ public class GenreService {
 	}
 
 	public List<GenreMusicListResponseDto> findGenreList(Long genreId) {
+		logger.info("*** findGenreList 메소드 호출");
 		List<Music> musicList = musicRepository.findMusicByGenreId(genreId);
 
 		List<GenreMusicListResponseDto> result = new ArrayList<>();
 		for (Music music : musicList) {
 			result.add(new GenreMusicListResponseDto(music.getId(), music.getTitle(), music.getSinger(), music.getSongImg(), music.getViewCount()));
 		}
+		return result;
+	}
+
+	public List<GenreMusicListResponseDto> recommendListMusicOnLike(UserDetails userDetails) {
+		logger.info("*** recommendListOnGenre 메소드 호출");
+		Optional<User> optionalUser = userRepository.findByEmail(userDetails.getUsername());
+		List<GenreMusicListResponseDto> result = new ArrayList<>();
+
+		if (optionalUser.isEmpty()) {
+			logger.info("*** 유저가 존재하지 않음");
+			// 인기많은 노래 10개정도
+			// return musicRepository.findTopByPick();
+		} else {
+			User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
+			List<UserLikeGenre> userLikeGenres = userLikeGenreRepository.findByUserId(user.getId());
+			// 장르 선택했는지
+			if (userLikeGenres.isEmpty()) {
+				// 선택 안했을 때는 인기 10개
+				// return musicRepository.findTopByPick();
+			} else {
+				// 좋아하는 장르 선택했을 때는 장르 기반으로 10개
+				List<Music> musicList = musicRepository.findTopByPick();
+				for (Music music : musicList) {
+					result.add(new GenreMusicListResponseDto(music.getId(), music.getTitle(), music.getSinger(), music.getSongImg(), music.getViewCount()));
+				}
+				return result;
+			}
+		}
+
 		return result;
 	}
 }
