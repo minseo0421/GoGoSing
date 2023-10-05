@@ -111,19 +111,6 @@ const MusicRecord: React.FC = () => {
         }
       };
 
-      const buttonStyle: React.CSSProperties = {
-        width: '40%', // 반응형 크기 조절
-        height: '60%', // 높이를 자동으로 조절
-        // left: '30%', // 가운데 정렬을 위한 좌표 조절
-        // top: '50%', // 가운데 정렬을 위한 좌표 조절
-        // transform: 'translate(-50%, -50%)', // 가운데 정렬
-        background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',
-        borderRadius: '50px',
-        border: 'none', // Optional: Remove button border
-        color: '#fff', // Optional: Text color
-        cursor: 'pointer',
-      };  
-
     // const recordresult = () => {
         // navigate("/recordresult");
     // };
@@ -142,7 +129,7 @@ const MusicRecord: React.FC = () => {
                     <h1>음역대 분석 결과입니다.</h1>
                     <p>높은 음: {responseData.voiceRangeHighest}</p>
                     <p>낮은 음: {responseData.voiceRangeLowest}</p>
-                    <p>당신이 편하게 부를 수 있는 노래는</p>
+                    <p>사용자님에게 추천드리는 노래는</p>
                     {imgErr ? <img crossOrigin="anonymous"  onClick={handleAlbumClick} src='assets/default_album.png' alt="" style={{ width: '60%' }} />
                     :<img src={responseData.voiceRangeMatchingMusic.songImg || 'assets/default_album.png'} alt={responseData.voiceRangeMatchingMusic.title} onClick={handleAlbumClick} crossOrigin="anonymous" onError={()=>setImgErr(true)}/>}
                     <p>노래방 번호 : {responseData.voiceRangeMatchingMusic.musicId}</p>
@@ -151,7 +138,7 @@ const MusicRecord: React.FC = () => {
                     <button onClick={Home} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>Go home</button>
                 </div>
             ) : (
-        <div>
+        <div style={{marginTop:'20%'}}>
             <div style={{ display: 'none' }}>
                     <AudioRecorder
                     onRecordingComplete={addAudio}
@@ -160,36 +147,41 @@ const MusicRecord: React.FC = () => {
                     // downloadOnSavePress={true}
                     />
             </div>
-            <h1>당신의 음역대</h1>
-            <h1>입력해!</h1>
+            <h1>음역대 녹음</h1>
+            <p>사용자님이 내실 수 있는 가장 낮은 음부터<br />가장 높은 음까지 녹음을 진행해주세요!</p>
             <div style={{ display: 'flex', flexDirection:'column',justifyContent: 'center', marginBottom: 24 }}>
                 {!isRecording && audioSourceURL==="" && (
-                <div style={{ margin: 'auto', marginBottom: '10px' }}>
+                  <div style={{ margin: 'auto', marginTop: '30%' }}>
                     <img src="assets/colmic.png" alt="" style={{width: '50%', height:'50%'}} onClick={handleStartRecording}/>
+                    <p>마이크 아이콘 터치 시, 녹음이 시작됩니다.</p>
                 </div>
                 )}
                 {isRecording && audioSourceURL==="" && (
-                <div>
-                    <h1>{recorderControls.recordingTime}</h1>
-                    <p onClick={recorderControls.stopRecording}>녹음 멈춰!!</p>
+                <div style={{ margin: 'auto', marginTop: '40%' }}>
+                  <h1>녹음 진행중</h1>
+                  <h1>{recorderControls.recordingTime}</h1>
+
+                  <p style={{ background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',borderRadius: '50px',border: 'none', color: '#fff', margin:'20px',height:'30px',display:'flex',justifyContent:'center',alignItems:'center'}} 
+                  onClick={recorderControls.stopRecording}>녹음 끝내기</p>
                 </div>
                 )}
                 {audioSourceURL && (
                     // <MusicPlay audioSourceURL= {audioSourceURL}/>
                     // <AudioPlayer audioSourceURL= {audioSourceURL}/>
-                    <AudioWithWave audioSourceURL= {audioSourceURL}/>
+                    <div>
+                      <AudioWithWave audioSourceURL= {audioSourceURL}/>
+                      <p style={{marginTop:'40px'}}>녹음 파일을 확인하고 분석을 진행해주세요</p>
+                    </div>
                     )}
-                    <div style={{ display: 'flex', flexDirection:'row',justifyContent: 'center', marginTop: 40 }} >
+                    <div style={{ display: 'flex', flexDirection:'row',justifyContent: 'center', marginTop: 20 }} >
                     {isRecording && audioSourceURL && (
-                    <button onClick={handleRestartRecording} style={buttonStyle}>다시하기</button>
+                      <p style={{ background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',borderRadius: '50px',border: 'none', color: '#fff', height:'30px',width:'120px',display:'flex',justifyContent:'center',alignItems:'center',margin:'5px'}} 
+                      onClick={handleRestartRecording}>다시하기</p>
+                    // <button onClick={handleRestartRecording} style={buttonStyle}>다시하기</button>
                     )}
                     {isRecording && audioSourceURL&&(
-                    // <button onClick={recordresult} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>
-                    //     다음으로
-                    // </button>
-                    <button onClick={MyrecordUpload} style={buttonStyle}>
-                    다음으로
-                    </button>
+                    <p style={{ background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',borderRadius: '50px',border: 'none', color: '#fff',height:'30px',width:'120px',display:'flex',justifyContent:'center',alignItems:'center',margin:'5px'}} 
+                      onClick={MyrecordUpload}>분석 진행하기</p>
                     )}
                     </div>
             </div>

@@ -76,19 +76,6 @@ const MusicUpload: React.FC = () => {
         borderRadius: '15px',
       };
 
-      const buttonStyle: React.CSSProperties = {
-        width: '40%', // 반응형 크기 조절
-        height: '60%', // 높이를 자동으로 조절
-        // left: '30%', // 가운데 정렬을 위한 좌표 조절
-        // top: '50%', // 가운데 정렬을 위한 좌표 조절
-        // transform: 'translate(-50%, -50%)', // 가운데 정렬
-        background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',
-        borderRadius: '50px',
-        border: 'none', // Optional: Remove button border
-        color: '#fff', // Optional: Text color
-        cursor: 'pointer',
-      };
-    
     return (
         <>
          {loading ? (
@@ -110,15 +97,13 @@ const MusicUpload: React.FC = () => {
                     <button onClick={Home} style={{ width: '50%', margin: 'auto', borderRadius:'10px'}}>Go home</button>
                 </div>
             ) : (
-              <div>
-              <p onClick={ Home }>X</p>
-              <h1>자신이 부른 노래를</h1>
-              <h1>업로드해 주세요!</h1>
+              <div style={{marginTop:'20%'}}>
+              {/* <p onClick={ Home }>X</p> */}
+              <h1>노래 업로드</h1>
+              <p>업로드 해주신 노래를 기반으로 <br /> 사용자님께 어울리는 노래를 추천합니다.</p>
               <br />
-              <p>업로드 해주신 노래를 기반으로</p>
-              <p>당신의 목소리와</p>
-              <p>유사한 노래를 추천합니다.</p>
-                <div style={{ display: 'flex', flexDirection:'column',justifyContent: 'center', marginBottom: 30 }}>
+           
+                <div style={{ display: 'flex', flexDirection:'column',justifyContent: 'center', marginTop: '30%' }}>
                   <div style={{ margin: 'auto', marginBottom: '10px' }}>
                   
                   {file===null && (
@@ -136,13 +121,21 @@ const MusicUpload: React.FC = () => {
                         style={{ width: '30%', height: '30%', cursor: 'pointer' }}
                         onClick={() => document.getElementById('fileInput')?.click()}
                       />
+                      <p>사용자님이 부르신 노래 파일을<br />업로드 해주세요!</p>
+                      <br />
+                      <p>(...노래 파일이 없으신 경우...)<br /><br />
+                       GOGO SING 에서 노래를 부르신 후<br /> 즉시, 업로드 하실 수 있습니다.</p>
                     </div>
                   )}
                   {file && (
                     <div>
                       <AudioPlayer audioSourceURL={window.URL.createObjectURL(file)} />
-                      <button onClick={removeAudio} style={buttonStyle}>재 업로드</button>
-                      <button onClick={MymusicUpload} style={buttonStyle}>업로드</button>
+                      <div style={{display:'flex', marginTop:'10%'}}>
+                        <p style={{ background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',borderRadius: '50px',border: 'none', color: '#fff',height:'30px',width:'120px',display:'flex',justifyContent:'center',alignItems:'center',margin:'5px'}} 
+                        onClick={removeAudio}>다시 선택하기</p>
+                        <p style={{ background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',borderRadius: '50px',border: 'none', color: '#fff',height:'30px',width:'120px',display:'flex',justifyContent:'center',alignItems:'center',margin:'5px'}} 
+                        onClick={MymusicUpload}>분석 진행하기</p>
+                      </div>
                     </div>
                   )}
                   </div>
