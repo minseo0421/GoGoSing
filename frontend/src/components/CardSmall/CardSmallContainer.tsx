@@ -57,7 +57,6 @@ const CardSmallContainer: React.FC<Props> = ({albums}) => {
       onMouseUp={handleEnd}
       onMouseLeave={handleEnd}
     > 
-      {albums.length===0 && <p style={{width:'100%', justifyContent:'center',alignItems:'center'}}>데이터 존재하지 않습니다. <br /> 좋아하는 노래를 등록(좋아요)해주세요! </p> }
       {albums.map((album) => {
         return <CardSmall album={album} />; // 각 ChartLong 컴포넌트에 album 데이터를 prop으로 전달합니다.
       })}
