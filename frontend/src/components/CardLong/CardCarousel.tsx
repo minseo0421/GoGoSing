@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from "react";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import styles from "./CardLong.module.css";
+import styles from "./CardCarousel.module.css";
 import { setModal, setAlbum } from "../../store/actions";
 import { useDispatch } from "react-redux";
 import axiosInstance from "../../axiosinstance";
@@ -20,7 +20,7 @@ interface AlbumProps {
   like:boolean|null
 }
 
-const CardLong: React.FC<AlbumProps> = ({ album,like }) => {
+const CardCarousel: React.FC<AlbumProps> = ({ album,like }) => {
 
   const dispatch = useDispatch(); // 이 위치로 변경
   const [islike, setLike] = useState<boolean|null>(null)
@@ -54,8 +54,10 @@ const CardLong: React.FC<AlbumProps> = ({ album,like }) => {
  
   return (
     <div className={styles.container}>
-      {imgErr ? <img crossOrigin="anonymous"  onClick={handleAlbumClick} src='assets/default_album.png' alt="" className={styles.image} />
-      :<img crossOrigin="anonymous"  onClick={handleAlbumClick} src={album?.songImg!} alt="" className={styles.image} onError={()=>setImgErr(true)} />}
+      <div style={{width:'30%', height:'100px', margin:'0 10px',boxSizing:'border-box'}}>
+        {imgErr ? <img crossOrigin="anonymous"  onClick={handleAlbumClick} src='assets/default_album.png' alt="" className={styles.image} />
+        :<img crossOrigin="anonymous" onClick={handleAlbumClick} src={album?.songImg!} alt="" className={styles.image} onError={()=>setImgErr(true)} />}
+      </div>
       <div className={styles.infoContainer}>
         <div className={styles.musicinfo}  onClick={handleAlbumClick}>
           <div style={{backgroundColor:'white', width:'50px', borderRadius:"20px"}}>
@@ -83,4 +85,4 @@ const CardLong: React.FC<AlbumProps> = ({ album,like }) => {
   );
 };
 
-export default CardLong;
+export default CardCarousel;

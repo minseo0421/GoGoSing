@@ -28,6 +28,8 @@ import SocialLogin from "./pages/account/sociallogin";
 import MusicDetail from "./pages/musicDetail";
 import GenreSelect from "./pages/genreselect";
 import MusicSing from "./pages/musicsing";
+import GenreMusic from "./pages/genremusic";
+
 
 
 function App() {
@@ -83,6 +85,9 @@ function App() {
             <Route path="/recordresult" element={<RecordResult />} />
             <Route path="/musicupload" element={<MusicUpload />} />
             <Route path="/uploadresult" element={<UploadResult />} />
+            
+            {/* 장르 별 인기차트 조회 */}
+            <Route path="/genremusic" element={<GenreMusic />} />
             
           </Routes>
         </motion.div>

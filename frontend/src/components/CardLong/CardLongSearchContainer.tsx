@@ -2,6 +2,7 @@ import CardLong from "./CardLong";
 import React, { useState, useRef, useEffect } from "react";
 import styles from "./CardLongContainer.module.css";
 import axiosInstance from "../../axiosinstance";
+import axios from "axios";
 
 interface AlbumProps {
   musicId:number;
@@ -15,18 +16,24 @@ interface AlbumProps {
   viewCount:number;
 }
 interface Props {
-  albums : AlbumProps[]
+  albums : AlbumProps[];
+  keyword:string;
+  selectedValue:string;
 }
 
-const CardLongContainer: React.FC<Props> = ({albums}) => {
+const CardLongSearchContainer: React.FC<Props> = ({albums,keyword,selectedValue}) => {
   const [startY, setStartY] = useState(0);
   const [scrollTop, setscrollTop] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [likelist, setLikeList] = useState<number[]|null>(null);
   const [startX, setStartX] = useState(0);
+  const [albumdata, setAlbumData] = useState<AlbumProps[]>([]);
+  const [pluspage, setpluspage] = useState(true);
+  const [searchpage, setSearchPage] = useState(2);
 
   useEffect(()=>{
+    setAlbumData(albums)
     const AccessToken = localStorage.getItem('AccessToken')
     axiosInstance({
       method:'get',
@@ -40,7 +47,8 @@ const CardLongContainer: React.FC<Props> = ({albums}) => {
     }).catch(err=>{
       console.log(err)
     })
-  },[])
+  },[albums])
+
   const handleStart = (
     e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>
   ) => {
@@ -71,16 +79,35 @@ const CardLongContainer: React.FC<Props> = ({albums}) => {
       return; // X축의 움직임이 더 클 경우 이벤트를 중지
     }
 
-    e.preventDefault();
-
+    // e.preventDefault();
     const walk = currentY - startY;
     containerRef.current.scrollTop = scrollTop - walk;
+
   };
 
   const handleEnd = () => {
     setIsDragging(false); 
+    if (containerRef.current) {
+      const isAtBottom = containerRef.current.scrollTop + containerRef.current.clientHeight >= containerRef.current.scrollHeight;
+      if (isAtBottom && pluspage) {
+        // 스크롤이 제일 하단에 도달했을 때 loading 함수를 호출합니다.
+        const sel = selectedValue==='제목' ? 'title' : selectedValue==='가수' ? 'singer': 'lyric'
+        axios({
+          method:'get',
+          url:`${process.env.REACT_APP_API_URL}/search/${sel}?page=${searchpage}&keyword=${keyword}`,
+        }).then(res=>{
+          if (res.data.length>0) {
+            setAlbumData((prevAlbumData) => [...prevAlbumData, ...res.data]); // 이전 상태를 이용하여 업데이트
+            setSearchPage((prevSearchPage) => prevSearchPage + 1); // 이전 상태를 이용하여 업데이트
+          } else {
+            setpluspage(false)
+          }
+        }).catch(err=>{
+          setpluspage(false)
+        })
+      }
+    }
   };
-
   /* onTouch 관련은 Mobile 환경에서 터치가 있을 때, onMouse는 Web 환경에서 Mobile 처럼 클릭하고 이동 할 때의 케이스 */
   return (
     <div
@@ -93,12 +120,13 @@ const CardLongContainer: React.FC<Props> = ({albums}) => {
       onMouseMove={handleMove}
       onMouseUp={handleEnd}
       onMouseLeave={handleEnd}
+      style={{ overflow:'auto'}}
     >
-      {albums.map((album) => {
-        return <CardLong album={album} like={likelist===null ? null : likelist.includes(album.musicId) ? true: false}/>; // 각 ChartLong 컴포넌트에 album 데이터를 prop으로 전달합니다.
-      })}
+    {albumdata.map((album) => (
+        <CardLong album={album} like={likelist === null ? null : likelist.includes(album.musicId) ? true : false} />
+      ))}
     </div>
   );
 };
 
-export default CardLongContainer;
+export default CardLongSearchContainer;

@@ -5,16 +5,19 @@ import styles from "./musicchart.module.css";
 import { setPage } from "../store/actions";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import axiosInstance from "../axiosinstance";
 
 interface AlbumProps {
   musicId:number;
   title:string;
   singer:string|null;
   songImg:string|null;
-  genreId:number[]|null;
-  genreType:string|null;
+  genreInfo:{
+    genreId:number[];
+    genreType:string;
+  }[];
+  viewCount:number;
 }
-
 const MusicChart: React.FC = () => {
   const [chartpage, setChartPage] = useState('인기차트')
   const [albums, setAlbums] = useState<AlbumProps[]>([])
@@ -34,14 +37,29 @@ const MusicChart: React.FC = () => {
     }
   },[])
   useEffect(()=>{
-    axios({
-      method:'get',
-      url:`${process.env.REACT_APP_API_URL}/music/chart`,
-    }).then(res=>{
-      setAlbums(res.data)
-    }).catch(err=>{
-      console.log(err)
-    })
+    if (chartpage==='인기차트') {
+      axios({
+        method:'get',
+        url:`${process.env.REACT_APP_API_URL}/music/chart`,
+      }).then(res=>{
+        setAlbums(res.data)
+      }).catch(err=>{
+        console.log(err)
+      })
+    } else {
+      const AccessToken = localStorage.getItem('AccessToken')
+      const page = chartpage==='좋아요추천' ? '/music/like/list':  chartpage==='음역대추천' ? '/analyze/rangeMusicList': '/analyze/waveMusicList'
+      axiosInstance({
+        method:'get',
+        url:`${process.env.REACT_APP_API_URL}${page}`,
+        headers:{
+          Authorization:`Bearer ${AccessToken}`
+        }}).then(res=>{
+        setAlbums(res.data)
+      }).catch(err=>{
+        console.log(err)
+      })
+    }
   },[chartpage])
   
   useEffect(() => {
