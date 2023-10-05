@@ -1,10 +1,13 @@
 package com.ssafy.gogosing.service;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.ssafy.gogosing.dto.music.response.MusicResponseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -77,4 +80,18 @@ public class GenreService {
 		registGenre(genreRequestDto, userDetails);
 	}
 
+	public List<MusicResponseDto> recommendListOnGenre(UserDetails userDetails) {
+		logger.info("*** recommendListOnGenre 메소드 호출");
+		Optional<User> optionalUser = userRepository.findByEmail(userDetails.getUsername());
+		// 장르 선택했는지
+		if(optionalUser.isEmpty()){
+			logger.info("*** 유저가 존재하지 않음");
+			// 인기많은 노래 10개정도
+		}
+		else {
+			// 좋아하는 장르 선택했을 때는 장르 기반으로 10개
+			// 선택 안했을 때는 인기 10개
+		}
+		return null;
+	}
 }

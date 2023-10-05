@@ -53,4 +53,10 @@ public class GenreController {
 		return ResponseEntity.ok().body("");
 	}
 
+	@PostMapping("/like/list")
+	@ApiOperation(value = "장르 수정")
+	public ResponseEntity<?> recommendListOnGenre(@AuthenticationPrincipal UserDetails userDetails) throws Exception{
+		return ResponseEntity.ok().body(genreService.recommendListOnGenre(userDetails));
+	}
+
 }

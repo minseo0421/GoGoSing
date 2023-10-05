@@ -128,7 +128,7 @@ public class MusicService {
                 .build();
             result.add(musicResponseDto);
         }
-
+        logger.info("*** recommendListMusicOnLike 메소드 종료");
         return result;
     }
 
