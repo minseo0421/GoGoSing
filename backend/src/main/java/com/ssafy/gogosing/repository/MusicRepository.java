@@ -3,6 +3,7 @@ package com.ssafy.gogosing.repository;
 import com.ssafy.gogosing.domain.music.Music;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,8 +11,8 @@ import java.util.Optional;
 public interface MusicRepository
         extends JpaRepository<Music, Long> {
     Optional<Music> findById(Long musicId);
-    @Query("SELECT m FROM MusicGenre mg INNER JOIN Music m ON mg.music.id = m.id WHERE mg.genre.id = :genreId ORDER BY m.viewCount DESC")
-    List<Music> findMusicByGenreId(Long genreId);
+    @Query(value = "SELECT m.* FROM music_genre mg INNER JOIN music m ON mg.music_id = m.music_id WHERE mg.genre_id = :genreId ORDER BY m.view_count DESC LIMIT 100 ", nativeQuery = true)
+    List<Music> findMusicByGenreId(@Param("genreId") Long genreId);
 
     @Query(value = "SELECT DISTINCT * " +
         "FROM (" +
