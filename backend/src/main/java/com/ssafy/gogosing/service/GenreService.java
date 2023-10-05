@@ -79,13 +79,13 @@ public class GenreService {
 		registGenre(genreRequestDto, userDetails);
 	}
 
-	public List<GenreMusicListResponseDto> findGenreList(Long genreId) {
+	public List<LikeMusicListResponseDto> findGenreList(Long genreId) {
 		logger.info("*** findGenreList 메소드 호출");
 		List<Music> musicList = musicRepository.findMusicByGenreId(genreId);
 
-		List<GenreMusicListResponseDto> result = new ArrayList<>();
+		List<LikeMusicListResponseDto> result = new ArrayList<>();
 		for (Music music : musicList) {
-			result.add(new GenreMusicListResponseDto(music.getId(), music.getTitle(), music.getSinger(), music.getSongImg(), music.getViewCount()));
+			result.add(new LikeMusicListResponseDto(music.getId(), music.getTitle(), music.getSinger(), music.getSongImg()));
 		}
 		return result;
 	}

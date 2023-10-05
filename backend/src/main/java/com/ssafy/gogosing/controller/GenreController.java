@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.gogosing.dto.genre.request.GenreRequestDto;
 import com.ssafy.gogosing.dto.music.response.GenreMusicListResponseDto;
+import com.ssafy.gogosing.dto.music.response.LikeMusicListResponseDto;
 import com.ssafy.gogosing.service.GenreService;
 
 import io.swagger.annotations.ApiOperation;
@@ -54,7 +55,7 @@ public class GenreController {
 	@GetMapping("/musicList")
 	@ApiOperation(value = "장르별 노래 리스트")
 	public ResponseEntity<?> findGenreList(@RequestParam("genreId") Long genreId) throws Exception {
-		List<GenreMusicListResponseDto> result = genreService.findGenreList(genreId);
+		List<LikeMusicListResponseDto> result = genreService.findGenreList(genreId);
 		return ResponseEntity.ok().body(result);
 	}
 
