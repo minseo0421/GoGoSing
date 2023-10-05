@@ -58,9 +58,7 @@ const ChangeNickName: React.FC<Props> = ({closemodal,isLogin,setLogin}) => {
           closemodal()
         }).catch(err=>{
             console.log(err)
-
         })
-
     },
 });
   return (

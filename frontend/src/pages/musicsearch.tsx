@@ -99,7 +99,7 @@ const MusicSearch: React.FC = () => {
   const handleEnd = () => {
     setIsDragging(false); 
     if (containerRef.current) {
-      const isAtBottom = containerRef.current.scrollTop + containerRef.current.clientHeight >= containerRef.current.scrollHeight;
+      const isAtBottom = containerRef.current.scrollTop + containerRef.current.clientHeight >= containerRef.current.scrollHeight-50;
       if (isAtBottom && pluspage) {
         // 스크롤이 제일 하단에 도달했을 때 loading 함수를 호출합니다.
         const sel = selectedValue==='제목' ? 'title' : selectedValue==='가수' ? 'singer': 'lyric'
