@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 // import MusicPlay from '../../components/musicrecord/musicplay';
-import { AudioPlayer } from '../../components/musicrecord/audioplay';
+// import { AudioPlayer } from '../../components/musicrecord/audioplay';
 import axiosInstance from '../../axiosinstance';
 import { setModal, setAlbum } from "../../store/actions";
 import { useDispatch } from "react-redux";
+import { AudioWithWave } from '../../components/musicrecord/audiowithwave';
 
 
 const MusicRecord: React.FC = () => {
@@ -110,6 +111,19 @@ const MusicRecord: React.FC = () => {
         }
       };
 
+      const buttonStyle: React.CSSProperties = {
+        width: '40%', // 반응형 크기 조절
+        height: '60%', // 높이를 자동으로 조절
+        // left: '30%', // 가운데 정렬을 위한 좌표 조절
+        // top: '50%', // 가운데 정렬을 위한 좌표 조절
+        // transform: 'translate(-50%, -50%)', // 가운데 정렬
+        background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',
+        borderRadius: '50px',
+        border: 'none', // Optional: Remove button border
+        color: '#fff', // Optional: Text color
+        cursor: 'pointer',
+      };  
+
     // const recordresult = () => {
         // navigate("/recordresult");
     // };
@@ -162,19 +176,22 @@ const MusicRecord: React.FC = () => {
                 )}
                 {audioSourceURL && (
                     // <MusicPlay audioSourceURL= {audioSourceURL}/>
-                    <AudioPlayer audioSourceURL= {audioSourceURL}/>
+                    // <AudioPlayer audioSourceURL= {audioSourceURL}/>
+                    <AudioWithWave audioSourceURL= {audioSourceURL}/>
                     )}
+                    <div style={{ display: 'flex', flexDirection:'row',justifyContent: 'center', marginTop: 40 }} >
                     {isRecording && audioSourceURL && (
-                    <button onClick={handleRestartRecording} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>다시하기</button>
+                    <button onClick={handleRestartRecording} style={buttonStyle}>다시하기</button>
                     )}
                     {isRecording && audioSourceURL&&(
                     // <button onClick={recordresult} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>
                     //     다음으로
                     // </button>
-                    <button onClick={MyrecordUpload} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>
+                    <button onClick={MyrecordUpload} style={buttonStyle}>
                     다음으로
                     </button>
                     )}
+                    </div>
             </div>
         </div>
         )}
