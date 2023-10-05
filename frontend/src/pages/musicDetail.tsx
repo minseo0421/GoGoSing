@@ -236,7 +236,7 @@ const MusicDetail: React.FC = () => {
                     }}/>}
                 </div>
             </div>
-            <div className={musicStyle.lyricsContainer}>
+       
               {album?.lyric ? 
               <p className={musicStyle.lyrics}>
               {album?.lyric.split('\n').map((line, index) => (
@@ -249,7 +249,7 @@ const MusicDetail: React.FC = () => {
               <p className={musicStyle.lyrics}>
                 <h2>가사 정보가 없습니다.</h2>
               </p>}
-            </div>
+         
           
         </ModalContainer>
       </Background>
