@@ -102,7 +102,7 @@ const AudioPlayer: React.FC<AudioPlayProps> = ({ audioSourceURL }) => {
 
   return (
     <div className={styles.audioPlayer}>
-      <audio ref={audioPlayer} preload="metadata"></audio>
+      <audio ref={audioPlayer} preload="metadata" crossOrigin="anonymous"></audio>
 
       <button onClick={togglePlayPause} className={styles.playPause}>
         {isPlaying ? <FaPause className={styles.pause}/> : <FaPlay className={styles.play} />}
