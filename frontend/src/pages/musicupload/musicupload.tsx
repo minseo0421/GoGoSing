@@ -67,12 +67,12 @@ const MusicUpload: React.FC = () => {
       const removeAudio = () => {
         setFile(null)
         console.log(file)
-        window.location.reload();
+        // window.location.reload();
       };
       const divStyle: React.CSSProperties = {
         // width: '100%',
         // height: '100%',
-        background: 'rgba(217, 217, 217, 0.2)',
+        // background: 'rgba(217, 217, 217, 0.2)',
         borderRadius: '15px',
       };
 
@@ -100,7 +100,8 @@ const MusicUpload: React.FC = () => {
             ) : responseData ? (
                 // 응답 데이터가 있는 경우 데이터를 표시
                 <div>
-                    <p>당신의 음색과 가장 잘 맞는 노래</p>
+                  <h2>당신의 음색과</h2>
+                    <h2>가장 잘 맞는 노래</h2>
                     {imgErr ? <img crossOrigin="anonymous"  onClick={handleAlbumClick} src='assets/default_album.png' alt="" style={{ width: '60%' }} />
                     :<img src={responseData.songImg} alt={responseData.title} onClick={handleAlbumClick} crossOrigin="anonymous" onError={()=>setImgErr(true)}/>}
                     <p>노래방 번호: {responseData.musicId}</p>

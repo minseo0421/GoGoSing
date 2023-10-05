@@ -5,10 +5,12 @@ import { setAlbum, setModal } from "../store/actions";
 import { AppState } from "../store/state";
 import musicStyle from "./musicDetail.module.css";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
-import MusicPlay from '../components/musicrecord/musicplay';
+// import MusicPlay from '../components/musicrecord/musicplay';
 import axiosInstance from "../axiosinstance";
 import axios from "axios";
-// import { blob } from "stream/consumers";
+import { AudioPlayer } from "../components/musicrecord/audioplay";
+import { useNavigate } from "react-router-dom";
+
 
 const slideUp = keyframes`
   from {
@@ -96,7 +98,19 @@ const MusicSing: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [album,setAlbumData] = useState<AlbumProps>()
   const [loading, setLoading] = useState(false);
+  const [audioSave, setAudioSave] = React.useState("");
+  const [responseData, setResponseData] = useState<any | null>(null);
+  const [imgErr, setImgErr] = useState<boolean>(false)
+  const navigate = useNavigate();
 
+  const handleAlbumClick = () => {
+    dispatch(setModal("musicDetail"));
+    dispatch(setAlbum(responseData.musicId)) // 모달 표시 액션
+  };
+
+  const Home = () => {
+    navigate(-1); // 뒤로가기
+  };
 
   useEffect(()=>{
     if (albumId) {
@@ -118,9 +132,8 @@ const MusicSing: React.FC = () => {
         navigator.mediaDevices.getUserMedia({ audio: true })
             .then(function (stream) {
                 // 권한 승인됨, 녹음 시작
-                setIsRecording(true);
+                setIsRecording(!isRecording);
                 console.log(isRecording)
-                console.log(audioSourceURL)
                 // 녹음을 시작하는 코드 추가
                 recorderControls.startRecording();
             })
@@ -131,21 +144,41 @@ const MusicSing: React.FC = () => {
                 alert('녹음 권한을 허용해야 녹음을 시작할 수 있습니다.');
             });
     };
+    // const setf =async (audioFile:any) => {
+    //   setFile(audioFile);
+    //   console.log(file)
+    // } 
+    const addAudio = async (blob: Blob) => {
+      if (blob.size > 0) {  
+      setIsRecording(true);
+        // setIsRecording(false);
+        const url = URL.createObjectURL(blob);
+        setAudioSourceURL(url);
+        // audioFile에 audio.webm을 할당
+        const audioFile = new File([blob], 'audio.webm', { type: 'audio/webm' });
+        // file을 audioFile로 변경
+        setFile(audioFile)
+        // await setf(audioFile)
+
+ 
+        // await getMergeMusic()
+
+      } else {
+        console.log('Blob에 데이터가 없습니다.');
+      }
+    };
     
-    // 음원 합치기 코드 ver1.
-    const getMergeMusic = async (blob: Blob) => {
+    // 음원 합치기 코드
+    const getMergeMusic = async () => {
       setLoading(true);
-      const audioFile = new File([blob], 'audio.webm', { type: 'audio/webm' });
-      console.log(audioFile)
-      setFile(audioFile)
       const ytlink = album?.mrUrl;
       // const url = `https://www.youtube.com/watch?v=${ytlink}`;
-      const url1 = 'https://www.youtube.com/watch?v='+ytlink;
-      // const audioFile = recordingResultBlob ? recordingResultBlob : new Blob(); // recordingResultBlob가 정의되어 있지 않으면 빈 Blob을 사용
-      if (audioFile) {
+      const url = 'https://www.youtube.com/watch?v='+ytlink;
+      console.log(file);
+      if (file) {
         const formData = new FormData();
-        formData.append('file', audioFile);
-        formData.append('url', url1);
+        formData.append('file', file);
+        formData.append('url', url);
         console.log(formData);
   
         try {
@@ -158,71 +191,41 @@ const MusicSing: React.FC = () => {
               'Authorization': `Bearer ${localStorage.getItem("AccessToken")}`,
             },
           });
-          console.log(response);
-          console.log(response.data);
+          // console.log(response);
+          setAudioSourceURL("");
+          console.log(audioSourceURL)
+          console.log(response.data.voiceUrl);
           setAudioSourceURL(response.data.voiceUrl);
+          setAudioSave(response.data.voiceUrl);
+          console.log(audioSourceURL)
           setLoading(false);
+          alert('녹음 완료!')
   
         } catch (error) {
           console.error(error);
         }
       } else {
         console.log('파일이 선택되지 않았습니다.');
-        // setLoading(false)
       }
     }
-    // 음원 합치기 코드
-    // const getMergeMusic = async () => {
-    //   setLoading(true);
-    //   const ytlink = album?.mrUrl;
-    //   console.log(ytlink);
-    //   console.log(`youtube.com/watch?v=${ytlink}`);
-    //   console.log('https://www.youtube.com/watch?v='+ytlink)
-    //   // const url = `https://www.youtube.com/watch?v=${ytlink}`;
-    //   const url = 'https://www.youtube.com/watch?v='+ytlink;
-    //   console.log(file);
-    //   if (file) {
-    //     const formData = new FormData();
-    //     formData.append('file', file);
-    //     formData.append('url', url);
-    //     console.log(formData);
-  
-    //     try {
-    //       const response = await axiosInstance({
-    //         method: 'post',
-    //         url: `${process.env.REACT_APP_API_URL}/analyze/singingRoomResult`,
-    //         data: formData,
-    //         headers: {
-    //           'Content-Type': 'multipart/form-data',
-    //           'Authorization': `Bearer ${localStorage.getItem("AccessToken")}`,
-    //         },
-    //       });
-    //       console.log(response);
-    //       console.log(response.data);
-    //       setAudioSourceURL(response.data.voiceUrl);
-    //       setLoading(false);
-  
-    //     } catch (error) {
-    //       console.error(error);
-    //     }
-    //   } else {
-    //     console.log('파일이 선택되지 않았습니다.');
-    //     // setLoading(false)
-    //   }
-    // }
-
     // useEffect(() => {
-    //   // file 상태가 변경될 때마다 호출되는 콜백 함수
     //   if (file) {
-    //     // file 상태가 변경되었을 때의 작업 수행
     //     console.log(file);
-    //     // 다음 작업 수행
-    //     getMergeMusic();
+    //     // setLoading(false)
+    //     getMergeMusic()
     //   }
     // }, [file]);
 
+    useEffect(() => {
+      if (audioSave) {
+        console.log(audioSave);
+        setLoading(false)
+      }
+    }, [audioSave]);
+
     const handleRestartRecording = () => {
       setAudioSourceURL("");
+      setAudioSave("");
       setIsRecording(!isRecording);
       console.log(audioSourceURL)
       console.log(isRecording)
@@ -230,6 +233,7 @@ const MusicSing: React.FC = () => {
 
     // 이 코드를 업로드 뿐만 아니라 아니라 음원 합치고, 그걸로 분석하게 해야함
     const MyrecordUpload = () => {
+        setLoading(true)
         if (file) {
           const formData = new FormData();
           formData.append('file', file); 
@@ -238,7 +242,7 @@ const MusicSing: React.FC = () => {
   
           axiosInstance({
             method: 'post',
-            url: `${process.env.REACT_APP_API_URL}/music/analyze/rangeResult`,
+            url: `${process.env.REACT_APP_API_URL}/analyze/waveResult`,
             data: formData,
             headers: {
               'Content-Type': 'multipart/form-data',
@@ -247,7 +251,9 @@ const MusicSing: React.FC = () => {
           })
             .then((res) => {
               console.log(res);
-              alert('업로드 완료!')
+              setResponseData(res.data);
+              setLoading(false)
+              alert('완료!')
             //   navigate("/uploadresult");
             })
             .catch((err) => {
@@ -290,10 +296,9 @@ const MusicSing: React.FC = () => {
 
   // 터치 이벤트 end
   const recordStop = ()=>{
-    recorderControls.stopRecording()
-    setIsRecording(false)
     setIsplay(false);
-    // setIsRecording(false); // 녹음 중지
+    setIsRecording(false); // 녹음 중지
+    recorderControls.stopRecording()
     // 마이크 스트림을 가져올 때 사용한 스트림을 해제
     navigator.mediaDevices.getUserMedia({ audio: true })
     .then((stream) => {
@@ -305,17 +310,48 @@ const MusicSing: React.FC = () => {
     .catch((error) => {
       console.error('마이크 스트림 해제 오류:', error);
     });
+
+    // const blob = new Blob([], {});
+    // addAudio(blob)
+    // getMergeMusic();
+    
   }
+
+  const handleCloseModal = () => {
+    setAudioSourceURL(""); // audioSave 초기화
+    setAudioSave(""); // audioSave 초기화
+    dispatch(setAlbum(null));
+    dispatch(setModal(null));
+    // window.location.reload();
+  };
 
   return (
       <Background $imageUrl="../../assets/background.png">
-        <CloseButton onClick={() => {dispatch(setAlbum(null)); dispatch(setModal(null))}}>
+        <CloseButton onClick={handleCloseModal}>
           닫기
         </CloseButton>
         <ModalContainer open={isModalOpen}>
         {loading ? (
           // 로딩 중일 때 표시할 내용
-          <div>Loading...</div>
+          <div>
+            <p>Loading...</p>
+            <img src="assets/spinner.gif" alt="" style={{ width: '50%'}} />
+          </div>
+        ) : responseData ? (
+          <div>
+                <div style={{marginTop: 150}}>
+                    <h2>당신의 음색과</h2>
+                    <h2>가장 잘 맞는 노래</h2>
+                    {imgErr ? <img crossOrigin="anonymous"  onClick={handleAlbumClick} src='assets/default_album.png' alt="" style={{ width: '60%' }} />
+                    :<img src={responseData.songImg} alt={responseData.title} onClick={handleAlbumClick} crossOrigin="anonymous" onError={()=>setImgErr(true)}/>}
+                    <p>노래방 번호: {responseData.musicId}</p>
+                    <p>Singer: {responseData.singer}</p>
+                    <p>Title: {responseData.title}</p>
+                    <button onClick={Home} style={{ width: '50%', margin: 'auto', borderRadius:'10px'}}>Go home</button>
+                    </div>
+                </div>
+        
+
         ) : (
           <>
           <h1>SING</h1>
@@ -337,7 +373,7 @@ const MusicSing: React.FC = () => {
           </div>
           <div style={{ display: 'none' }}>
             <AudioRecorder
-            onRecordingComplete={getMergeMusic}
+            onRecordingComplete={addAudio}
             recorderControls={recorderControls}
             // showVisualizer={true}
             // downloadOnSavePress={true}
@@ -354,18 +390,28 @@ const MusicSing: React.FC = () => {
                     <p>{recorderControls.recordingTime}</p>
                     <p onClick={recordStop}>녹음 멈춰!!</p>
                 </div>
-                )}
-                {audioSourceURL && (
-                    <MusicPlay audioSourceURL= {audioSourceURL}/>
+
+                )}  {audioSourceURL && audioSave && (
+                    // <MusicPlay audioSourceURL= {audioSave}/>
+                    <AudioPlayer audioSourceURL= {audioSave}/>
                     )}
+                    {audioSourceURL && !audioSave && (
+                    // <MusicPlay audioSourceURL= {audioSourceURL}/>
+                    <AudioPlayer audioSourceURL= {audioSourceURL}/>
+                    )}
+                    <div style={{ display: 'flex', flexDirection:'row',justifyContent: 'center', marginBottom: 5 }}>
                     {isRecording && audioSourceURL && (
                     <button onClick={handleRestartRecording} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>다시 부르기</button>
                     )}
+                    {isRecording && audioSourceURL && (
+                    <button onClick={getMergeMusic} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>MR 합치기</button>
+                    )}
                     {isRecording && audioSourceURL&&(
                     <button onClick={MyrecordUpload} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>
-                        이 노래로 목소리 분석하기
+                        이 노래로<br></br>목소리 분석하기
                     </button>
                     )}
+                    </div>
             </div>
             </>
             )}

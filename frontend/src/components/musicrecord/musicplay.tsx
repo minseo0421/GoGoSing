@@ -71,6 +71,7 @@ const MusicPlay: React.FC<MusicPlayProps> = ({ audioSourceURL }) => {
                 ref={audioRef}
                 onPlay={handleAudioPlay}
                 src={audioSourceURL}
+                crossOrigin="anonymous"
                 controls
                 />
             )}
