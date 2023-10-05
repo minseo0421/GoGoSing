@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./genremusic.module.css";
 import CardLongContainer from "../components/CardLong/CardLongContainer";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface AlbumProps {
     musicId:number;
@@ -11,7 +12,7 @@ interface AlbumProps {
   }
 
 const GenreMusic: React.FC = () => {
-
+  const navigate = useNavigate()
   const [albums, setAlbums] = useState<AlbumProps[]>([]);
   const [chartpage, setChartPage] = useState('')
   useEffect(()=>{
@@ -46,7 +47,10 @@ const GenreMusic: React.FC = () => {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div className={styles.topbar}>
-        <h2>{chartpage} 목록입니다</h2>
+        <h2>{chartpage} TOP 100</h2>
+        <div style={{justifyContent:'right',display:'flex'}}>
+            <span onClick={()=>{navigate(-1)}}>닫기</span>
+        </div>
       </div>
       <div style={{ height: "100%", overflow: "scroll" }}>
         <CardLongContainer albums={albums} />

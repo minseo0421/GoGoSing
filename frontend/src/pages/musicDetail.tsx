@@ -195,7 +195,12 @@ const MusicDetail: React.FC = () => {
                 }} />
               </div>
               <div className={musicStyle.iconContainer}>
-                  {!album ? null : likelist===null ? <p></p> :
+                  {!album ? null : likelist===null ? 
+                  <AiFillHeart
+                    className={musicStyle.icon}
+                    style={{color:'red',filter:'blur(3px)'}}
+                    onClick={()=>{alert('로그인을 해주세요')}}
+                  /> :
                 likelist.includes(album.musicId) ? (
                   <AiFillHeart
                     className={musicStyle.icon}
@@ -214,11 +219,20 @@ const MusicDetail: React.FC = () => {
                     onClick={handlePlayPause}
                   />
                   :<p>Loading...</p>}
-                  {album?.mrUrl===null ? <span></span>:
+                  {album?.mrUrl===null ? <img
+                  src={"/assets/gosing.svg"}
+                  alt="gogosing"
+                  onClick={()=>{alert('MR 파일이 없어요 ㅠㅠ')}}/>:
                   <img
                   src={"/assets/gosing.svg"}
                   alt="gogosing"
-                  onClick={()=>{dispatch(setModal('musicSing'))}}/>}
+                  onClick={()=>{
+                    if (localStorage.getItem('AccessToken')){
+                      dispatch(setModal('musicSing'))
+                    } else {
+                      alert('로그인이 필요한 기능입니다.')
+                    }
+                    }}/>}
                 </div>
             </div>
             <div className={musicStyle.lyricsContainer}>
@@ -234,7 +248,6 @@ const MusicDetail: React.FC = () => {
               <p className={musicStyle.lyrics}>
                 <h2>가사 정보가 없습니다.</h2>
               </p>}
-              
             </div>
           
         </ModalContainer>
