@@ -7,13 +7,11 @@ import axiosInstance from "../../axiosinstance";
 
 interface AlbumProps {
   album: {
-    musicId: number;
-    title: string;
-    singer: string | null;
-    songImg: string | null;
-    genreId: number[] | null;
-    genreType: string | null;
-  };
+    musicId:number;
+    title:string;
+    singer:string|null;
+    songImg:string|null;
+  }
 }
 
 const CardLong: React.FC<AlbumProps> = ({ album }) => {
