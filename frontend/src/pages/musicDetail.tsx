@@ -121,33 +121,21 @@ const MusicDetail: React.FC = () => {
   }
 
   useEffect(()=>{
+    setIsplay(false);
     setControl(false)
+    const iframe = document.querySelector<HTMLIFrameElement>("#yt");
+    if (iframe) {
+      iframe.setAttribute('credentialless','true')
+    }
     if (albumId) {
       axios({
         method:'get',
         url:`${process.env.REACT_APP_API_URL}/music/detail/${albumId}`
       }).then(res=>{
         setAlbumData(res.data)
-        setIsplay(false);
-        
         setTimeout(() => {
-          const iframe = document.querySelector<HTMLIFrameElement>("#yt");
-          if (iframe) {
-            const a = iframe.src
-            setTimeout(() => {
-              iframe.setAttribute('credentialless','true')
-              iframe.src=a
-            }, 500);
-            iframe.src=''
-            setTimeout(() => {
-              console.log(11)
-              setControl(true)
-              console.log(iframe.src)
-            }, 1000);
-            console.log(22)
-            console.log(iframe.src)
-          }
-        }, 500);
+          setControl(true)
+        }, 1000);
 
       }).catch(err=>{
         alert('노래 상세정보 없음')
