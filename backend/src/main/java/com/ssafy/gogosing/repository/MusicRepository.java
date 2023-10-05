@@ -27,5 +27,19 @@ public interface MusicRepository
         "LIMIT 10", nativeQuery = true)
     List<Music> findTopByPick();
 
+    @Query(value = "SELECT DISTINCT * " +
+        "FROM (" +
+        "    SELECT m.*, ROW_NUMBER() OVER (ORDER BY m.view_count DESC) AS row_num, RAND() AS random_num " +
+        "    FROM music_genre mg " +
+        "    INNER JOIN music m ON mg.music_id = m.music_id " +
+        "    WHERE mg.genre_id IN (?1) " + // ?1은 genreIds 파라미터를 나타냅니다.
+        "    ORDER BY m.view_count DESC " +
+        "    LIMIT 1000" +
+        ") AS subquery " +
+        "ORDER BY subquery.random_num " +
+        "LIMIT 10", nativeQuery = true)
+    List<Music> findListByPick(@Param("genreIds") List<Long> genreIds);
+
+
 
 }
