@@ -13,8 +13,8 @@ interface userdata {
   gender: string;
   birth: string;
   profileImg: string | null;
-    
 }
+
 const MainHome: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();

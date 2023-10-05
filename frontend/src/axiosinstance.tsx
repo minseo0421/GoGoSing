@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const AccessToken = localStorage.getItem('AccessToken');
+
 const axiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
@@ -27,11 +28,15 @@ axiosInstance.interceptors.response.use(
       try {
         const { data } = await axios({
           method: 'post',
-          url: `/members/reissue`,
+          url: `${process.env.REACT_APP_API_URL}/login`,
+          headers : {
+            Authorization:accessToken,
+            'Authorization-refresh':refreshToken
+          },
           data: { accessToken, refreshToken },
         });
-        const newAccessToken = data.data.accessToken;
-        const newRefreshToken = data.data.refreshToken;
+        const newAccessToken = data.headers['authorization'];
+        const newRefreshToken = data.headers['authorization-refresh'];
         originalRequest.headers = {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + newAccessToken,

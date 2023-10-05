@@ -3,12 +3,10 @@ import React, { useState, useRef } from "react";
 import styles from "./CardLikedContainer.module.css";
 
 interface AlbumProps {
-  musicId: number;
-  title: string;
-  singer: string | null;
-  songImg: string | null;
-  genreId: number[] | null;
-  genreType: string | null;
+  musicId:number;
+  title:string;
+  singer:string|null;
+  songImg:string|null;
 }
 interface Props {
   albums: AlbumProps[];
