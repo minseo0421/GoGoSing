@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { setAlbum, setModal } from "../store/actions";
+import { setAlbum, setLike, setModal } from "../store/actions";
 import { AppState } from "../store/state";
 import musicStyle from "./musicDetail.module.css";
 import YouTube from "react-youtube";
 import axios from "axios";
-
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import axiosInstance from "../axiosinstance";
 const slideUp = keyframes`
   from {
     transform: translateY(100%);
@@ -77,9 +78,9 @@ interface AlbumProps {
   songImg: string,
   releaseDate: string|null,
   lyric: string|null,
-  mrUrl: string,
-  musicUrl:string,
-  musicPlayTime: string,
+  mrUrl: string|null,
+  musicUrl:string
+  musicPlayTime: string|null,
   genreInfo:{
     genreId: number,
     genreType: string
@@ -90,11 +91,35 @@ interface AlbumProps {
 const MusicDetail: React.FC = () => {
   const dispatch = useDispatch();
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen === "musicDetail");
+  const likelist = useSelector((state: AppState) => state.likelist);
   const albumId = useSelector((state: AppState) => state.albumId);
   const [isPlay, setIsplay] = useState(false);
   const [album,setAlbumData] = useState<AlbumProps>()
   const [control, setControl] = useState<boolean>(false)
   const [imgErr, setImgErr] = useState<boolean>(false)
+
+  const onLike = () => {
+    const AccessToken = localStorage.getItem('AccessToken')
+    axiosInstance({
+      method: likelist?.includes(album!.musicId) ? 'delete':'post',
+      url:`${process.env.REACT_APP_API_URL}/music/like`,
+      data:{
+        musicId:album!.musicId
+      },
+      headers:{
+        Authorization:`Bearer ${AccessToken}`
+      }
+    }).then(res=>{
+      if (likelist?.includes(album!.musicId)) {
+        dispatch(setLike(likelist!.filter(item => item !== album!.musicId)))
+      } else {
+        dispatch(setLike([...likelist!,album!.musicId]))
+      }
+    }).catch(err=>{
+      console.log(err)
+    })
+  }
+
   useEffect(()=>{
     setControl(false)
     if (albumId) {
@@ -110,11 +135,11 @@ const MusicDetail: React.FC = () => {
           const a=iframe.src
           iframe.setAttribute('credentialless','true')
           iframe.src=a
-          setTimeout(() => {
-            setControl(true)
-          }, 500);
         }
         }, 500);
+        setTimeout(() => {
+          setControl(true)
+        }, 1000);
         
       }).catch(err=>{
         alert('노래 상세정보 없음')
@@ -147,9 +172,6 @@ const MusicDetail: React.FC = () => {
   if (!isModalOpen) {
     return null;
   }
-  // 여기부터 터치 이벤트 관련 start
-
-  // 터치 이벤트 end
 
   return (
       <Background $imageUrl="../../assets/background.png">
@@ -158,37 +180,46 @@ const MusicDetail: React.FC = () => {
         </CloseButton>
         <ModalContainer open={isModalOpen}>
         {imgErr ? <img crossOrigin="anonymous" src='assets/default_album.png' alt="" className={musicStyle.blur} style={{
-              width: "105%",
-            }}/>
+              width: "105%",}}/>
           :<img crossOrigin="anonymous" src={album?.songImg} alt="" className={musicStyle.blur} style={{
             width: "105%",
           }} onError={()=>setImgErr(true)} />}
           <div className={musicStyle.musicContainer}>
-          {imgErr ? <img crossOrigin="anonymous" src='assets/default_album.png' alt="" className={musicStyle.musicImage}  />
-          :<img crossOrigin="anonymous" src={album?.songImg} alt="" className={musicStyle.musicImage}  onError={()=>setImgErr(true)} />}
             <div className={musicStyle.titleFont}>{album?.title}</div>
             <div className={musicStyle.singerFont}>{album?.singer}</div>
-            <div>
-              <YouTube id='yt' ref={youtubeRef} videoId={album?.musicUrl} opts={opts} onEnd={()=>{
-                setIsplay(false)
-              }} />
-              {control ? 
-                <div className={musicStyle.iconContainer}>
-                  <img src="/assets/previousSong.png" alt="" />
+            {imgErr ? <img crossOrigin="anonymous" src='assets/default_album.png' alt="" className={musicStyle.musicImage}  />
+            :<img crossOrigin="anonymous" src={album?.songImg} alt="" className={musicStyle.musicImage}  onError={()=>setImgErr(true)} />}
+              <div hidden>
+                <YouTube id='yt' ref={youtubeRef} videoId={album?.musicUrl} opts={opts} onEnd={()=>{
+                  setIsplay(false)
+                }} />
+              </div>
+              <div className={musicStyle.iconContainer}>
+                  {!album ? null : likelist===null ? null :
+                likelist.includes(album.musicId) ? (
+                  <AiFillHeart
+                    className={musicStyle.icon}
+                    onClick={() => onLike()}
+                  />
+                ) : (
+                  <AiOutlineHeart
+                    className={musicStyle.icon}
+                    onClick={() => onLike()}
+                  />
+                )}
+                  {control ? 
                   <img
                     src={isPlay ? "/assets/pause.png" : "/assets/play.png"}
                     alt="play/pause"
                     onClick={handlePlayPause}
                   />
-                  <img src="/assets/nextSong.png" alt="" />
+                  :<p>Loading...</p>}
+                  {album?.mrUrl===null ? null:
+                  <img
+                  src={"/assets/gosing.svg"}
+                  alt="gogosing"
+                  onClick={()=>{dispatch(setModal('musicSing'))}}/>}
                 </div>
-              
-              :
-              <div className={musicStyle.iconContainer}>
-                <p>로딩 중..</p>
-              </div>
-              }
-              <button onClick={()=>{dispatch(setModal('musicSing'))}} style={{marginTop:40}}>Sing!!</button>
             </div>
             <div className={musicStyle.lyricsContainer}>
               {album?.lyric ? 
@@ -205,7 +236,7 @@ const MusicDetail: React.FC = () => {
               </p>}
               
             </div>
-          </div>
+          
         </ModalContainer>
       </Background>
   );
