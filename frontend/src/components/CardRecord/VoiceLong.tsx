@@ -62,7 +62,7 @@ const VoiceLong: React.FC = () => {
             />
           <p onClick={musicupload}>등록하러 가기</p>
         </div>
-         : <CardSmallContainer albums={pitchData} />}
+         : <CardSmallContainer albums={pitchData.slice(0,10)} />}
     </div>
   );
 };

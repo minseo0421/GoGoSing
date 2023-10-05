@@ -15,12 +15,10 @@ import CardLikedContainer from "../components/CardLiked/CardLikedContainer";
 import { useNavigate } from "react-router-dom";
 
 interface AlbumProps {
-  musicId: number;
-  title: string;
-  singer: string | null;
-  songImg: string | null;
-  genreId: number[] | null;
-  genreType: string | null;
+  musicId:number;
+  title:string;
+  singer:string|null;
+  songImg:string|null;
 }
 
 const MusicLike: React.FC = () => {

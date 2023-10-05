@@ -11,16 +11,12 @@ interface AlbumProps {
     title:string;
     singer:string|null;
     songImg:string|null;
-    genreInfo:{
-      genreId:number[];
-      genreType:string;
-    }[];
-    viewCount:number;
   }
   like:boolean|null
+  idx:number
 }
 
-const CardLong: React.FC<AlbumProps> = ({ album,like }) => {
+const CardLong: React.FC<AlbumProps> = ({ album,like,idx }) => {
 
   const dispatch = useDispatch(); // 이 위치로 변경
   const [islike, setLike] = useState<boolean|null>(null)
@@ -54,6 +50,9 @@ const CardLong: React.FC<AlbumProps> = ({ album,like }) => {
  
   return (
     <div className={styles.container}>
+      <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'10%'}}>
+        <h2>{idx}</h2>
+      </div>
       {imgErr ? <img crossOrigin="anonymous"  onClick={handleAlbumClick} src='assets/default_album.png' alt="" className={styles.image} />
       :<img crossOrigin="anonymous"  onClick={handleAlbumClick} src={album?.songImg!} alt="" className={styles.image} onError={()=>setImgErr(true)} />}
       <div className={styles.infoContainer}>
