@@ -1,6 +1,7 @@
 package com.ssafy.gogosing.controller;
 
 import com.ssafy.gogosing.dto.user.request.UserPasswordUpdateRequestDto;
+import com.ssafy.gogosing.dto.user.request.UserQuitRequestDto;
 import com.ssafy.gogosing.dto.user.request.UserSignUpRequestDto;
 import com.ssafy.gogosing.dto.user.request.UserSingUpPlusRequestDto;
 import com.ssafy.gogosing.global.jwt.service.JwtService;
@@ -62,10 +63,11 @@ public class UserController {
     @ApiOperation(value = "회원 탈퇴")
     @PostMapping("/quit")
     public ResponseEntity<?> quit(HttpServletRequest httpServletRequest,
+                                  @RequestBody UserQuitRequestDto userQuitRequestDto,
                                   @AuthenticationPrincipal UserDetails userDetails) {
 
         Long result = userService.quit(jwtService.extractAccessToken(httpServletRequest)
-                .orElseThrow(() -> new IllegalArgumentException("비정상적인 access token 입니다.")), userDetails);
+                .orElseThrow(() -> new IllegalArgumentException("비정상적인 access token 입니다.")), userQuitRequestDto, userDetails);
 
         return ResponseEntity.ok().body(result);
     }
