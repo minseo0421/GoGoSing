@@ -96,7 +96,7 @@ public class SecurityConfig {
                 .antMatchers("/", "/favicon.ico", "/oauth2/**","/api/sessions/**","/api/email/**").permitAll()
                 .antMatchers(PERMIT_URL_ARRAY).permitAll()
                 .antMatchers("/api/user/signup", "/api/login", "/api/user/nicknameCheck/**").permitAll() // 회원가입 접근 OK
-                .antMatchers("/api/music/chart", "/api/music/detail/*", "/api/search/**", "/api/genre/musicList/**").permitAll()
+                .antMatchers("/api/music/chart", "/api/music/detail/*", "/api/search/**", "/api/genre/musicList/**", "/api/genre/list").permitAll()
                 .anyRequest().authenticated() // 그 외 경로는 모두 인증된 사용자만 접근 가능
                 .and()
 

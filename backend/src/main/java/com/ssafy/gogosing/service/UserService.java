@@ -128,7 +128,13 @@ public class UserService {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
 
-        user.checkPassword(userQuitRequestDto.getCheckPassword(), passwordEncoder);
+        if(userQuitRequestDto.isSocialType()) {
+            if(!userQuitRequestDto.getCheckPassword().equals("회원탈퇴")){
+                throw new RuntimeException("회원 탈퇴 문구를 다시 입력하여 주세요.");
+            }
+        } else {
+            user.checkPassword(userQuitRequestDto.getCheckPassword(), passwordEncoder);
+        }
 
         user.updateDeletedDate();
         userRepository.save(user);
