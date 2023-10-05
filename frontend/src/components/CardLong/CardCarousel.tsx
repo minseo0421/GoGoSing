@@ -48,8 +48,8 @@ const CardCarousel: React.FC<AlbumProps> = ({ album }) => {
   }
  
   return (
-    <div className={styles.container}>
-      <div style={{width:'30%', height:'100px', margin:'0 10px',boxSizing:'border-box'}}>
+    <div className={styles.container} >
+      <div style={{width:'30%', height:'100px', margin:'0 10px',boxSizing:'border-box'}} onClick={handleAlbumClick}>
         {imgErr ? <img crossOrigin="anonymous"  onClick={handleAlbumClick} src='assets/default_album.png' alt="" className={styles.image} />
         :<img crossOrigin="anonymous" onClick={handleAlbumClick} src={album?.songImg!} alt="" className={styles.image} onError={()=>setImgErr(true)} />}
       </div>
