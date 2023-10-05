@@ -136,7 +136,8 @@ const MusicSing: React.FC = () => {
         navigator.mediaDevices.getUserMedia({ audio: true })
             .then(function (stream) {
                 // 권한 승인됨, 녹음 시작
-                setIsRecording(!isRecording);
+                // setIsRecording(!isRecording);
+                setIsRecording(true);
                 console.log(isRecording)
                 // 녹음을 시작하는 코드 추가
                 recorderControls.startRecording();
@@ -154,7 +155,7 @@ const MusicSing: React.FC = () => {
     // } 
     const addAudio = async (blob: Blob) => {
       if (blob.size > 0) {  
-      setIsRecording(true);
+      // setIsRecording(true);
         // setIsRecording(false);
         const url = URL.createObjectURL(blob);
         setAudioSourceURL(url);
@@ -230,7 +231,7 @@ const MusicSing: React.FC = () => {
     const handleRestartRecording = () => {
       setAudioSourceURL("");
       setAudioSave("");
-      setIsRecording(!isRecording);
+      setIsRecording(false);
       console.log(audioSourceURL)
       console.log(isRecording)
     };
@@ -397,20 +398,19 @@ const MusicSing: React.FC = () => {
                   <p style={{ background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',borderRadius: '50px',border: 'none', color: '#fff', margin:'20px',height:'30px',display:'flex',justifyContent:'center',alignItems:'center'}} 
                   onClick={recordStop}>녹음 끝내기</p>
                 </div>
-
                 )}  
                     <div style={{ marginTop: 25, marginBottom:'10%'}}>
-                    {audioSourceURL && audioSave && (
+                    {audioSourceURL && audioSave && !isRecording &&(
                     // <MusicPlay audioSourceURL= {audioSave}/>
                     <AudioPlayer audioSourceURL= {audioSave}/>
                     )}
-                    {audioSourceURL && !audioSave && (
+                    {audioSourceURL && !audioSave && !isRecording && (
                     // <MusicPlay audioSourceURL= {audioSourceURL}/>
                     <AudioPlayer audioSourceURL= {audioSourceURL}/>
                     )}
                     </div>
                     
-                    {isRecording && audioSourceURL && (
+                    {!isRecording && audioSourceURL && (
                       <>
                       <p>녹음 파일을 확인하고 분석을 진행해주세요</p>
                       <p style={{ background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',borderRadius: '50px',border: 'none', color: '#fff', margin:'0 20px',height:'30px',display:'flex',justifyContent:'center',alignItems:'center'}} 
@@ -418,11 +418,11 @@ const MusicSing: React.FC = () => {
                       </>
                     )}
                     <div style={{ display: 'flex', flexDirection:'row',justifyContent: 'space-between'}}>
-                    {isRecording && audioSourceURL && (
+                    {!isRecording && audioSourceURL && (
                       <p style={{ background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',borderRadius: '50px',border: 'none', color: '#fff', margin:'20px',height:'30px',display:'flex',justifyContent:'center',alignItems:'center',width:'40%'}} 
                       onClick={handleRestartRecording}>다시 부르기</p>
                     )}
-                    {isRecording && audioSourceURL&&(
+                    {!isRecording && audioSourceURL &&(
                       <p style={{ background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',borderRadius: '50px',border: 'none', color: '#fff', margin:'20px',height:'30px',display:'flex',justifyContent:'center',alignItems:'center',width:'40%'}} 
                       onClick={MyrecordUpload}>분석하기</p>
                     )}
