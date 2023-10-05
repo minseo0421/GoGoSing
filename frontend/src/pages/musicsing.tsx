@@ -323,19 +323,6 @@ const MusicSing: React.FC = () => {
     // window.location.reload();
   };
 
-  const buttonStyle: React.CSSProperties = {
-    width: '100%', // 반응형 크기 조절
-    height: '100%', // 높이를 자동으로 조절
-    // left: '30%', // 가운데 정렬을 위한 좌표 조절
-    // top: '50%', // 가운데 정렬을 위한 좌표 조절
-    // transform: 'translate(-50%, -50%)', // 가운데 정렬
-    background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',
-    borderRadius: '50px',
-    border: 'none', // Optional: Remove button border
-    color: '#fff', // Optional: Text color
-    cursor: 'pointer',
-  };  
-
   return (
       <Background $imageUrl="../../assets/background.png">
         <CloseButton onClick={handleCloseModal}>
@@ -390,20 +377,24 @@ const MusicSing: React.FC = () => {
             // downloadOnSavePress={true}
           />
           </div>
-          <div style={{ display: 'flex', flexDirection:'column',justifyContent: 'center', marginBottom: 24 }}>
+          <div style={{ display: 'flex', flexDirection:'column',justifyContent: 'center', marginBottom: 24,marginTop:'20%' }}>
                 {!isRecording && audioSourceURL==="" && (
                 <div style={{ margin: 'auto', marginBottom: '10px' }}>
                   <img onClick={()=>{handlePlayPause()}} src="assets/colmic.png" alt=""  style={isPlay ? {display:'none', }:{width: '40%',margin:'auto'}} />
+                  <p style={isPlay ? {display:'none', }:{}}>마이크 아이콘 터치 시, 녹음이 시작됩니다. <br /> ⚠️원활한 녹음을 위해 이어폰 환경이 권장됩니다.</p>
                 </div>
                 )}
                 {isRecording && audioSourceURL==="" && (
                 <div>
-                    <p>{recorderControls.recordingTime}</p>
-                    <p onClick={recordStop}>녹음 멈춰!!</p>
+                  <h1>녹음 진행중</h1>
+                  <h1>{recorderControls.recordingTime}</h1>
+
+                  <p style={{ background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',borderRadius: '50px',border: 'none', color: '#fff', margin:'20px',height:'30px',display:'flex',justifyContent:'center',alignItems:'center'}} 
+                  onClick={recordStop}>녹음 끝내기</p>
                 </div>
 
                 )}  
-                    <div style={{ marginTop: 25}}>
+                    <div style={{ marginTop: 25, marginBottom:'10%'}}>
                     {audioSourceURL && audioSave && (
                     // <MusicPlay audioSourceURL= {audioSave}/>
                     <AudioPlayer audioSourceURL= {audioSave}/>
@@ -413,17 +404,19 @@ const MusicSing: React.FC = () => {
                     <AudioPlayer audioSourceURL= {audioSourceURL}/>
                     )}
                     </div>
-                    <div style={{ display: 'flex', flexDirection:'row',justifyContent: 'spacebetween', marginTop: 25 }}>
+                    <p>녹음 파일을 확인하고 분석을 진행해주세요</p>
                     {isRecording && audioSourceURL && (
-                    <button onClick={handleRestartRecording} style={buttonStyle}>다시 부르기</button>
+                      <p style={{ background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',borderRadius: '50px',border: 'none', color: '#fff', margin:'0 20px',height:'30px',display:'flex',justifyContent:'center',alignItems:'center'}} 
+                      onClick={getMergeMusic}>MR 합치기</p>
                     )}
+                    <div style={{ display: 'flex', flexDirection:'row',justifyContent: 'space-between'}}>
                     {isRecording && audioSourceURL && (
-                    <button onClick={getMergeMusic} style={buttonStyle}>MR 합치기</button>
+                      <p style={{ background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',borderRadius: '50px',border: 'none', color: '#fff', margin:'20px',height:'30px',display:'flex',justifyContent:'center',alignItems:'center',width:'40%'}} 
+                      onClick={handleRestartRecording}>다시 부르기</p>
                     )}
                     {isRecording && audioSourceURL&&(
-                    <button onClick={MyrecordUpload} style={buttonStyle}>
-                        분석하기
-                    </button>
+                      <p style={{ background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',borderRadius: '50px',border: 'none', color: '#fff', margin:'20px',height:'30px',display:'flex',justifyContent:'center',alignItems:'center',width:'40%'}} 
+                      onClick={MyrecordUpload}>분석하기</p>
                     )}
                     </div>
             </div>
