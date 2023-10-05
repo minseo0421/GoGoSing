@@ -65,9 +65,9 @@ public class RedisSearchRankingService {
     }
 
 
-//    @Scheduled(cron = "0 0 * * MON") // 매주 월요일 0시 0분에 실행
 //    @Scheduled(fixedRate = 120000) // 현재 시간으로부터 2분 후에 실행 (2분 = 120,000 밀리초)
-    @Scheduled(cron = "0 0 0 * * ?") //매일 자정에 실행
+//    @Scheduled(cron = "0 0 0 * * ?") //매일 자정에 실행
+    @Scheduled(cron = "0 0 * * 1 *") // 매주 월요일 0시 0분에 실행
     public void cleanupRedisKey() {
         String keyPattern = "search_keywords"; // 삭제할 키 패턴 설정
 

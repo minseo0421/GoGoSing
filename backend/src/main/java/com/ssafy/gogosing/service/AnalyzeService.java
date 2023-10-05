@@ -71,7 +71,7 @@ public class AnalyzeService {
      * 파이썬을 음역대 저장
      */
     @Transactional
-    public String saveVoice(MultipartFile multipartFile, UserDetails userDetails) throws IOException {
+    public String saveVoice(MultipartFile multipartFile, UserDetails userDetails, Long musicId) throws IOException {
 
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
@@ -81,8 +81,14 @@ public class AnalyzeService {
         }
 
         try {
-
-            String fileName = generateFileName(multipartFile, String.valueOf(user.getId()));
+            String fileName = "";
+            if(musicId != null) {
+                Music music = musicRepository.findById(musicId)
+                        .orElseThrow(() -> new EmptyResultDataAccessException("해당 노래는 존재하지 않습니다.", 1));
+                fileName = generateFileNameTitle(multipartFile, user, music.getTitle());
+            } else {
+                fileName = generateFileName(multipartFile, user);
+            }
 
             byte[] fileBytes = multipartFile.getBytes();
 
@@ -378,9 +384,22 @@ public class AnalyzeService {
     /**
      * 파일 이름 생성 메서드
      */
-    private String generateFileName(MultipartFile multipartFile, String userId) {
+    private String generateFileName(MultipartFile multipartFile, User user) {
+        String userId = String.valueOf(user.getId());
         String originalName = multipartFile.getOriginalFilename();
         String fileExtension = getFileExtension(originalName);
+        user.updatevoiceFileName(originalName);
+        return userId + "_voicefile" + fileExtension;
+    }
+
+    /**
+     * 파일 이름 노래 이름으로 생성 메서드
+     */
+    private String generateFileNameTitle(MultipartFile multipartFile, User user, String title) {
+        String userId = String.valueOf(user.getId());
+        String originalName = multipartFile.getOriginalFilename();
+        String fileExtension = getFileExtension(originalName);
+        user.updatevoiceFileName(title);
         return userId + "_voicefile" + fileExtension;
     }
 

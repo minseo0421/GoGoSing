@@ -65,11 +65,14 @@ public class User extends BaseTimeEntity {
     @Column(name = "voice_file")
     private String voiceFile;
 
+    @Column(name = "voice_file_name")
+    private String voiceFileName;
+
     @Column(name = "max_pitch")
     private Double maxPitch;
 
     @Builder
-    public User(Long id, String email, String password, String nickname, Gender gender, LocalDate birth, String profileImg, Role role, SocialType socialType, String socialId, LocalDateTime deletedDate, String voiceRangeHighest, String voiceRangeLowest, Double maxPitch) {
+    public User(Long id, String email, String password, String nickname, Gender gender, LocalDate birth, String profileImg, Role role, SocialType socialType, String socialId, LocalDateTime deletedDate, String voiceRangeHighest, String voiceRangeLowest, Double maxPitch, String voiceFileName) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -84,6 +87,7 @@ public class User extends BaseTimeEntity {
         this.voiceRangeHighest = voiceRangeHighest;
         this.voiceRangeLowest = voiceRangeLowest;
         this.maxPitch = maxPitch;
+        this.voiceFileName = voiceFileName;
     }
 
     /**
@@ -149,5 +153,12 @@ public class User extends BaseTimeEntity {
      */
     public void updateNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    /**
+     * 내 파일 이름 변경
+     */
+    public void updatevoiceFileName(String fileName) {
+        this.voiceFileName = fileName;
     }
 }
