@@ -43,7 +43,7 @@ const PitchLong: React.FC = () => {
     <div>
       {pitchData===null ? 
           <div className={RecordLong.container}>
-            <p>등록된 음역대가 없으세요 !</p>
+            <p>등록된 음역대가 없습니다 !</p>
             <img
               className={RecordLong.PitchIcon}
               onClick={musicrecord}

@@ -167,7 +167,9 @@ const MainContainer: React.FC = () => {
           }}}>더보기</span>
       </div>
       <PitchLong />
-      <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
+      {AccessToken &&
+        <>
+              <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
         <span style={{fontSize:'20px'}}>당신의 좋아요 추천 노래❤️</span>
         <span style={{fontSize:'16px'}} onClick={()=>{
           if (AccessToken) {
@@ -179,6 +181,9 @@ const MainContainer: React.FC = () => {
           }}>더보기</span>
       </div>
       <CardSmallContainer albums={likechart.slice(0,10)} />
+      </>
+      }
+
     </div>
     
   );

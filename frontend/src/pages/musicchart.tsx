@@ -41,7 +41,7 @@ const MusicChart: React.FC = () => {
         setChartPage('좋아요추천')
       }
       const AccessToken = localStorage.getItem('AccessToken')
-      const page = type==='like' ? '/music/like/list':  type==='pitch' ? '/analyze/rangeMusicList': '/analyze/waveMusicList'
+      const page = type==='like' ? '/music/like/list':  type==='pitch' ? '/analyze/rangeMusicList':  '/analyze/waveMusicList'
       axiosInstance({
         method:'get',
         url:`${process.env.REACT_APP_API_URL}${page}`,
@@ -75,6 +75,7 @@ const MusicChart: React.FC = () => {
         headers:{
           Authorization:`Bearer ${AccessToken}`
         }}).then(res=>{
+          if (res.data)
         setAlbums(res.data)
         setChartPage(name)
       }).catch(err=>{

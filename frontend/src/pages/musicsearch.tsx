@@ -46,6 +46,7 @@ const MusicSearch: React.FC = () => {
       url:`${process.env.REACT_APP_API_URL}/search/${sel}?page=1&keyword=${keyword}`,
     }).then(res=>{
       setSearchData(res.data)
+      setSearchPage(2)
     }).catch(err=>{
       console.log(err)
     })
