@@ -121,24 +121,18 @@ const MusicDetail: React.FC = () => {
   }
 
   useEffect(()=>{
+    setIsplay(false);
     setControl(false)
+    const iframe = document.querySelector<HTMLIFrameElement>("#yt");
+    if (iframe) {
+      iframe.setAttribute('credentialless','true')
+    }
     if (albumId) {
       axios({
         method:'get',
         url:`${process.env.REACT_APP_API_URL}/music/detail/${albumId}`
       }).then(res=>{
         setAlbumData(res.data)
-        setIsplay(false);
-        
-        setTimeout(() => {
-          const iframe = document.querySelector<HTMLIFrameElement>("#yt");
-          if (iframe) {
-            setTimeout(() => {
-              iframe.setAttribute('credentialless','true')
-            }, 100);
-            iframe.setAttribute('src',`https://www.youtube.com/embed/${res.data.musicUrl}?enablejsapi=1&widgetid=16`)
-          }
-        }, 500);
         setTimeout(() => {
           setControl(true)
         }, 1000);
@@ -154,6 +148,7 @@ const MusicDetail: React.FC = () => {
     width: "0",
     playerVars: {
       origin: window.location.origin,
+      
     },
   };
 
@@ -193,7 +188,7 @@ const MusicDetail: React.FC = () => {
             {imgErr ? <img crossOrigin="anonymous" src='assets/default_album.png' alt="" className={musicStyle.musicImage}  />
             :<img crossOrigin="anonymous" src={album?.songImg} alt="" className={musicStyle.musicImage}  onError={()=>setImgErr(true)} />}
               <div>
-                <YouTube id='yt' ref={youtubeRef} videoId={''} opts={opts} onEnd={()=>{
+                <YouTube id='yt' ref={youtubeRef} videoId={album?.musicUrl} opts={opts} onEnd={()=>{
                   setIsplay(false)
                 }} />
               </div>
