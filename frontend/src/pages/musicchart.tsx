@@ -92,10 +92,10 @@ const MusicChart: React.FC = () => {
         }).catch(err=>{
           console.log(err)
           if (name ==='음역대추천') {
-            alert('음역대 추천 데이터없음')
+            alert('사용자 데이터가 존재하지 않습니다. 데이터를 입력해주세요')
             navigate('/record')
           } else if (name ==='목소리추천') {
-            alert('목소리 추천 데이터없음')
+            alert('사용자 데이터가 존재하지 없습니다. 데이터를 입력해주세요')
             navigate('/musicupload')
           } 
         })
