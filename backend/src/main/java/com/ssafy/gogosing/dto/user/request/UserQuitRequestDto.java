@@ -8,10 +8,7 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserPasswordUpdateRequestDto {
+public class UserQuitRequestDto {
 
     private String checkPassword;
-
-    @NotBlank(message = "password는 빈값이 올 수 없습니다")
-    private String newPassword;
 }
