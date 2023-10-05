@@ -192,7 +192,6 @@ public class MusicService {
             }
 
             Music music = optionalMusic.get();
-            List<LikeMusicListResponseDto> genreInfo = new ArrayList<>();
             List<MusicGenre> musicGenreList = musicGenreRepository.findByMusicId(music.getId());
             if (musicGenreList.isEmpty()) {
                 logger.info("*** 노래의 장르가 존재하지 않음 musicId : " + music.getId());
