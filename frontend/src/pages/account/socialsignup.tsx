@@ -12,7 +12,7 @@ import axios from 'axios';
 const validationSchema = Yup.object().shape({
     nickname: Yup.string()
       .min(2, '닉네임 최소글자는 2자 입니다')
-      .max(10, '닉네임 최대글자는 50자 입니다')
+      .max(6, '닉네임 최대글자는 6자 입니다')
       .required('닉네임을 입력해주세요'),
     gender: Yup.string()
       .oneOf(['MALE', 'FEMALE'], '성별을 선택해주세요')

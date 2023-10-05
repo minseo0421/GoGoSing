@@ -11,13 +11,7 @@ interface AlbumProps {
   title:string;
   singer:string|null;
   songImg:string|null;
-  genreInfo:{
-    genreId:number[];
-    genreType:string;
-  }[];
-  viewCount:number;
 }
-
 const MusicSearch: React.FC = () => {
   const [keyword, setKeyword] = useState('')
   const [isInputFocused, setIsInputFocused] = useState(false);
