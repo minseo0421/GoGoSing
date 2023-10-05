@@ -9,7 +9,6 @@ import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import axiosInstance from "../axiosinstance";
 import axios from "axios";
 import { AudioPlayer } from "../components/musicrecord/audioplay";
-import { useNavigate } from "react-router-dom";
 
 
 const slideUp = keyframes`
@@ -100,16 +99,21 @@ const MusicSing: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [audioSave, setAudioSave] = React.useState("");
   const [responseData, setResponseData] = useState<any | null>(null);
-  const [imgErr, setImgErr] = useState<boolean>(false)
-  const navigate = useNavigate();
+  const [imgErr, setImgErr] = useState<boolean>(false);
+
+  useEffect(()=>{
+    if (isModalOpen) {
+      setAudioSourceURL("");
+      setAudioSave("");
+      setResponseData(null);
+      setIsRecording(false);
+    }
+  },[isModalOpen])
+
 
   const handleAlbumClick = () => {
     dispatch(setModal("musicDetail"));
     dispatch(setAlbum(responseData.musicId)) // 모달 표시 액션
-  };
-
-  const Home = () => {
-    navigate(-1); // 뒤로가기
   };
 
   useEffect(()=>{
@@ -318,6 +322,8 @@ const MusicSing: React.FC = () => {
   const handleCloseModal = () => {
     setAudioSourceURL(""); // audioSave 초기화
     setAudioSave(""); // audioSave 초기화
+    setResponseData(null);
+    setIsRecording(false);
     dispatch(setAlbum(null));
     dispatch(setModal(null));
     // window.location.reload();
@@ -355,10 +361,9 @@ const MusicSing: React.FC = () => {
                     <h2>가장 잘 맞는 노래</h2>
                     {imgErr ? <img crossOrigin="anonymous"  onClick={handleAlbumClick} src='assets/default_album.png' alt="" style={{ width: '60%' }} />
                     :<img src={responseData.songImg} alt={responseData.title} onClick={handleAlbumClick} crossOrigin="anonymous" onError={()=>setImgErr(true)}/>}
+                    <h2>{responseData.title}</h2>
+                    <p>{responseData.singer}</p>
                     <p>노래방 번호: {responseData.musicId}</p>
-                    <p>Singer: {responseData.singer}</p>
-                    <p>Title: {responseData.title}</p>
-                    <button onClick={Home} style={{ width: '50%', margin: 'auto', borderRadius:'10px'}}>Go home</button>
                     </div>
                 </div>
         
