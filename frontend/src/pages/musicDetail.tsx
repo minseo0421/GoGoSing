@@ -129,18 +129,20 @@ const MusicDetail: React.FC = () => {
       }).then(res=>{
         setAlbumData(res.data)
         setIsplay(false);
+        
         setTimeout(() => {
-        const iframe = document.querySelector<HTMLIFrameElement>("#yt");
-        if (iframe) {
-          const a=iframe.src
-          iframe.setAttribute('credentialless','true')
-          iframe.src=a
-        }
+          const iframe = document.querySelector<HTMLIFrameElement>("#yt");
+          if (iframe) {
+            setTimeout(() => {
+              iframe.setAttribute('credentialless','true')
+            }, 100);
+            iframe.setAttribute('src',`https://www.youtube.com/embed/${res.data.musicUrl}?enablejsapi=1&widgetid=16`)
+          }
         }, 500);
         setTimeout(() => {
           setControl(true)
         }, 1000);
-        
+
       }).catch(err=>{
         alert('노래 상세정보 없음')
       })
@@ -190,8 +192,8 @@ const MusicDetail: React.FC = () => {
             <div className={musicStyle.singerFont}>{album?.singer}</div>
             {imgErr ? <img crossOrigin="anonymous" src='assets/default_album.png' alt="" className={musicStyle.musicImage}  />
             :<img crossOrigin="anonymous" src={album?.songImg} alt="" className={musicStyle.musicImage}  onError={()=>setImgErr(true)} />}
-              <div hidden>
-                <YouTube id='yt' ref={youtubeRef} videoId={album?.musicUrl} opts={opts} onEnd={()=>{
+              <div>
+                <YouTube id='yt' ref={youtubeRef} videoId={''} opts={opts} onEnd={()=>{
                   setIsplay(false)
                 }} />
               </div>
@@ -249,8 +251,6 @@ const MusicDetail: React.FC = () => {
               <p className={musicStyle.lyrics}>
                 <h2>가사 정보가 없습니다.</h2>
               </p>}
-         
-          
         </ModalContainer>
       </Background>
   );
