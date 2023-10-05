@@ -325,6 +325,19 @@ const MusicSing: React.FC = () => {
     // window.location.reload();
   };
 
+  const buttonStyle: React.CSSProperties = {
+    width: '100%', // 반응형 크기 조절
+    height: '100%', // 높이를 자동으로 조절
+    // left: '30%', // 가운데 정렬을 위한 좌표 조절
+    // top: '50%', // 가운데 정렬을 위한 좌표 조절
+    // transform: 'translate(-50%, -50%)', // 가운데 정렬
+    background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',
+    borderRadius: '50px',
+    border: 'none', // Optional: Remove button border
+    color: '#fff', // Optional: Text color
+    cursor: 'pointer',
+  };  
+
   return (
       <Background $imageUrl="../../assets/background.png">
         <CloseButton onClick={handleCloseModal}>
@@ -333,8 +346,8 @@ const MusicSing: React.FC = () => {
         <ModalContainer open={isModalOpen}>
         {loading ? (
           // 로딩 중일 때 표시할 내용
-          <div>
-            <p>Loading...</p>
+          <div style={{ marginTop: '150px' }}>
+            <h2>Loading...</h2>
             <img src="assets/spinner.gif" alt="" style={{ width: '50%'}} />
           </div>
         ) : responseData ? (
@@ -391,7 +404,9 @@ const MusicSing: React.FC = () => {
                     <p onClick={recordStop}>녹음 멈춰!!</p>
                 </div>
 
-                )}  {audioSourceURL && audioSave && (
+                )}  
+                    <div style={{ marginTop: 25}}>
+                    {audioSourceURL && audioSave && (
                     // <MusicPlay audioSourceURL= {audioSave}/>
                     <AudioPlayer audioSourceURL= {audioSave}/>
                     )}
@@ -399,16 +414,17 @@ const MusicSing: React.FC = () => {
                     // <MusicPlay audioSourceURL= {audioSourceURL}/>
                     <AudioPlayer audioSourceURL= {audioSourceURL}/>
                     )}
-                    <div style={{ display: 'flex', flexDirection:'row',justifyContent: 'center', marginBottom: 5 }}>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection:'row',justifyContent: 'spacebetween', marginTop: 25 }}>
                     {isRecording && audioSourceURL && (
-                    <button onClick={handleRestartRecording} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>다시 부르기</button>
+                    <button onClick={handleRestartRecording} style={buttonStyle}>다시 부르기</button>
                     )}
                     {isRecording && audioSourceURL && (
-                    <button onClick={getMergeMusic} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>MR 합치기</button>
+                    <button onClick={getMergeMusic} style={buttonStyle}>MR 합치기</button>
                     )}
                     {isRecording && audioSourceURL&&(
-                    <button onClick={MyrecordUpload} style={{ width: '30%', margin: 'auto', borderRadius:'10px'}}>
-                        이 노래로<br></br>목소리 분석하기
+                    <button onClick={MyrecordUpload} style={buttonStyle}>
+                        분석하기
                     </button>
                     )}
                     </div>

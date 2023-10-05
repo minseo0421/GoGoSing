@@ -93,7 +93,7 @@ const MusicUpload: React.FC = () => {
         <>
          {loading ? (
                 // 로딩 중인 경우 로딩 화면을 표시
-                <div>
+                <div style={{ marginTop: '150px' }}>
                   <p>Loading...</p>
                   <img src="assets/spinner.gif" alt="" style={{ width: '50%'}} />
                 </div>
