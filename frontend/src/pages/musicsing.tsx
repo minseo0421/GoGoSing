@@ -288,7 +288,7 @@ const MusicSing: React.FC = () => {
     }
   };
 
-  // Render the modal
+  // Render the modal 
   if (!isModalOpen) {
     return null;
   }
