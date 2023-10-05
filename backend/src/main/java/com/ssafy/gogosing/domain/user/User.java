@@ -23,13 +23,13 @@ public class User extends BaseTimeEntity {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email")
     private String email; // 이메일이자 로그인할 때 사용하는 id
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "nickname", unique = true)
+    @Column(name = "nickname")
     private String nickname;
 
     @Enumerated(EnumType.STRING)
