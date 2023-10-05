@@ -158,6 +158,14 @@ public class User extends BaseTimeEntity {
     }
 
     /**
+     * 소셜 회원탈퇴 등록
+     */
+    public void updateSocialDelete() {
+        this.socialId = null;
+        this.deletedDate = LocalDateTime.now();
+    }
+
+    /**
      * 닉네임 변경
      */
     public void updateNickname(String nickname) {
