@@ -46,9 +46,10 @@ public class AnalyzeController {
     @ApiOperation(value = "사용자의 파형 분석 결과 가장 유사한 노래 반환")
     @PostMapping("/waveResult")
     public ResponseEntity<?> getVoiceWaveAnalyzeResult(@RequestParam("file") MultipartFile multipartFile,
+                                                       @RequestParam(value = "musicId", required = false) Long musicId,
                                                   @AuthenticationPrincipal UserDetails userDetails) throws IOException {
 
-        String voiceFile = musicAnalyzeService.saveVoice(multipartFile, userDetails);
+        String voiceFile = musicAnalyzeService.saveVoice(multipartFile, userDetails, musicId);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(musicAnalyzeService.getVoiceWaveMatchingMusic(voiceFile, userDetails));
     }
