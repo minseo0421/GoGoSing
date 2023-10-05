@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import RecordLong from "./RecordLong.module.css";
 import CardSmallContainer from "../CardSmall/CardSmallContainer";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../axiosinstance";
 
-const PitchLong: React.FC = () => {
-  const [pitchData, setPitchData] = useState<any[]|null>(null);
+
+interface props {
+  pitchData:any[]|null
+}
+const PitchLong: React.FC<props> = ({pitchData}) => {
   const navigate = useNavigate();
 
   const musicrecord = () => {
@@ -17,27 +19,7 @@ const PitchLong: React.FC = () => {
     }
   };
 
-  const getPitchList = () => {
-    axiosInstance({
-      method: 'get',
-      url: `${process.env.REACT_APP_API_URL}/analyze/rangeMusicList`, 
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
-      },
-    }).then(res=>{
-      setPitchData(res.data);
-    }).catch(err=>{
-      console.log(err)
-    })
-  }
-
-
-    useEffect(() => {
-      const token = localStorage.getItem("AccessToken");
-      if (token) {
-        getPitchList();
-      }
-    }, []);
+  
 
   return (
     <div>

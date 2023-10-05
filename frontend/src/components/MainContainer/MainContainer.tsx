@@ -28,6 +28,9 @@ const MainContainer: React.FC = () => {
   const [plusview, setplusview] = useState(false);
   const dispatch = useDispatch()
   const AccessToken = localStorage.getItem('AccessToken')
+  const [pitchData, setPitchData] = useState<any[]|null>(null);
+  const [voiceData, setVoiceData] = useState<any[]|null>(null);
+
   // 차트 정보 불러오는 axios 작성
   useEffect(()=>{
     const AccessToken = localStorage.getItem('AccessToken')
@@ -39,6 +42,7 @@ const MainContainer: React.FC = () => {
     }).catch(err=>{
       console.log(err)
     })
+
     axiosInstance({
       method:'get',
       url:`${process.env.REACT_APP_API_URL}/music/like/list`,
@@ -51,6 +55,47 @@ const MainContainer: React.FC = () => {
       console.log(err)
     })
   },[])
+
+  const getPitchList = () => {
+    axiosInstance({
+      method: 'get',
+      url: `${process.env.REACT_APP_API_URL}/analyze/rangeMusicList`, 
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+      },
+    }).then(res=>{
+      setPitchData(res.data);
+    }).catch(err=>{
+      console.log(err)
+    })
+  }
+
+  useEffect(() => {
+    const token = localStorage.getItem("AccessToken");
+    if (token) {
+      getPitchList();
+    }
+  }, []);
+  const getVoiceList = () => {
+    axiosInstance({
+        method: 'get',
+        url: `${process.env.REACT_APP_API_URL}/analyze/waveMusicList`, 
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+        },
+      }).then(res=>{
+        setVoiceData(res.data);
+      }).catch(err=>{
+        console.log(err)
+      })
+    }
+
+  useEffect(() => {
+    const token = localStorage.getItem("AccessToken");
+    if (token) {
+      getVoiceList();
+    }
+  }, []);
 
   useEffect(()=>{
     const AccessToken = localStorage.getItem('AccessToken')
@@ -68,6 +113,57 @@ const MainContainer: React.FC = () => {
     })
   },[dispatch])
 
+  const [Carousel, setCarousel] = useState<AlbumProps[]>([])
+    useEffect(()=>{
+      const AccessToken = localStorage.getItem('AccessToken')
+      if (AccessToken) {
+        axiosInstance({
+          method:'get',
+          url:`${process.env.REACT_APP_API_URL}/genre/like/list`,
+          headers:{
+            Authorization:`Bearer ${AccessToken}`
+          }
+        }).then(res=>{
+          setCarousel(res.data)
+        }).catch(err=>{
+          console.log(err)
+        })
+      } else {
+        axios({
+          method:'get',
+          url:`${process.env.REACT_APP_API_URL}/genre/list`,
+        }).then(res=>{
+          setCarousel(res.data)
+        }).catch(err=>{
+          console.log(err)
+        })
+      }
+    },[])
+  const newCarousel = ()=>{
+    const AccessToken = localStorage.getItem('AccessToken')
+      if (AccessToken) {
+        axiosInstance({
+          method:'get',
+          url:`${process.env.REACT_APP_API_URL}/genre/like/list`,
+          headers:{
+            Authorization:`Bearer ${AccessToken}`
+          }
+        }).then(res=>{
+          setCarousel(res.data)
+        }).catch(err=>{
+          console.log(err)
+        })
+      } else {
+        axios({
+          method:'get',
+          url:`${process.env.REACT_APP_API_URL}/genre/list`,
+        }).then(res=>{
+          setCarousel(res.data)
+        }).catch(err=>{
+          console.log(err)
+        })
+      }
+  }
   const handleStart = (
     e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>
   ) => {
@@ -113,9 +209,10 @@ const MainContainer: React.FC = () => {
       </div>
       <CardSmallContainer albums={popularchart.slice(0,10)} />
       <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
-        <span style={{fontSize:'20px'}}>이 노래는 어떠신가요?</span>
+        <span style={{fontSize:'20px'}}>👇이 노래는 어떠신가요?</span>
+        <span style={{fontSize:'20px'}} onClick={newCarousel}>🔃</span>
       </div>
-      <CarouselComponent />
+      <CarouselComponent albums={Carousel} />
       <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
         <span style={{fontSize:'20px'}}>장르별 인기차트</span>
       </div>
@@ -147,6 +244,7 @@ const MainContainer: React.FC = () => {
       {plusview ? <p onClick={()=>setplusview(false)} style={{margin:0,marginBottom:20}}>⇧ 숨기기</p>: <p onClick={()=>setplusview(true)} style={{margin:0,marginBottom:20}}>더보기 ⇩</p> }
       <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
         <span style={{fontSize:'20px'}}>당신의 목소리에 맞는 노래🎤</span>
+        {voiceData &&
         <span style={{fontSize:'16px'}} onClick={()=>{
           if (AccessToken) {
             navigate('/chart?type=voice')
@@ -154,10 +252,12 @@ const MainContainer: React.FC = () => {
             alert('로그인이 필요합니다')
             navigate('/login')
           }}}>더보기</span>
+        }
       </div>
-      <VoiceLong />
+      <VoiceLong voiceData={voiceData} />
       <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
         <span style={{fontSize:'20px'}}>당신의 음역대에 맞는 노래🎼</span>
+        {pitchData &&
         <span style={{fontSize:'16px'}} onClick={()=>{
           if (AccessToken) {
             navigate('/chart?type=pitch')
@@ -165,13 +265,15 @@ const MainContainer: React.FC = () => {
             alert('로그인이 필요합니다')
             navigate('/login')
           }}}>더보기</span>
+        }
       </div>
-      <PitchLong />
+      <PitchLong pitchData={pitchData} />
       {AccessToken &&
         <>
-              <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
+      <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
         <span style={{fontSize:'20px'}}>당신의 좋아요 추천 노래❤️</span>
-        <span style={{fontSize:'16px'}} onClick={()=>{
+        {likechart.length!==0 &&
+          <span style={{fontSize:'16px'}} onClick={()=>{
           if (AccessToken) {
             navigate('/chart?type=like')
           } else {
@@ -179,8 +281,10 @@ const MainContainer: React.FC = () => {
             navigate('/login')
           }
           }}>더보기</span>
+        }
       </div>
-      <CardSmallContainer albums={likechart.slice(0,10)} />
+      {likechart.length===0 ? <p>조회 결과가 없습니다.😭 <br /> 좋아요를 누르고 추천을 받아보세요!</p>:
+      <CardSmallContainer albums={likechart.slice(0,10)} />}
       </>
       }
 

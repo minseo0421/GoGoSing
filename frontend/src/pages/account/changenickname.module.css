@@ -54,3 +54,26 @@
     box-sizing: border-box;
     cursor: pointer;
 }
+.checkemail {
+    background-color: white;
+    border:1px solid black;
+    border-radius: 1rem;
+    color:black;
+    margin-left: 10px;
+    box-sizing: border-box;
+    width:25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkemail:enabled:hover {
+    cursor:pointer;
+    background-color: #D7D7D7;
+}
+
+.checkemail:disabled {
+    background-color: #D7D7D7;
+    border:1px solid white;
+    color:gray;
+}

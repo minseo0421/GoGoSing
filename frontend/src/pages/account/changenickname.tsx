@@ -63,14 +63,13 @@ const ChangeNickName: React.FC<Props> = ({closemodal,isLogin,setLogin}) => {
 
     },
 });
-
   return (
     <div className={styles.modaloverlay}>
       <div className={styles.modal}>
         <span style={{display:'flex',justifyContent:'right'}} onClick={()=>closemodal()}>닫기</span>
         <h2 style={{margin:0}}>닉네임 변경</h2>
         <form onSubmit={formik.handleSubmit}>
-          <p style={{display:'flex'}}>현재 닉네임 : {isLogin.nickname}</p>
+          <h4 style={{}}>현재 닉네임 : {isLogin.nickname}</h4>
           <div style={{display:'flex'}}>
               <input className={styles.input_account} type="text" placeholder="닉네임을 입력해주세요." {...formik.getFieldProps('nickname')} onChange={(event) => { formik.handleChange(event); setCheckNickname(false); }} autoComplete='username'/>
               {/* 올바른 닉네임 입력시 인증버튼 활성화 */}
@@ -83,8 +82,8 @@ const ChangeNickName: React.FC<Props> = ({closemodal,isLogin,setLogin}) => {
               {formik.values.nickname === '' ? <span>　</span> : formik.errors.nickname ? <span style={{color:'red'}}>{formik.errors.nickname}</span> : !isCheckNickname ? <span style={{color:'yellowgreen'}}>닉네임 중복체크를 진행해주세요.</span>: <span style={{color:'green'}}>사용가능한 닉네임입니다.</span> }
           </p>
           <div style={{marginTop:'1%'}}>
-              <button style={{width:'40%',marginRight:'10%'}} type='submit'>변경</button>
-              <button style={{width:'40%'}} type='button' onClick={()=>{closemodal()}}>취소</button>
+              <button style={{width:'25%',marginRight:'10%',borderRadius:10,border:'0.5px solid black',backgroundColor:'#7290FA'}} type='submit'>변경</button>
+              <button style={{width:'25%',borderRadius:10,border:'0.5px solid black',backgroundColor:'#F27474'}} type='button' onClick={()=>{closemodal()}}>취소</button>
           </div>
         </form>
     </div>
