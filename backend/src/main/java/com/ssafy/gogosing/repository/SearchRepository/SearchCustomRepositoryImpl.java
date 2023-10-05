@@ -41,7 +41,7 @@ public class SearchCustomRepositoryImpl implements SearchCustomRepository{
                 .limit(pageable.getPageSize()) // 페이지 사이즈
                 .orderBy(
                         music.title.length().asc(),
-                        music.releaseDate.desc()
+                        music.viewCount.desc()
                 )
                 .fetch();
         return musicList;
