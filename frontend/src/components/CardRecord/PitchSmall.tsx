@@ -4,28 +4,23 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../axiosinstance";
 
 const PitchSmall: React.FC = () => {
-  const [pitchData, setPitchData] = useState<any[]>([]);
+  const [pitchData, setPitchData] = useState<{nickname:string;voiceRangeHighest:string;voiceRangeLowest:string}|null>(null);
   const navigate = useNavigate();
-
-  const getPitchList = () => {
-    axiosInstance({
-      method: 'get',
-      url: `${process.env.REACT_APP_API_URL}/analyze/rangeMusicList`, 
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
-      },
-    }).then(res=>{
-      setPitchData(res.data);
-    }).catch(err=>{
-      console.log(err)
-    })
-  }
-
   const musicrecord = () => {
     navigate("/record");
   };
   useEffect(()=>{
-    getPitchList()
+    axiosInstance({
+      method: 'get',
+      url: `${process.env.REACT_APP_API_URL}/user/detail/voiceRange`, 
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+      },
+    }).then(res=>{
+      setPitchData(res.data)
+    }).catch(err=>{
+      console.log(err)
+    })
   },[])
   return (
     <div className={RecordSmall.container}>
@@ -42,8 +37,8 @@ const PitchSmall: React.FC = () => {
       ) : (
         <div onClick={musicrecord}>
           <p>음역대 정보</p>
-          <p style={{color:'#C0CEFF',fontSize:12, margin:0}}>nickname 님의</p>
-          <p style={{color:'#C0CEFF',fontSize:12, margin:0}}>음역대는 레3 ~ 도4 입니다.</p>
+          <p style={{color:'#C0CEFF',fontSize:12, margin:0}}>{pitchData.nickname} 님의</p>
+          <p style={{color:'#C0CEFF',fontSize:12, margin:0}}>음역대는 {pitchData.voiceRangeLowest} ~ {pitchData.voiceRangeHighest} 입니다.</p>
           <p style={{color:'white', marginTop:10}}>음역대 수정하기 →</p>
         </div>
       )}

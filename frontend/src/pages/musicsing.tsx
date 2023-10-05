@@ -103,6 +103,13 @@ const MusicSing: React.FC = () => {
   const [imgErr, setImgErr] = useState<boolean>(false)
   const navigate = useNavigate();
 
+  useEffect(()=>{
+    if (isModalOpen) {
+      setAudioSourceURL("");
+      setAudioSave("");
+      setIsRecording(false);
+    }
+  },[isModalOpen])
   const handleAlbumClick = () => {
     dispatch(setModal("musicDetail"));
     dispatch(setAlbum(responseData.musicId)) // 모달 표시 액션
