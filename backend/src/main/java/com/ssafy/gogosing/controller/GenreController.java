@@ -8,16 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.gogosing.domain.music.Music;
 import com.ssafy.gogosing.dto.genre.request.GenreRequestDto;
-import com.ssafy.gogosing.dto.music.request.MusicLikeRequestDto;
-import com.ssafy.gogosing.dto.music.response.MusicDetailResponseDto;
+import com.ssafy.gogosing.dto.music.response.GenreMusicListResponseDto;
 import com.ssafy.gogosing.service.GenreService;
 
 import io.swagger.annotations.ApiOperation;
@@ -53,4 +51,16 @@ public class GenreController {
 		return ResponseEntity.ok().body("");
 	}
 
+	@GetMapping("/musicList")
+	@ApiOperation(value = "장르별 노래 리스트")
+	public ResponseEntity<?> findGenreList(@RequestParam("genreId") Long genreId) throws Exception {
+		List<GenreMusicListResponseDto> result = genreService.findGenreList(genreId);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@ApiOperation(value = "유저 노래 좋아요 기반 추천 리스트")
+	@GetMapping("/like/list")
+	public ResponseEntity<?> recommendListMusicOnLike(@AuthenticationPrincipal UserDetails userDetails) throws Exception {
+		return ResponseEntity.ok().body(genreService.recommendListMusicOnLike(userDetails));
+	}
 }

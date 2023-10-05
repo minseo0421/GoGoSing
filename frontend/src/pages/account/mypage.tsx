@@ -7,6 +7,7 @@ import { setModal } from "../../store/actions";
 import PitchSmall from "../../components/CardRecord/PitchSmall";
 import VoiceSmall from "../../components/CardRecord/VoiceSmall";
 import RecordStyle from "../../components/CardRecord/RecordSmall.module.css";
+import WithDraw from "./withdrawmodal";
 
 interface userdata { 
     socialType: string;
@@ -21,6 +22,7 @@ const MyPage: React.FC = () => {
     const navigate = useNavigate()
     const [isLogin, setLogin] = useState<userdata|null>(null)
     const [mygenre, setMygenre] = useState<number[]>([])
+    const [accountmodal, setAccountModal] = useState<string>('')
     const logout = () => {
         const AccessToken = localStorage.getItem('AccessToken')
         axiosInstance({
@@ -95,6 +97,7 @@ const MyPage: React.FC = () => {
   return (
     <div>
         <div className={styles.myprofile}>
+            {accountmodal ==='회원탈퇴' ? <WithDraw closemodal={()=>{setAccountModal('')}} /> : null}
             <div style={{justifyContent:'right',display:'flex',marginRight:'7vw'}}>
                 <Link to='/'>닫기</Link>
             </div>
@@ -198,7 +201,7 @@ const MyPage: React.FC = () => {
             </div>
             <hr style={{marginTop:20, width:'90%', border:'white 1px solid', marginBottom:0}} />
             <div style={{justifyContent:'right',display:'flex',marginRight:'5vw'}}>
-                <p style={{color:'red',fontWeight:'bold',fontSize:'16px'}} onClick={()=>{alert('회원탈퇴')}}>회원탈퇴</p>
+                <p style={{color:'red',fontWeight:'bold',fontSize:'16px'}} onClick={()=>{setAccountModal('회원탈퇴')}}>회원탈퇴</p>
             </div>
         </div>
     </div>

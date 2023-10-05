@@ -1,6 +1,6 @@
 package com.ssafy.gogosing.service;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,8 @@ import com.ssafy.gogosing.domain.music.MusicGenre;
 import com.ssafy.gogosing.domain.user.User;
 import com.ssafy.gogosing.domain.user.UserLikeGenre;
 import com.ssafy.gogosing.dto.genre.request.GenreRequestDto;
-import com.ssafy.gogosing.dto.music.response.MusicDetailResponseDto;
+import com.ssafy.gogosing.dto.music.response.GenreMusicListResponseDto;
+import com.ssafy.gogosing.dto.music.response.LikeMusicListResponseDto;
 import com.ssafy.gogosing.repository.GenreRepository;
 import com.ssafy.gogosing.repository.MusicGenreRepository;
 import com.ssafy.gogosing.repository.MusicRepository;
@@ -77,4 +79,43 @@ public class GenreService {
 		registGenre(genreRequestDto, userDetails);
 	}
 
+	public List<GenreMusicListResponseDto> findGenreList(Long genreId) {
+		logger.info("*** findGenreList 메소드 호출");
+		List<Music> musicList = musicRepository.findMusicByGenreId(genreId);
+
+		List<GenreMusicListResponseDto> result = new ArrayList<>();
+		for (Music music : musicList) {
+			result.add(new GenreMusicListResponseDto(music.getId(), music.getTitle(), music.getSinger(), music.getSongImg(), music.getViewCount()));
+		}
+		return result;
+	}
+
+	public List<GenreMusicListResponseDto> recommendListMusicOnLike(UserDetails userDetails) {
+		logger.info("*** recommendListOnGenre 메소드 호출");
+		Optional<User> optionalUser = userRepository.findByEmail(userDetails.getUsername());
+		List<GenreMusicListResponseDto> result = new ArrayList<>();
+
+		if (optionalUser.isEmpty()) {
+			logger.info("*** 유저가 존재하지 않음");
+			// 인기많은 노래 10개정도
+			// return musicRepository.findTopByPick();
+		} else {
+			User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
+			List<UserLikeGenre> userLikeGenres = userLikeGenreRepository.findByUserId(user.getId());
+			// 장르 선택했는지
+			if (userLikeGenres.isEmpty()) {
+				// 선택 안했을 때는 인기 10개
+				// return musicRepository.findTopByPick();
+			} else {
+				// 좋아하는 장르 선택했을 때는 장르 기반으로 10개
+				List<Music> musicList = musicRepository.findTopByPick();
+				for (Music music : musicList) {
+					result.add(new GenreMusicListResponseDto(music.getId(), music.getTitle(), music.getSinger(), music.getSongImg(), music.getViewCount()));
+				}
+				return result;
+			}
+		}
+
+		return result;
+	}
 }

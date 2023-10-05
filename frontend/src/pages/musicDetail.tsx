@@ -72,16 +72,19 @@ interface AlbumProps {
   musicId: number,
   title: string,
   singer: string,
-  lyricist: string,
-  composer: string,
+  lyricist: string|null,
+  composer: string|null,
   songImg: string,
-  releaseDate: string,
+  releaseDate: string|null,
   lyric: string|null,
   mrUrl: string,
   musicUrl:string,
   musicPlayTime: string,
-  genreId: number[]|null,
-  genreType: string|null
+  genreInfo:{
+    genreId: number,
+    genreType: string
+  }[],
+  viewCount:number;
 }
 
 const MusicDetail: React.FC = () => {
@@ -90,8 +93,10 @@ const MusicDetail: React.FC = () => {
   const albumId = useSelector((state: AppState) => state.albumId);
   const [isPlay, setIsplay] = useState(false);
   const [album,setAlbumData] = useState<AlbumProps>()
+  const [control, setControl] = useState<boolean>(false)
   const [imgErr, setImgErr] = useState<boolean>(false)
   useEffect(()=>{
+    setControl(false)
     if (albumId) {
       axios({
         method:'get',
@@ -102,12 +107,14 @@ const MusicDetail: React.FC = () => {
         setTimeout(() => {
         const iframe = document.querySelector<HTMLIFrameElement>("#yt");
         if (iframe) {
-          // alert(iframe.src)
           const a=iframe.src
           iframe.setAttribute('credentialless','true')
           iframe.src=a
+          setTimeout(() => {
+            setControl(true)
+          }, 500);
         }
-        }, 300);
+        }, 500);
         
       }).catch(err=>{
         alert('노래 상세정보 없음')
@@ -162,18 +169,25 @@ const MusicDetail: React.FC = () => {
             <div className={musicStyle.titleFont}>{album?.title}</div>
             <div className={musicStyle.singerFont}>{album?.singer}</div>
             <div>
+              <YouTube id='yt' ref={youtubeRef} videoId={album?.musicUrl} opts={opts} onEnd={()=>{
+                setIsplay(false)
+              }} />
+              {control ? 
+                <div className={musicStyle.iconContainer}>
+                  <img src="/assets/previousSong.png" alt="" />
+                  <img
+                    src={isPlay ? "/assets/pause.png" : "/assets/play.png"}
+                    alt="play/pause"
+                    onClick={handlePlayPause}
+                  />
+                  <img src="/assets/nextSong.png" alt="" />
+                </div>
+              
+              :
               <div className={musicStyle.iconContainer}>
-                <img src="/assets/previousSong.png" alt="" />
-                <img
-                  src={isPlay ? "/assets/pause.png" : "/assets/play.png"}
-                  alt="play/pause"
-                  onClick={handlePlayPause}
-                />
-                <img src="/assets/nextSong.png" alt="" />
-                <YouTube id='yt' ref={youtubeRef} videoId={album?.musicUrl} opts={opts} onEnd={()=>{
-                  setIsplay(false)
-                }} />
+                <p>로딩 중..</p>
               </div>
+              }
               <button onClick={()=>{dispatch(setModal('musicSing'))}} style={{marginTop:40}}>Sing!!</button>
             </div>
             <div className={musicStyle.lyricsContainer}>
