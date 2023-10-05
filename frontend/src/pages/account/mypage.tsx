@@ -99,7 +99,7 @@ const MyPage: React.FC = () => {
   return (
     <div>
         <div className={styles.myprofile}>
-            {accountmodal ==='회원탈퇴' ? <WithDraw closemodal={()=>{setAccountModal('')}} logout={()=>logout()}/>
+            {accountmodal ==='회원탈퇴' ? <WithDraw closemodal={()=>{setAccountModal('')}} logout={()=>logout()} isLogin={isLogin!}/>
              : accountmodal ==='비밀번호 변경' ? <ChangePW closemodal={()=>{setAccountModal('')}} />
              : accountmodal ==='닉네임 변경' ? <ChangeNickName closemodal={()=>{setAccountModal('')}} isLogin={isLogin!} setLogin={(value:userdata)=>setLogin(value)} />
              : null}

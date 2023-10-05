@@ -44,6 +44,7 @@ function App() {
     navigate(pageRoutes[clickedNumber]);
     setPageNumber(clickedNumber);
   };
+  
   return (
     <div className="App" style={{height:'100vh',width:'100vw', overflow:'hidden'}}>
       <div id='modals'>
