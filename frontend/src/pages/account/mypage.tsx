@@ -3,7 +3,7 @@ import styles from './mypage.module.css'
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../axiosinstance";
 import { useDispatch } from "react-redux";
-import { setModal } from "../../store/actions";
+import { setLike, setModal } from "../../store/actions";
 import PitchSmall from "../../components/CardRecord/PitchSmall";
 import VoiceSmall from "../../components/CardRecord/VoiceSmall";
 import RecordStyle from "../../components/CardRecord/RecordSmall.module.css";
@@ -40,6 +40,7 @@ const MyPage: React.FC = () => {
         })
         localStorage.removeItem('AccessToken')
         localStorage.removeItem('RefreshToken')
+        dispatch(setLike(null))
         navigate('/')
     }
     const myimgdelete = () =>{
