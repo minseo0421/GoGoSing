@@ -1,7 +1,7 @@
 import CardLong from "./CardLong";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import styles from "./CardLongContainer.module.css";
-import axiosInstance from "../../axiosinstance";
+
 import axios from "axios";
 
 interface AlbumProps {
@@ -21,28 +21,27 @@ const CardLongSearchContainer: React.FC<Props> = ({albums,keyword,selectedValue}
   const [scrollTop, setscrollTop] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [likelist, setLikeList] = useState<number[]|null>(null);
   const [startX, setStartX] = useState(0);
   const [albumdata, setAlbumData] = useState<AlbumProps[]>([]);
   const [pluspage, setpluspage] = useState(true);
   const [searchpage, setSearchPage] = useState(2);
 
-  useEffect(()=>{
-    setAlbumData(albums)
-    const AccessToken = localStorage.getItem('AccessToken')
-    axiosInstance({
-      method:'get',
-      url:`${process.env.REACT_APP_API_URL}/music/like`,
-      headers:{
-        Authorization:`Bearer ${AccessToken}`
-      }
-    }).then(res=>{
-      const likelists = res.data.map((item:{musicId:number,singer:string,songImg:string|null,title:string}) => item.musicId)
-      setLikeList(likelists)
-    }).catch(err=>{
-      console.log(err)
-    })
-  },[albums])
+  // useEffect(()=>{
+  //   setAlbumData(albums)
+  //   const AccessToken = localStorage.getItem('AccessToken')
+  //   axiosInstance({
+  //     method:'get',
+  //     url:`${process.env.REACT_APP_API_URL}/music/like`,
+  //     headers:{
+  //       Authorization:`Bearer ${AccessToken}`
+  //     }
+  //   }).then(res=>{
+  //     const likelists = res.data.map((item:{musicId:number,singer:string,songImg:string|null,title:string}) => item.musicId)
+  //     setLikeList(likelists)
+  //   }).catch(err=>{
+  //     console.log(err)
+  //   })
+  // },[albums])
 
   const handleStart = (
     e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>
@@ -118,7 +117,7 @@ const CardLongSearchContainer: React.FC<Props> = ({albums,keyword,selectedValue}
       style={{ overflow:'auto'}}
     >
     {albumdata.map((album,index) => (
-        <CardLong idx={index+1} album={album} like={likelist === null ? null : likelist.includes(album.musicId) ? true : false} />
+        <CardLong idx={index+1} album={album} />
       ))}
     </div>
   );

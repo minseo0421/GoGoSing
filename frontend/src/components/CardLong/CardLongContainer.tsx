@@ -1,7 +1,7 @@
 import CardLong from "./CardLong";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import styles from "./CardLongContainer.module.css";
-import axiosInstance from "../../axiosinstance";
+
 
 interface AlbumProps {
   musicId:number;
@@ -18,24 +18,23 @@ const CardLongContainer: React.FC<Props> = ({albums}) => {
   const [scrollTop, setscrollTop] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [likelist, setLikeList] = useState<number[]|null>(null);
   const [startX, setStartX] = useState(0);
 
-  useEffect(()=>{
-    const AccessToken = localStorage.getItem('AccessToken')
-    axiosInstance({
-      method:'get',
-      url:`${process.env.REACT_APP_API_URL}/music/like`,
-      headers:{
-        Authorization:`Bearer ${AccessToken}`
-      }
-    }).then(res=>{
-      const likelists = res.data.map((item:{musicId:number,singer:string,songImg:string|null,title:string}) => item.musicId)
-      setLikeList(likelists)
-    }).catch(err=>{
-      console.log(err)
-    })
-  },[])
+  // useEffect(()=>{
+  //   const AccessToken = localStorage.getItem('AccessToken')
+  //   axiosInstance({
+  //     method:'get',
+  //     url:`${process.env.REACT_APP_API_URL}/music/like`,
+  //     headers:{
+  //       Authorization:`Bearer ${AccessToken}`
+  //     }
+  //   }).then(res=>{
+  //     const likelists = res.data.map((item:{musicId:number,singer:string,songImg:string|null,title:string}) => item.musicId)
+  //     setLikeList(likelists)
+  //   }).catch(err=>{
+  //     console.log(err)
+  //   })
+  // },[])
   const handleStart = (
     e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>
   ) => {
@@ -90,7 +89,7 @@ const CardLongContainer: React.FC<Props> = ({albums}) => {
       onMouseLeave={handleEnd}
     >
       {albums.map((album,index) => {
-        return <CardLong idx={index+1} album={album} like={likelist===null ? null : likelist.includes(album.musicId) ? true: false}/>; // 각 ChartLong 컴포넌트에 album 데이터를 prop으로 전달합니다.
+        return <CardLong idx={index+1} album={album} />; // 각 ChartLong 컴포넌트에 album 데이터를 prop으로 전달합니다.
       })}
     </div>
   );

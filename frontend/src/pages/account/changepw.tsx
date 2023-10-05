@@ -30,7 +30,10 @@ const ChangePW: React.FC<Props> = ({closemodal}) => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
         // 비밀번호 변경 요청 로직
-        if (nowpassword==='' || values.password==='' || values.confirmPassword==='')
+        if (nowpassword==='' || values.password==='' || values.confirmPassword==='') {
+          alert('비밀번호를 입력해주세요')
+          return
+        }
         if (nowpassword===values.password){
           alert('변경 전 비밀번호와 동일합니다')
           return
@@ -47,8 +50,11 @@ const ChangePW: React.FC<Props> = ({closemodal}) => {
             },
         }).then(res=>{
             console.log(res)
+            alert('비밀번호가 변경되었습니다')
+            closemodal()
         }).catch(err=>{
             console.log(err)
+            alert('현재 비밀번호가 일치하지 않습니다.')
 
         })
 
