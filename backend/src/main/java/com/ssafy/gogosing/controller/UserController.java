@@ -95,6 +95,22 @@ public class UserController {
                 .body(userService.getUserDetail(userDetails.getUsername()));
     }
 
+    @ApiOperation(value = "유저 상세정보 음역대 조회")
+    @GetMapping("/detail/voiceRange")
+    public ResponseEntity<?> getUserVocieRange(@AuthenticationPrincipal UserDetails userDetails) {
+
+        return ResponseEntity.ok()
+                .body(userService.getUserVocieRange(userDetails.getUsername()));
+    }
+
+    @ApiOperation(value = "유저 상세정보 내 목소리 파일 조회")
+    @GetMapping("/detail/voiceFile")
+    public ResponseEntity<?> getUserVocieFile(@AuthenticationPrincipal UserDetails userDetails) {
+
+        return ResponseEntity.ok()
+                .body(userService.getUserVocieFile(userDetails.getUsername()));
+    }
+
     @ApiOperation(value = "닉네임 중복 확인")
     @GetMapping("/nicknameCheck")
     public ResponseEntity<?> nicknameUsefulCheck(@RequestParam("nickname") String nickname) throws Exception {
