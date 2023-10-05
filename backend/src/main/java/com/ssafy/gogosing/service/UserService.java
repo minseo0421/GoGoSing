@@ -1,12 +1,20 @@
 package com.ssafy.gogosing.service;
 
 import com.ssafy.gogosing.domain.user.User;
+import com.ssafy.gogosing.dto.user.request.UserPasswordUpdateRequestDto;
+import com.ssafy.gogosing.dto.user.request.UserQuitRequestDto;
 import com.ssafy.gogosing.dto.user.request.UserSignUpRequestDto;
 import com.ssafy.gogosing.dto.user.request.UserSingUpPlusRequestDto;
+import com.ssafy.gogosing.dto.user.response.UserMypageResponseDto;
+import com.ssafy.gogosing.dto.user.response.UserMypageVoiceFileResponseDto;
+import com.ssafy.gogosing.dto.user.response.UserMypageVoiceRangeResponseDto;
+import com.ssafy.gogosing.global.redis.repository.CertificationNumberDao;
 import com.ssafy.gogosing.global.redis.service.RedisAccessTokenService;
 import com.ssafy.gogosing.global.redis.service.RedisRefreshTokenService;
 import com.ssafy.gogosing.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +36,12 @@ public class UserService {
 
     private final RedisAccessTokenService redisAccessTokenService;
 
+    private final EmailService emailCertificationService;
+
+    private final CertificationNumberDao certificationNumberDao;
+
+    public static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
     /**
      * 일반 회원 가입
      */
@@ -45,6 +59,11 @@ public class UserService {
             throw new IllegalStateException("이메일 형식을 다시 맞춰주세요.");
         }
 
+        emailCertificationService.verifyEmail(userSignUpRequestDto.getEmailCertificationNumber(), userSignUpRequestDto.getEmail());
+
+        // 인증된 이메일로 가입을 시도하면 redis에 저장한 인증번호 삭제
+        certificationNumberDao.removeCertificationNumber(userSignUpRequestDto.getEmail());
+
         // 비밀번호 유효성 검사
         if (!Pattern.matches("^.*(?=^.{9,15}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$", userSignUpRequestDto.getPassword())) {
             throw new IllegalStateException("비밀번호 형식이 맞지않습니다.");
@@ -54,7 +73,7 @@ public class UserService {
 
         user.passwordEncode(passwordEncoder);
 
-        user.updateProfileImage("DefaultProfile.png");
+        user.updateProfileImage("https://gogosing.s3.ap-northeast-2.amazonaws.com/DefaultProfile.png");
 
         System.out.println(user.getEmail());
         User saveUser = userRepository.save(user);
@@ -75,7 +94,7 @@ public class UserService {
                 .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
 
         if(user.getProfileImg() == null) {
-            user.updateProfileImage("DefaultProfile.png");
+            user.updateProfileImage("https://gogosing.s3.ap-northeast-2.amazonaws.com/DefaultProfile.png");
         }
 
         user.updateSignupPlus(userSingUpPlusRequestDto);
@@ -89,13 +108,110 @@ public class UserService {
      * 로그아웃
      * 성공 시 accessToken blacklist 추가 및 refreshToken 삭제
      */
-    public Long logout(String accessToken, Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+    public Long logout(String accessToken, UserDetails userDetails) {
+
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
 
         redisRefreshTokenService.deleteRefreshToken(user.getEmail());
         redisAccessTokenService.setRedisAccessToken(accessToken.replace("Bearer ", ""), "LOGOUT");
 
-        return id;
+        return user.getId();
+    }
+
+    /**
+     * 회원 탈퇴
+     * 성공 시 accessToken blacklist 추가 및 refreshToken 삭제
+     */
+    @Transactional
+    public Long quit(String accessToken, UserQuitRequestDto userQuitRequestDto, UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1));
+
+        if(userQuitRequestDto.isSocialType()) {
+            if(!userQuitRequestDto.getCheckPassword().equals("회원탈퇴")){
+                throw new RuntimeException("회원 탈퇴 문구를 다시 입력하여 주세요.");
+            }
+        } else {
+            user.checkPassword(userQuitRequestDto.getCheckPassword(), passwordEncoder);
+        }
+
+        user.updateDeletedDate();
+        userRepository.save(user);
+
+        redisRefreshTokenService.deleteRefreshToken(user.getEmail());
+        redisAccessTokenService.setRedisAccessToken(accessToken.replace("Bearer ", ""), "QUIT");
+
+        return user.getId();
+    }
+
+    /**
+     * 마이페이지에 제공할 회원 상세정보 가져오기
+     */
+    public UserMypageResponseDto getUserDetail(String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+        return new UserMypageResponseDto(user);
+    }
+
+    /**
+     * 마이페이지에 제공할 회원 음역대정보 가져오기
+     */
+    public UserMypageVoiceRangeResponseDto getUserVocieRange(String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+        return new UserMypageVoiceRangeResponseDto(user);
+    }
+
+    /**
+     * 마이페이지에 제공할 회원 목소리 파일 가져오기
+     */
+    public UserMypageVoiceFileResponseDto getUserVocieFile(String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+        return new UserMypageVoiceFileResponseDto(user);
+    }
+
+    public void nicknameUsefulCheck(String nickname) throws Exception {
+
+        if(userRepository.findByNickname(nickname).isPresent())
+            throw new Exception("이미 존재하는 닉네임입니다.");
+    }
+
+    @Transactional
+    public void updateNickname(String nickname, UserDetails userDetails) throws Exception {
+        logger.info("*** updateNickname 메소드 호출");
+
+        User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(() ->
+        {
+            logger.info("*** 존재하지 않는 유저");
+            return new EmptyResultDataAccessException("해당 유저는 존재하지 않습니다.", 1);
+        });
+        nicknameUsefulCheck(nickname);
+        user.updateNickname(nickname);
+        userRepository.save(user);
+        logger.info("*** updateNickname 메소드 종료");
+    }
+
+    @Transactional
+    public Long updatePassword(UserPasswordUpdateRequestDto userPasswordUpdateRequestDto, UserDetails userDetails) throws Exception {
+
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+        user.checkPassword(userPasswordUpdateRequestDto.getCheckPassword(), passwordEncoder);
+
+        // 비밀번호 유효성 검사
+        if (!Pattern.matches("^.*(?=^.{9,15}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$", userPasswordUpdateRequestDto.getNewPassword())) {
+            throw new IllegalStateException("비밀번호 형식이 맞지않습니다.");
+        }
+
+        user.updatePassword(userPasswordUpdateRequestDto.getNewPassword(), passwordEncoder);
+        userRepository.save(user);
+
+        return user.getId();
     }
 }

@@ -23,13 +23,13 @@ public class User extends BaseTimeEntity {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email")
     private String email; // 이메일이자 로그인할 때 사용하는 id
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "nickname", unique = true)
+    @Column(name = "nickname")
     private String nickname;
 
     @Enumerated(EnumType.STRING)
@@ -56,14 +56,23 @@ public class User extends BaseTimeEntity {
     @Column(name = "deleted_date")
     private LocalDateTime deletedDate;
 
-    @Column(name = "vocal_range_highest")
-    private String vocalRangeHighest;
+    @Column(name = "voice_range_highest")
+    private String voiceRangeHighest;
 
-    @Column(name = "vocal_range_lowest")
-    private String vocalRangeLowest;
+    @Column(name = "voice_range_lowest")
+    private String voiceRangeLowest;
+
+    @Column(name = "voice_file")
+    private String voiceFile;
+
+    @Column(name = "voice_file_name")
+    private String voiceFileName;
+
+    @Column(name = "max_pitch")
+    private Double maxPitch;
 
     @Builder
-    public User(Long id, String email, String password, String nickname, Gender gender, LocalDate birth, String profileImg, Role role, SocialType socialType, String socialId, LocalDateTime deletedDate, String vocalRangeHighest, String vocalRangeLowest) {
+    public User(Long id, String email, String password, String nickname, Gender gender, LocalDate birth, String profileImg, Role role, SocialType socialType, String socialId, LocalDateTime deletedDate, String voiceRangeHighest, String voiceRangeLowest, Double maxPitch, String voiceFileName) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -75,8 +84,10 @@ public class User extends BaseTimeEntity {
         this.socialType = socialType;
         this.socialId = socialId;
         this.deletedDate = deletedDate;
-        this.vocalRangeHighest = vocalRangeHighest;
-        this.vocalRangeLowest = vocalRangeLowest;
+        this.voiceRangeHighest = voiceRangeHighest;
+        this.voiceRangeLowest = voiceRangeLowest;
+        this.maxPitch = maxPitch;
+        this.voiceFileName = voiceFileName;
     }
 
     /**
@@ -97,6 +108,66 @@ public class User extends BaseTimeEntity {
         this.gender = Gender.valueOf(userSingUpPlusRequestDto.getGender());
         this.birth = LocalDate.parse(userSingUpPlusRequestDto.getBirth());
         // 권한 수정
+        this.role = Role.FIRST;
+    }
+
+    /**
+     * 첫 로그인 이후 표시 변경
+     */
+    public void updateFirstRole() {
         this.role = Role.USER;
+    }
+
+    /**
+     * 비밀번호 변경후 암호화
+     */
+    public void updatePassword(String tempPassword, PasswordEncoder passwordEncoder) {
+        this.password = tempPassword;
+        passwordEncode(passwordEncoder);
+    }
+
+    /**
+     * 암호화된 비밀번호 일치 여부 확인
+     */
+    public void checkPassword(String checkPassword, PasswordEncoder passwordEncoder) {
+        if(!passwordEncoder.matches(checkPassword, this.password)) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    /**
+     * 내 목소리 파일 변경
+     */
+    public Long updateVoiceFile(String voiceFile) {
+        this.voiceFile = voiceFile;
+
+        return this.id;
+    }
+
+    public void updateVoiceRange(String voiceRangeHighest, String voiceRangeLowest, String voiceRangeNum) {
+        this.voiceRangeHighest = voiceRangeHighest;
+        this.voiceRangeLowest = voiceRangeLowest;
+        this.maxPitch = Double.valueOf(voiceRangeNum);
+    }
+
+    /**
+     * 회원탈퇴 날짜 등록
+     */
+    public void updateDeletedDate() {
+        this.deletedDate = LocalDateTime.now();
+    }
+
+    /**
+     * 닉네임 변경
+     */
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    /**
+     * 내 파일 이름 변경
+     */
+    public void updatevoiceFileName(String fileName) {
+        this.voiceFileName = fileName;
     }
 }

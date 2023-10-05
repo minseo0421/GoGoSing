@@ -1,0 +1,56 @@
+.modaloverlay {
+    position: fixed; /* 화면에 고정된 위치에 오버레이를 배치합니다 */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999; /* 오버레이를 다른 요소 위에 표시하기 위한 z-index 값입니다 */
+    display: flex;
+    justify-content: center; /* 오버레이 내의 내용을 가운데 정렬합니다 */
+    align-items: center;
+}
+
+.modal {
+    position: fixed;
+    top:35%;
+    left: 5%;
+    width: 90%;
+    height: 280px;
+    display:flex;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    flex-direction:column;
+    background-image:url('../../../public/assets/background.png');
+    padding:20px;
+    box-sizing:border-box;
+}
+
+.input {
+    background-color: #D7D7D7;
+    border:1px solid white;
+    border-radius: 1rem;
+    width: 80%;
+    height: 30px;
+    padding:0 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.btn {
+    width:90px;
+    height: 35px;
+    border-radius: 10px;
+    color:white;
+}
+
+.input_account {
+    background-color: #D7D7D7;
+    border:1px solid white;
+    border-radius: 1rem;
+    width: 90%;
+    margin:0 5%;
+    height: 40px;
+    padding:0 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+}

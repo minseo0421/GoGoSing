@@ -1,0 +1,55 @@
+.container {
+    height: 97vh;
+}
+
+.genrelist {
+    width: 100%;
+    margin: 7% auto;
+}
+
+.genre {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    margin:5px;
+    position: relative;
+    display: inline-block;
+    align-items:center;
+    justify-content:center;
+    box-sizing: border-box;
+}
+
+.genreimg {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.5);
+}
+.sel_genre {
+    filter: blur(2px);
+}
+
+.checkmark {
+    position: absolute;
+    top: 50%; /* 컨테이너 상단에서 50% 높이로 이동 */
+    left: 50%; /* 컨테이너 왼쪽에서 50% 위치로 이동 */
+    transform: translate(-50%, -50%); /* 텍스트를 수평 및 수직으로 가운데 정렬 */
+    font-size: 50px; /* 텍스트 크기 조절 */
+    color: #000000; /* 텍스트 색상 설정 */
+    /* padding: 5px; 텍스트와 경계 사이의 여백 조절 */
+    z-index: 9999;
+    padding-top:10px;
+    box-sizing: border-box;
+    width: 100px;
+    height: 100px;
+    border: 3px solid black;
+    border-radius: 50%;
+}
+.btn {
+    border: 1px solid white;
+    width:40%;
+    height: 50px;
+    border-radius: 1rem;
+    background-color: rgba(255, 203, 203, 0.5);
+    color:white;
+}

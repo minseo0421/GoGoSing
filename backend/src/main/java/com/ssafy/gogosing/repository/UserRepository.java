@@ -3,16 +3,19 @@ package com.ssafy.gogosing.repository;
 import com.ssafy.gogosing.domain.user.SocialType;
 import com.ssafy.gogosing.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
 public interface UserRepository
         extends JpaRepository<User, Long> {
 
+    @Query("SELECT u FROM User u WHERE u.email = :email AND u.deletedDate IS NULL")
     Optional<User> findByEmail(String email);
 
     Optional<User> findByEmailAndDeletedDateIsNull(String email);
 
+    @Query("SELECT u FROM User u WHERE u.nickname = :nickname AND u.deletedDate IS NULL")
     Optional<User> findByNickname(String nickname);
 
     /**
