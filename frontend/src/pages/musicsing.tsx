@@ -409,10 +409,13 @@ const MusicSing: React.FC = () => {
                     <AudioPlayer audioSourceURL= {audioSourceURL}/>
                     )}
                     </div>
-                    <p>녹음 파일을 확인하고 분석을 진행해주세요</p>
+                    
                     {isRecording && audioSourceURL && (
+                      <>
+                      <p>녹음 파일을 확인하고 분석을 진행해주세요</p>
                       <p style={{ background: 'linear-gradient(90deg, #BB8DFF 0.69%, #8F76FE 100.35%)',borderRadius: '50px',border: 'none', color: '#fff', margin:'0 20px',height:'30px',display:'flex',justifyContent:'center',alignItems:'center'}} 
                       onClick={getMergeMusic}>MR 합치기</p>
+                      </>
                     )}
                     <div style={{ display: 'flex', flexDirection:'row',justifyContent: 'space-between'}}>
                     {isRecording && audioSourceURL && (
