@@ -270,21 +270,21 @@ const MainContainer: React.FC = () => {
       <PitchLong pitchData={pitchData} />
       {AccessToken &&
         <>
-      <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
-        <span style={{fontSize:'20px'}}>당신의 좋아요 추천 노래❤️</span>
-        {likechart.length!==0 &&
-          <span style={{fontSize:'16px'}} onClick={()=>{
-          if (AccessToken) {
-            navigate('/chart?type=like')
-          } else {
-            alert('로그인이 필요합니다')
-            navigate('/login')
-          }
-          }}>더보기</span>
-        }
-      </div>
-      {likechart.length===0 ? <p>조회 결과가 없습니다.😭 <br /> 좋아요를 누르고 추천을 받아보세요!</p>:
-      <CardSmallContainer albums={likechart.slice(0,10)} />}
+          <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
+            <span style={{fontSize:'20px'}}>당신의 좋아요 추천 노래❤️</span>
+            {likechart.length!==0 &&
+              <span style={{fontSize:'16px'}} onClick={()=>{
+              if (AccessToken) {
+                navigate('/chart?type=like')
+              } else {
+                alert('로그인이 필요합니다')
+                navigate('/login')
+              }
+              }}>더보기</span>
+            }
+          </div>
+          {likechart.length===0 ? <p>조회 결과가 없습니다.😭 <br /> 좋아요를 누르고 추천을 받아보세요!</p>:
+          <CardSmallContainer albums={likechart.slice(0,10)} />}
       </>
       }
 

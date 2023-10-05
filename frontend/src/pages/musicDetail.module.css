@@ -64,21 +64,30 @@
 }
 
 .musicImage {
-  margin: 10% 0;
+  margin-top: 5%;
+  margin-bottom: 10%;
   width: 150px;
   height: 150px;
   border-radius: 20px;
 }
 
+.numFont {
+  background-color: aliceblue;
+  color:black;
+  width:50px;
+  margin:auto;
+  padding: 2px 5px;
+  border-radius: 10px;
+}
 .titleFont {
   margin-top: 10px;
   font-size: 18px;
+  font-weight: bold;
 }
 .singerFont {
   margin-top: 10px;
-  font-weight: bold;
   font-size: 16px;
-  margin-bottom: 3%;
+  /* margin-bottom: 3%; */
 }
 
 .icon {

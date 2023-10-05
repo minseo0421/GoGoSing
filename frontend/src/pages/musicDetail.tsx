@@ -185,6 +185,7 @@ const MusicDetail: React.FC = () => {
             width: "105%",
           }} onError={()=>setImgErr(true)} />}
           <div className={musicStyle.musicContainer}>
+            <div className={musicStyle.numFont}>{album?.musicId}</div>
             <div className={musicStyle.titleFont}>{album?.title}</div>
             <div className={musicStyle.singerFont}>{album?.singer}</div>
             {imgErr ? <img crossOrigin="anonymous" src='assets/default_album.png' alt="" className={musicStyle.musicImage}  />
