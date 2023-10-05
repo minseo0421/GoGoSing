@@ -228,7 +228,7 @@ const MainContainer: React.FC = () => {
       </div>
 
       {plusview ? 
-      <>
+      <div>
         <div style={{display:'flex', width:'90%', margin:'2% 5%', justifyContent:'space-between',alignItems:'center'}}>
           <div onClick={()=>{navigate('/genremusic?type=락/메탈')}} style={{backgroundColor:'#DF3636',width:'30%',height:'40px', justifyContent:'center',alignItems:'center', display:'flex',fontSize:'18px',borderRadius:10,border:'0.5px solid white'}}>락/메탈</div> 
           <div onClick={()=>{navigate('/genremusic?type=포크/블루스')}} style={{backgroundColor:'#CF5405',width:'30%',height:'40px', justifyContent:'center',alignItems:'center', display:'flex',fontSize:'18px',borderRadius:10,border:'0.5px solid white'}}>포크/블루스</div> 
@@ -239,7 +239,7 @@ const MainContainer: React.FC = () => {
           <div onClick={()=>{navigate('/genremusic?type=동요')}} style={{backgroundColor:'#FABE78',width:'30%',height:'40px', justifyContent:'center',alignItems:'center', display:'flex',fontSize:'18px',borderRadius:10,border:'0.5px solid white'}}>동요</div> 
           <div onClick={()=>{navigate('/genremusic?type=CCM')}} style={{backgroundColor:'#D4D3EA',width:'30%',height:'40px', justifyContent:'center',alignItems:'center', display:'flex',fontSize:'18px',borderRadius:10,border:'0.5px solid white'}}>CCM</div>
         </div>
-      </>
+      </div>
       : null}
       {plusview ? <p onClick={()=>setplusview(false)} style={{margin:0,marginBottom:20}}>⇧ 숨기기</p>: <p onClick={()=>setplusview(true)} style={{margin:0,marginBottom:20}}>더보기 ⇩</p> }
       <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
