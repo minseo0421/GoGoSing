@@ -162,6 +162,10 @@ public class UserService {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 
+        if(user.getVoiceRangeHighest() == null) {
+            throw new EmptyResultDataAccessException("음역대 분석 데이터가 존재하지 않습니다.", 1);
+        }
+
         return new UserMypageVoiceRangeResponseDto(user);
     }
 
@@ -171,6 +175,10 @@ public class UserService {
     public UserMypageVoiceFileResponseDto getUserVocieFile(String userEmail) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+        if(user.getVoiceRangeHighest() == null) {
+            throw new EmptyResultDataAccessException("파형 분석 데이터가 존재하지 않습니다.", 1);
+        }
 
         return new UserMypageVoiceFileResponseDto(user);
     }
