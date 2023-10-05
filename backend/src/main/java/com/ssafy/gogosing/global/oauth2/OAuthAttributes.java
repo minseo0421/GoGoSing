@@ -80,7 +80,8 @@ public class OAuthAttributes {
                 .socialId(oAuth2UserInfo.getId())
                 .email(UUID.randomUUID() + "@socialUser.com")
 //                .gender(oAuth2UserInfo.getGender())
-                .profileImg(oAuth2UserInfo.getProfileImg())
+//                .profileImg(oAuth2UserInfo.getProfileImg())
+                .profileImg("https://gogosing.s3.ap-northeast-2.amazonaws.com/DefaultProfile.png")
                 .role(Role.GUEST)
                 .build();
     }
