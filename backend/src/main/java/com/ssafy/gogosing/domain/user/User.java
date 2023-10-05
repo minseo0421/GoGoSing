@@ -127,6 +127,15 @@ public class User extends BaseTimeEntity {
     }
 
     /**
+     * 암호화된 비밀번호 일치 여부 확인
+     */
+    public void checkPassword(String checkPassword, PasswordEncoder passwordEncoder) {
+        if(!passwordEncoder.matches(checkPassword, this.password)) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    /**
      * 내 목소리 파일 변경
      */
     public Long updateVoiceFile(String voiceFile) {

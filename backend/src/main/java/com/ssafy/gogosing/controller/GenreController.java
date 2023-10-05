@@ -58,4 +58,9 @@ public class GenreController {
 		return ResponseEntity.ok().body(result);
 	}
 
+	@ApiOperation(value = "유저 노래 좋아요 기반 추천 리스트")
+	@GetMapping("/like/list")
+	public ResponseEntity<?> recommendListMusicOnLike(@AuthenticationPrincipal UserDetails userDetails) throws Exception {
+		return ResponseEntity.ok().body(genreService.recommendListMusicOnLike(userDetails));
+	}
 }
