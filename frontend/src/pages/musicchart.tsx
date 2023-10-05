@@ -6,6 +6,7 @@ import { setPage } from "../store/actions";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import axiosInstance from "../axiosinstance";
+import { useNavigate } from "react-router-dom";
 
 interface AlbumProps {
   musicId:number;
@@ -16,8 +17,9 @@ interface AlbumProps {
 const MusicChart: React.FC = () => {
   const [chartpage, setChartPage] = useState('인기차트')
   const [albums, setAlbums] = useState<AlbumProps[]>([])
+  const [nodata, setNodata] = useState<boolean>(false)
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   useEffect(()=>{
     const params = new URL(document.location.toString()).searchParams;
     const type = params.get('type')
@@ -41,7 +43,7 @@ const MusicChart: React.FC = () => {
         setChartPage('좋아요추천')
       }
       const AccessToken = localStorage.getItem('AccessToken')
-      const page = type==='like' ? '/music/like/list':  type==='pitch' ? '/analyze/rangeMusicList': '/analyze/waveMusicList'
+      const page = type==='like' ? '/music/like/list':  type==='pitch' ? '/analyze/rangeMusicList':  '/analyze/waveMusicList'
       axiosInstance({
         method:'get',
         url:`${process.env.REACT_APP_API_URL}${page}`,
@@ -68,18 +70,39 @@ const MusicChart: React.FC = () => {
       })
     } else {
       const AccessToken = localStorage.getItem('AccessToken')
-      const page = name==='좋아요추천' ? '/music/like/list':  name==='음역대추천' ? '/analyze/rangeMusicList': '/analyze/waveMusicList'
-      axiosInstance({
-        method:'get',
-        url:`${process.env.REACT_APP_API_URL}${page}`,
-        headers:{
-          Authorization:`Bearer ${AccessToken}`
-        }}).then(res=>{
-        setAlbums(res.data)
-        setChartPage(name)
-      }).catch(err=>{
-        console.log(err)
-      })
+
+      if (AccessToken) {
+        const page = name==='좋아요추천' ? '/music/like/list':  name==='음역대추천' ? '/analyze/rangeMusicList': '/analyze/waveMusicList'
+        axiosInstance({
+          method:'get',
+          url:`${process.env.REACT_APP_API_URL}${page}`,
+          headers:{
+            Authorization:`Bearer ${AccessToken}`
+          }}).then(res=>{
+            setAlbums(res.data)
+            if (name==='좋아요추천') {
+              if (res.data.length === 0) {
+                setNodata(true)
+              } else {
+                setNodata(false)
+              }
+            }
+            setChartPage(name)
+              
+        }).catch(err=>{
+          console.log(err)
+          if (name ==='음역대추천') {
+            alert('음역대 추천 데이터없음')
+            navigate('/record')
+          } else if (name ==='목소리추천') {
+            alert('목소리 추천 데이터없음')
+            navigate('/musicupload')
+          } 
+        })
+      } else {
+        alert('로그인이 필요한 기능입니다.')
+        navigate('/login')
+      }
     }
   }
   
@@ -98,6 +121,7 @@ const MusicChart: React.FC = () => {
         </span>
       </div>
       <div style={{height:'87%',marginTop:'3%', overflow:'auto'}}>
+        {nodata && chartpage==='좋아요추천' && <p style={{fontSize:18, backgroundColor:'rgba(240, 248, 255,0.2)', borderRadius:20, width:'80%', marginLeft:'10%', padding:'10px'}}>조회 결과가 없습니다.😭 <br /> 좋아요를 누르고 추천을 받아보세요!</p> }
         <CardLongContainer albums={albums} />
       </div>
     </div>

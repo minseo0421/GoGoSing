@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import RecordLong from "./RecordLong.module.css";
 import CardSmallContainer from "../CardSmall/CardSmallContainer";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../axiosinstance";
 
-const VoiceLong: React.FC = () => {
-  const [pitchData, setPitchData] = useState<any[]|null>(null);
+
+interface props {
+  voiceData:any[]|null
+}
+
+const VoiceLong: React.FC<props> = ({voiceData}) => {
   const navigate = useNavigate();
 
   const musicupload = () => {
@@ -17,32 +20,12 @@ const VoiceLong: React.FC = () => {
     }
   };
 
-  const getPitchList = () => {
-    axiosInstance({
-        method: 'get',
-        url: `${process.env.REACT_APP_API_URL}/analyze/waveMusicList`, 
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
-        },
-      }).then(res=>{
-        setPitchData(res.data);
-      }).catch(err=>{
-        console.log(err)
-      })
-    }
-
-  useEffect(() => {
-    const token = localStorage.getItem("AccessToken");
-    if (token) {
-      getPitchList();
-    }
-  }, []);
 
   return (
     <div>
-      {pitchData===null ? 
+      {voiceData===null ? 
         <div className={RecordLong.container}>
-            <p>등록된 목소리가 없으세요 !</p>
+            <p>등록된 목소리가 없습니다 !</p>
             <img
               className={RecordLong.PitchIcon}
               onClick={musicupload}
@@ -51,7 +34,7 @@ const VoiceLong: React.FC = () => {
             />
             <p onClick={musicupload}>등록하러 가기</p>
       </div>
-       : pitchData.length===0 ? 
+       : voiceData.length===0 ? 
         <div className={RecordLong.container}>
           <p>다른 목소리를 등록해주세요!</p>
             <img
@@ -62,7 +45,7 @@ const VoiceLong: React.FC = () => {
             />
           <p onClick={musicupload}>등록하러 가기</p>
         </div>
-         : <CardSmallContainer albums={pitchData.slice(0,10)} />}
+         : <CardSmallContainer albums={voiceData.slice(0,10)} />}
     </div>
   );
 };

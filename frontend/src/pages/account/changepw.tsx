@@ -83,8 +83,8 @@ const ChangePW: React.FC<Props> = ({closemodal}) => {
             {formik.values.confirmPassword === '' ? <span>　</span> : formik.errors.confirmPassword ? <span>{formik.errors.confirmPassword}</span> : formik.errors.password ? <span>비밀번호를 확인해주세요.</span>:<span style={{color:'green'}}>비밀번호가 일치합니다.</span>}
           </p>
           <div style={{marginTop:'1%'}}>
-              <button style={{width:'40%',marginRight:'10%'}} type='submit'>변경</button>
-              <button style={{width:'40%'}} type='button' onClick={()=>{closemodal()}}>취소</button>
+              <button style={{width:'25%',marginRight:'10%',borderRadius:10,border:'0.5px solid black',backgroundColor:'#7290FA'}} type='submit'>변경</button>
+              <button style={{width:'25%',borderRadius:10,border:'0.5px solid black',backgroundColor:'#F27474'}} type='button' onClick={()=>{closemodal()}}>취소</button>
           </div>
         </form>
     </div>
