@@ -85,37 +85,48 @@ public class GenreService {
 
 		List<LikeMusicListResponseDto> result = new ArrayList<>();
 		for (Music music : musicList) {
-			result.add(new LikeMusicListResponseDto(music.getId(), music.getTitle(), music.getSinger(), music.getSongImg()));
+			result.add(
+				new LikeMusicListResponseDto(music.getId(), music.getTitle(), music.getSinger(), music.getSongImg()));
 		}
 		return result;
 	}
 
-	public List<GenreMusicListResponseDto> recommendListMusicOnLike(UserDetails userDetails) {
+	public List<LikeMusicListResponseDto> recommendListMusicOnLike(UserDetails userDetails) {
 		logger.info("*** recommendListOnGenre 메소드 호출");
-		Optional<User> optionalUser = userRepository.findByEmail(userDetails.getUsername());
-		List<GenreMusicListResponseDto> result = new ArrayList<>();
+		User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
+		List<UserLikeGenre> userLikeGenres = userLikeGenreRepository.findByUserId(user.getId());
+		List<LikeMusicListResponseDto> result = new ArrayList<>();
 
-		if (optionalUser.isEmpty()) {
-			logger.info("*** 유저가 존재하지 않음");
-			// 인기많은 노래 10개정도
-			// return musicRepository.findTopByPick();
-		} else {
-			User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
-			List<UserLikeGenre> userLikeGenres = userLikeGenreRepository.findByUserId(user.getId());
-			// 장르 선택했는지
-			if (userLikeGenres.isEmpty()) {
-				// 선택 안했을 때는 인기 10개
-				// return musicRepository.findTopByPick();
-			} else {
-				// 좋아하는 장르 선택했을 때는 장르 기반으로 10개
-				List<Music> musicList = musicRepository.findTopByPick();
-				for (Music music : musicList) {
-					result.add(new GenreMusicListResponseDto(music.getId(), music.getTitle(), music.getSinger(), music.getSongImg(), music.getViewCount()));
-				}
-				return result;
+		// 장르 선택했는지
+		if (userLikeGenres.isEmpty()) {
+			// 선택 안했을 때는 인기 10개
+			List<Music> musicList = musicRepository.findTopByPick();
+			for (Music music : musicList) {
+				result.add(
+					new LikeMusicListResponseDto(music.getId(), music.getTitle(), music.getSinger(),
+						music.getSongImg()));
 			}
+			return result;
+		} else {
+			// 좋아하는 장르 선택했을 때는 장르 기반으로 10개
+			List<Music> musicList = musicRepository.findListByPick(findGenres(userDetails));
+			for (Music music : musicList) {
+				result.add(new LikeMusicListResponseDto(music.getId(), music.getTitle(), music.getSinger(),
+					music.getSongImg()));
+			}
+			return result;
 		}
+	}
 
+	public List<LikeMusicListResponseDto> recommendListMusic() {
+		logger.info("*** recommendListMusic 메소드 호출");
+		List<LikeMusicListResponseDto> result = new ArrayList<>();
+
+		List<Music> musicList = musicRepository.findTopByPick();
+		for (Music music : musicList) {
+			result.add(
+				new LikeMusicListResponseDto(music.getId(), music.getTitle(), music.getSinger(), music.getSongImg()));
+		}
 		return result;
 	}
 }

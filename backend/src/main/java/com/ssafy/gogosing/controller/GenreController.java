@@ -59,9 +59,15 @@ public class GenreController {
 		return ResponseEntity.ok().body(result);
 	}
 
-	@ApiOperation(value = "유저 노래 좋아요 기반 추천 리스트")
+	@ApiOperation(value = "회원 장르 좋아요 기반 추천 리스트")
 	@GetMapping("/like/list")
 	public ResponseEntity<?> recommendListMusicOnLike(@AuthenticationPrincipal UserDetails userDetails) throws Exception {
 		return ResponseEntity.ok().body(genreService.recommendListMusicOnLike(userDetails));
+	}
+
+	@ApiOperation(value = "비회원 장르 추천 리스트")
+	@GetMapping("/list")
+	public ResponseEntity<?> recommendListMusic() throws Exception {
+		return ResponseEntity.ok().body(genreService.recommendListMusic());
 	}
 }
