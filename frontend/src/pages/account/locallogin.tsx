@@ -19,7 +19,7 @@ const LocalLogin: React.FC = () => {
         if (res.headers['user_role']==='first') {localStorage.setItem('user_role','first')}
         navigate('/')
       }).catch(err=>{
-        console.log(err)
+        alert(err.response.data)
       })
     }
 

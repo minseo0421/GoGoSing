@@ -116,7 +116,7 @@ const MainContainer: React.FC = () => {
         <span style={{fontSize:'20px'}}>이 노래는 어떠신가요?</span>
       </div>
       <CarouselComponent />
-      <div style={{display:'flex', width:'90%', margin:'0 5%', marginTop:'-10%', justifyContent:'space-between',alignItems:'center'}}>
+      <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
         <span style={{fontSize:'20px'}}>장르별 인기차트</span>
       </div>
       <div style={{display:'flex', width:'90%', margin:'2% 5%', justifyContent:'space-between',alignItems:'center'}}>
