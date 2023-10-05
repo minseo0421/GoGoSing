@@ -35,14 +35,14 @@
     left: 50%; /* 컨테이너 왼쪽에서 50% 위치로 이동 */
     transform: translate(-50%, -50%); /* 텍스트를 수평 및 수직으로 가운데 정렬 */
     font-size: 50px; /* 텍스트 크기 조절 */
-    color: #000000; /* 텍스트 색상 설정 */
+    color: rgb(13, 20, 59); /* 텍스트 색상 설정 */
     /* padding: 5px; 텍스트와 경계 사이의 여백 조절 */
     z-index: 9999;
     padding-top:10px;
     box-sizing: border-box;
     width: 100px;
     height: 100px;
-    border: 3px solid black;
+    border: 2px solid rgb(204, 214, 253);
     border-radius: 50%;
 }
 .btn {
