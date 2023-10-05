@@ -47,7 +47,7 @@ const WithDraw: React.FC<Props> = ({closemodal,logout,isLogin}) => {
           <p>계정의 모든 데이터가 삭제됩니다. <br />
           {isLogin.socialType==='X' ? 
            <span>본인인증을 위해 비밀번호를 입력해주세요.</span>
-          : <span>'회원탈퇴에 동의합니다'를 입력해주세요.</span>}</p>
+          : <span>'회원탈퇴'를 입력해주세요.</span>}</p>
           <input className={styles.input_account} type={isLogin.socialType==='X' ? 'password':'text'} value={password} onChange={(e)=>{setPassword(e.target.value)}} autoComplete="current-password"/>
           <div style={{marginTop:'10%',display:'flex',width:'70%',marginLeft:'15%',justifyContent:'space-evenly',alignItems:'center'}}>
               <div style={{width:'30%',backgroundColor:'#F27474',borderRadius:10,padding:'5px 10px',border:'0.5px solid black',color:'black'}} onClick={withdraw}>탈퇴</div>

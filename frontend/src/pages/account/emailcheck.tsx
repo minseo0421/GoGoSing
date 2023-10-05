@@ -49,8 +49,8 @@ const EmailCheck: React.FC<Props> = ({email,closemodal,success}) => {
             type="text" placeholder="비밀번호" value={isNum} onChange={(e)=>{setNum(e.target.value)}} />
         </div>
         <div style={{margin:'20px 0'}}>
-            <button className={styles.btn} style={{marginRight:'10px',backgroundColor:'blue'}} onClick={()=>checknum()}>확인</button>
-            <button className={styles.btn} style={{marginLeft:'10px',backgroundColor:'red'}} onClick={()=>closemodal()}>취소</button>
+            <button className={styles.btn} style={{marginRight:'10px',backgroundColor:'#7290FA',border:'1px solid white'}} onClick={()=>checknum()}>확인</button>
+            <button className={styles.btn} style={{marginLeft:'10px',backgroundColor:'#F27474',border:'1px solid white'}} onClick={()=>closemodal()}>취소</button>
         </div>
     </div>
   );

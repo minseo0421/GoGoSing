@@ -72,7 +72,9 @@ const MusicUpload: React.FC = () => {
       const divStyle: React.CSSProperties = {
         // width: '100%',
         // height: '100%',
-        // background: 'rgba(217, 217, 217, 0.2)',
+        margin:'0 50px',
+        padding:'30px 0',
+        background: 'rgba(217, 217, 217, 0.2)',
         borderRadius: '15px',
       };
 
@@ -103,11 +105,11 @@ const MusicUpload: React.FC = () => {
               <p>업로드 해주신 노래를 기반으로 <br /> 사용자님께 어울리는 노래를 추천합니다.</p>
               <br />
            
-                <div style={{ display: 'flex', flexDirection:'column',justifyContent: 'center', marginTop: '30%' }}>
+                <div style={{ display: 'flex', flexDirection:'column',justifyContent: 'center', marginTop: '25%' }}>
                   <div style={{ margin: 'auto', marginBottom: '10px' }}>
                   
                   {file===null && (
-                    <div style={divStyle}>
+                    <div>
                       <input
                         type="file"
                         accept="audio/*"
@@ -115,12 +117,14 @@ const MusicUpload: React.FC = () => {
                         style={{ display: 'none' }}
                         onChange={({ target: { files } }) => files && files[0] && setFile(files[0])}
                       />
+                      <div style={divStyle} onClick={() => document.getElementById('fileInput')?.click()}>
+
                       <img
                         src="assets/file.png"
                         alt=""
-                        style={{ width: '30%', height: '30%', cursor: 'pointer' }}
-                        onClick={() => document.getElementById('fileInput')?.click()}
-                      />
+                        style={{ width: '50%', height: '50%', cursor: 'pointer' }}
+                        />
+                      </div>
                       <p>사용자님이 부르신 노래 파일을<br />업로드 해주세요!</p>
                       <br />
                       <p>(...노래 파일이 없으신 경우...)<br /><br />
