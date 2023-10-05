@@ -8,11 +8,6 @@ interface AlbumProps {
   title:string;
   singer:string|null;
   songImg:string|null;
-  genreInfo:{
-    genreId:number[];
-    genreType:string;
-  }[];
-  viewCount:number;
 }
 interface Props {
   albums : AlbumProps[]
@@ -94,8 +89,8 @@ const CardLongContainer: React.FC<Props> = ({albums}) => {
       onMouseUp={handleEnd}
       onMouseLeave={handleEnd}
     >
-      {albums.map((album) => {
-        return <CardLong album={album} like={likelist===null ? null : likelist.includes(album.musicId) ? true: false}/>; // 각 ChartLong 컴포넌트에 album 데이터를 prop으로 전달합니다.
+      {albums.map((album,index) => {
+        return <CardLong idx={index+1} album={album} like={likelist===null ? null : likelist.includes(album.musicId) ? true: false}/>; // 각 ChartLong 컴포넌트에 album 데이터를 prop으로 전달합니다.
       })}
     </div>
   );

@@ -1,6 +1,6 @@
 import React,{ useState, useEffect } from "react";
 import styles from './mypage.module.css'
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../axiosinstance";
 import { useDispatch } from "react-redux";
 import { setModal } from "../../store/actions";
@@ -8,6 +8,8 @@ import PitchSmall from "../../components/CardRecord/PitchSmall";
 import VoiceSmall from "../../components/CardRecord/VoiceSmall";
 import RecordStyle from "../../components/CardRecord/RecordSmall.module.css";
 import WithDraw from "./withdrawmodal";
+import ChangePW from "./changepw";
+import ChangeNickName from "./changenickname";
 
 interface userdata { 
     socialType: string;
@@ -97,9 +99,12 @@ const MyPage: React.FC = () => {
   return (
     <div>
         <div className={styles.myprofile}>
-            {accountmodal ==='회원탈퇴' ? <WithDraw closemodal={()=>{setAccountModal('')}} /> : null}
+            {accountmodal ==='회원탈퇴' ? <WithDraw closemodal={()=>{setAccountModal('')}} logout={()=>logout()}/>
+             : accountmodal ==='비밀번호 변경' ? <ChangePW closemodal={()=>{setAccountModal('')}} />
+             : accountmodal ==='닉네임 변경' ? <ChangeNickName closemodal={()=>{setAccountModal('')}} isLogin={isLogin!} setLogin={(value:userdata)=>setLogin(value)} />
+             : null}
             <div style={{justifyContent:'right',display:'flex',marginRight:'7vw'}}>
-                <Link to='/'>닫기</Link>
+                <span onClick={()=>{navigate('/')}}>닫기</span>
             </div>
             <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'100%',padding:'5% 10% 5% 10%',}}>
                 <div style={{ width: "30%"}}>
@@ -146,8 +151,8 @@ const MyPage: React.FC = () => {
                     <p style={{display:'flex',justifyContent:'start',alignItems:'center',textAlign:'center'}}>
                         <img src={isLogin?.socialType==='KAKAO' ? "assets/kakao_logo.png": isLogin?.socialType==='GOOGLE' ? "assets/google_logo.png" : isLogin?.socialType==='NAVER' ? "assets/naver_logo.png":"assets/ggs_logo.png"} 
                             style={{borderRadius:'50%', width:'25px', marginRight:'10px',marginTop:'5px', boxShadow:'5px 5px 5px rgba(0, 0, 0, 0.2)'}} alt="" />
-                        <span style={{fontSize:'25px', fontWeight:'bold', marginRight:'10px'}}>{isLogin?.nickname} 님</span>
-                        <img src="assets/account_edit.png" alt="" onClick={()=>{alert('닉네임 변경')}} />
+                        <span style={{fontSize:'18px', fontWeight:'bold', marginRight:'10px'}}>{isLogin?.nickname} 님</span>
+                        <img src="assets/account_edit.png" alt="" onClick={()=>{setAccountModal('닉네임 변경')}} />
                     </p>
                     <p style={{fontSize:'16px', margin:0,}}>성　　별 : {isLogin?.gender==='MALE' ? '남자':'여자'}</p>
                     <p style={{fontSize:'16px',marginTop:0,}}>생년월일 : {isLogin?.birth}</p>
@@ -155,7 +160,7 @@ const MyPage: React.FC = () => {
             </div>
             <div style={{justifyContent:'space-around',display:'flex', width:'100%', padding:'0 5% 5% 5%',boxSizing:'border-box'}}>
                 {isLogin?.socialType==='X' ? 
-                <button style={{width:'40%',borderRadius:'2rem',height:'45px',backgroundColor:'#7290FA', border:'none',boxShadow:'5px 5px 10px rgba(0, 0, 0, 0.1)'}} onClick={()=>{alert('비밀번호 변경')}}>비밀번호 변경</button>
+                <button style={{width:'40%',borderRadius:'2rem',height:'45px',backgroundColor:'#7290FA', border:'none',boxShadow:'5px 5px 10px rgba(0, 0, 0, 0.1)'}} onClick={()=>{setAccountModal('비밀번호 변경')}}>비밀번호 변경</button>
                 : <button style={{width:'40%',borderRadius:'2rem',height:'45px',backgroundColor:'rgba(255, 255, 255, 0.7)', border:'none',boxShadow:'5px 5px 10px rgba(0, 0, 0, 0.3)'}} disabled>비밀번호 변경<br /><span style={{fontSize:'6px'}}>(소셜 회원입니다)</span></button>}
                 <button style={{width:'40%',borderRadius:'2rem',height:'45px',backgroundColor:'#F27474', border:'none',boxShadow:'5px 5px 10px rgba(0, 0, 0, 0.3)'}}
                 onClick={()=>logout()}>로그아웃</button>

@@ -9,11 +9,6 @@ interface AlbumProps {
   title:string;
   singer:string|null;
   songImg:string|null;
-  genreInfo:{
-    genreId:number[];
-    genreType:string;
-  }[];
-  viewCount:number;
 }
 interface Props {
   albums : AlbumProps[];
@@ -122,8 +117,8 @@ const CardLongSearchContainer: React.FC<Props> = ({albums,keyword,selectedValue}
       onMouseLeave={handleEnd}
       style={{ overflow:'auto'}}
     >
-    {albumdata.map((album) => (
-        <CardLong album={album} like={likelist === null ? null : likelist.includes(album.musicId) ? true : false} />
+    {albumdata.map((album,index) => (
+        <CardLong idx={index+1} album={album} like={likelist === null ? null : likelist.includes(album.musicId) ? true : false} />
       ))}
     </div>
   );
