@@ -86,7 +86,7 @@ public class GenreService {
 		List<LikeMusicListResponseDto> result = new ArrayList<>();
 		for (Music music : musicList) {
 			result.add(
-				new LikeMusicListResponseDto(music.getId(), music.getTitle(), music.getSinger(), music.getSongImg()));
+				new LikeMusicListResponseDto(music.getId(), music.getSinger(), music.getSongImg(), music.getTitle()));
 		}
 		return result;
 	}
@@ -103,16 +103,16 @@ public class GenreService {
 			List<Music> musicList = musicRepository.findTopByPick();
 			for (Music music : musicList) {
 				result.add(
-					new LikeMusicListResponseDto(music.getId(), music.getTitle(), music.getSinger(),
-						music.getSongImg()));
+					new LikeMusicListResponseDto(music.getId(), music.getSinger(), music.getSongImg(),
+						music.getTitle()));
 			}
 			return result;
 		} else {
 			// 좋아하는 장르 선택했을 때는 장르 기반으로 10개
 			List<Music> musicList = musicRepository.findListByPick(findGenres(userDetails));
 			for (Music music : musicList) {
-				result.add(new LikeMusicListResponseDto(music.getId(), music.getTitle(), music.getSinger(),
-					music.getSongImg()));
+				result.add(new LikeMusicListResponseDto(music.getId(), music.getSinger(), music.getSongImg(),
+					music.getTitle()));
 			}
 			return result;
 		}
@@ -125,7 +125,7 @@ public class GenreService {
 		List<Music> musicList = musicRepository.findTopByPick();
 		for (Music music : musicList) {
 			result.add(
-				new LikeMusicListResponseDto(music.getId(), music.getTitle(), music.getSinger(), music.getSongImg()));
+				new LikeMusicListResponseDto(music.getId(), music.getSinger(), music.getSongImg(), music.getTitle()));
 		}
 		return result;
 	}
