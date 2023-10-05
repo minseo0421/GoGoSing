@@ -185,6 +185,7 @@ const MusicDetail: React.FC = () => {
             width: "105%",
           }} onError={()=>setImgErr(true)} />}
           <div className={musicStyle.musicContainer}>
+            <div className={musicStyle.numFont}>{album?.musicId}</div>
             <div className={musicStyle.titleFont}>{album?.title}</div>
             <div className={musicStyle.singerFont}>{album?.singer}</div>
             {imgErr ? <img crossOrigin="anonymous" src='assets/default_album.png' alt="" className={musicStyle.musicImage}  />
@@ -235,7 +236,7 @@ const MusicDetail: React.FC = () => {
                     }}/>}
                 </div>
             </div>
-            <div className={musicStyle.lyricsContainer}>
+       
               {album?.lyric ? 
               <p className={musicStyle.lyrics}>
               {album?.lyric.split('\n').map((line, index) => (
@@ -248,7 +249,7 @@ const MusicDetail: React.FC = () => {
               <p className={musicStyle.lyrics}>
                 <h2>가사 정보가 없습니다.</h2>
               </p>}
-            </div>
+         
           
         </ModalContainer>
       </Background>

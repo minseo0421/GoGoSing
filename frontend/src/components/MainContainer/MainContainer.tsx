@@ -204,17 +204,17 @@ const MainContainer: React.FC = () => {
       onMouseLeave={handleEnd}
     >
       <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
-        <span style={{fontSize:'20px'}}>노래방 인기차트🎶</span>
+        <span style={{fontSize:'20px',fontWeight:'bold'}}>노래방 인기차트🎶</span>
         <span style={{fontSize:'16px'}} onClick={()=>{navigate('/chart?type=popular')}}>더보기</span>
       </div>
       <CardSmallContainer albums={popularchart.slice(0,10)} />
       <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
-        <span style={{fontSize:'20px'}}>👇이 노래는 어떠신가요?</span>
+        <span style={{fontSize:'20px',fontWeight:'bold'}}>👇이 노래는 어떠신가요?</span>
         <span style={{fontSize:'20px'}} onClick={newCarousel}>🔃</span>
       </div>
       <CarouselComponent albums={Carousel} />
-      <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
-        <span style={{fontSize:'20px'}}>장르별 인기차트</span>
+      <div style={{display:'flex', width:'90%', margin:'0 5%',marginTop:'5%', justifyContent:'space-between',alignItems:'center'}}>
+        <span style={{fontSize:'20px',fontWeight:'bold'}}>장르별 인기차트</span>
       </div>
       <div style={{display:'flex', width:'90%', margin:'2% 5%', justifyContent:'space-between',alignItems:'center'}}>
         <div onClick={()=>{navigate('/genremusic?type=발라드')}} style={{backgroundColor:'#FFBD59',width:'30%',height:'40px', justifyContent:'center',alignItems:'center', display:'flex',fontSize:'18px',borderRadius:10,border:'0.5px solid white'}}>발라드</div> 
@@ -243,7 +243,7 @@ const MainContainer: React.FC = () => {
       : null}
       {plusview ? <p onClick={()=>setplusview(false)} style={{margin:0,marginBottom:20}}>⇧ 숨기기</p>: <p onClick={()=>setplusview(true)} style={{margin:0,marginBottom:20}}>더보기 ⇩</p> }
       <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
-        <span style={{fontSize:'20px'}}>당신의 목소리에 맞는 노래🎤</span>
+        <span style={{fontSize:'20px',fontWeight:'bold'}}>당신의 목소리에 맞는 노래🎤</span>
         {voiceData &&
         <span style={{fontSize:'16px'}} onClick={()=>{
           if (AccessToken) {
@@ -256,7 +256,7 @@ const MainContainer: React.FC = () => {
       </div>
       <VoiceLong voiceData={voiceData} />
       <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
-        <span style={{fontSize:'20px'}}>당신의 음역대에 맞는 노래🎼</span>
+        <span style={{fontSize:'20px',fontWeight:'bold'}}>당신의 음역대에 맞는 노래🎼</span>
         {pitchData &&
         <span style={{fontSize:'16px'}} onClick={()=>{
           if (AccessToken) {
@@ -270,21 +270,21 @@ const MainContainer: React.FC = () => {
       <PitchLong pitchData={pitchData} />
       {AccessToken &&
         <>
-      <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
-        <span style={{fontSize:'20px'}}>당신의 좋아요 추천 노래❤️</span>
-        {likechart.length!==0 &&
-          <span style={{fontSize:'16px'}} onClick={()=>{
-          if (AccessToken) {
-            navigate('/chart?type=like')
-          } else {
-            alert('로그인이 필요합니다')
-            navigate('/login')
-          }
-          }}>더보기</span>
-        }
-      </div>
-      {likechart.length===0 ? <p>조회 결과가 없습니다.😭 <br /> 좋아요를 누르고 추천을 받아보세요!</p>:
-      <CardSmallContainer albums={likechart.slice(0,10)} />}
+          <div style={{display:'flex', width:'90%', margin:'0 5%', justifyContent:'space-between',alignItems:'center'}}>
+            <span style={{fontSize:'20px',fontWeight:'bold'}}>당신의 좋아요 추천 노래❤️</span>
+            {likechart.length!==0 &&
+              <span style={{fontSize:'16px'}} onClick={()=>{
+              if (AccessToken) {
+                navigate('/chart?type=like')
+              } else {
+                alert('로그인이 필요합니다')
+                navigate('/login')
+              }
+              }}>더보기</span>
+            }
+          </div>
+          {likechart.length===0 ? <p>조회 결과가 없습니다.😭 <br /> 좋아요를 누르고 추천을 받아보세요!</p>:
+          <CardSmallContainer albums={likechart.slice(0,10)} />}
       </>
       }
 
