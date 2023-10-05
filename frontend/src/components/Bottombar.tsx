@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "./bar.module.css";
 
 import { AppState } from "../store/state";
@@ -14,7 +14,7 @@ const BottomBar: React.FC<BottomBarProps> = ({ onClickButton }) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const isPage = useSelector((state: AppState) => state.isPage);
-
+  const navigate = useNavigate();
   return (
     <>
       {location.pathname === "/" ||
@@ -83,6 +83,12 @@ const BottomBar: React.FC<BottomBarProps> = ({ onClickButton }) => {
                 isPage === 4 ? styled.sel_icon : null
               }`}
               onClick={() => {
+                const AccessToken=localStorage.getItem('AccessToken')
+                if (!AccessToken) {
+                  alert('로그인이 필요한 기능입니다')
+                  navigate('/login')
+                  return
+                }
                 onClickButton(3);
                 dispatch(setPage(4));
               }}
