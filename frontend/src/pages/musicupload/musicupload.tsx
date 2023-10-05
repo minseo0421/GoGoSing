@@ -88,7 +88,7 @@ const MusicUpload: React.FC = () => {
                 </div>
             ) : responseData ? (
                 // 응답 데이터가 있는 경우 데이터를 표시
-                <div>
+                <div style={{marginTop:'35%'}}>
                   <h2>당신의 음색과</h2>
                     <h2>가장 잘 맞는 노래</h2>
                     {imgErr ? <img crossOrigin="anonymous"  onClick={handleAlbumClick} src='assets/default_album.png' alt="" style={{ width: '60%' }} />
@@ -96,7 +96,7 @@ const MusicUpload: React.FC = () => {
                     <p>노래방 번호: {responseData.musicId}</p>
                     <p>Singer: {responseData.singer}</p>
                     <p>Title: {responseData.title}</p>
-                    <button onClick={Home} style={{ width: '50%', margin: 'auto', borderRadius:'10px'}}>Go home</button>
+                    <button onClick={Home} style={{ width: '30%', margin: 'auto', borderRadius:'10px', height:'40px'}}>Go home</button>
                 </div>
             ) : (
               <div style={{marginTop:'20%'}}>
