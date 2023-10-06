@@ -1,0 +1,17 @@
+.topbar {
+    margin:10px 25px 0 25px;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+.pitch {
+    font-size: 20px;
+    text-align: left;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+  }
+  
