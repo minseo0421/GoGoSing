@@ -1,0 +1,19 @@
+.input_account {
+    background-color: #D7D7D7;
+    border:1px solid white;
+    border-radius: 1rem;
+    width: 70%;
+    height: 50px;
+    padding:0 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+.findbtn {
+    border: 1px solid white;
+    width:40%;
+    height: 50px;
+    border-radius: 1rem;
+    background-color: rgba(255, 203, 203, 0.5);
+    color:white;
+}

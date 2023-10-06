@@ -54,6 +54,13 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         User createdUser = getUser(extractAttributes, socialType);
 
+        /**
+         * 추후 '탈퇴한 회원입니다' 에러 메시지 날라가게 처리해주기
+         */
+        if(createdUser.getDeletedDate() != null) {
+            throw new OAuth2AuthenticationException("탈퇴한 회원입니다.");
+        }
+
         // DefaultOAuth2User를 구현한 CustomOAuth2User 객체를 생성하여 반환
         return new CustomOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(createdUser.getRole().getKey())),

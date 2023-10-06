@@ -1,0 +1,37 @@
+.Navbar {
+    border-top:#90FFF8 2px solid;
+    width: 100%;
+    height: 100%;
+}
+  
+.iconbar {
+    width:80%;
+    display: flex;
+    justify-content: space-between;
+    margin: 15px auto 30px auto;
+    padding: 0 10px;
+    box-sizing: border-box;
+    color:white;
+}
+
+.iconbtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+    color:#90FFF8;
+    transition: transform 0.3s; /* 호버 시 부드러운 변환 효과를 위한 트랜지션 설정 */
+}
+
+.iconbtn:hover {
+    transform: scale(1.1); /* 이미지를 1.1배 확대 */
+}
+
+.iconbtn img {
+    width:30px
+}
+
+.sel_icon {
+    color:white;
+}
