@@ -72,9 +72,18 @@ public class SecurityConfig {
                 .formLogin().disable() // FormLogin 사용 X
                 .httpBasic().disable() // httpBasic 사용 X
                 .csrf().disable() // csrf 보안 사용 X
-                .headers().frameOptions().disable()
+                .headers()
+//                .contentSecurityPolicy("require-corp")
+//                .and()
+                .frameOptions().disable()
+                .addHeaderWriter((request, response) -> {
+                    response.setHeader("Cross-Origin-Embedder-Policy", "credentialless");
+                    response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+                    response.setHeader("Access-Control-Allow-Origin", "*"); // 모든 출처에서 접근 허용
+
+                })
                 .and()
-                .cors()
+                .cors().and().authorizeRequests()
                 .and()
 
                 // 세션 사용 X, 토큰 사용
@@ -84,9 +93,10 @@ public class SecurityConfig {
                 // URL 별 권한 관리
                 .authorizeRequests()
 
-                    .antMatchers("/", "/favicon.ico", "/api/oauth2/**","/api/sessions/**", "/api/user/checkbyemail/**", "/api/user/checkbynickname/**").permitAll()
+                .antMatchers("/", "/favicon.ico", "/oauth2/**","/api/sessions/**","/api/email/**").permitAll()
                 .antMatchers(PERMIT_URL_ARRAY).permitAll()
-                .antMatchers("/api/user/signup").permitAll() // 회원가입 접근 OK
+                .antMatchers("/api/user/signup", "/api/login", "/api/user/nicknameCheck/**").permitAll() // 회원가입 접근 OK
+                .antMatchers("/api/music/chart", "/api/music/detail/*", "/api/search/**", "/api/genre/musicList/**", "/api/genre/list").permitAll()
                 .anyRequest().authenticated() // 그 외 경로는 모두 인증된 사용자만 접근 가능
                 .and()
 

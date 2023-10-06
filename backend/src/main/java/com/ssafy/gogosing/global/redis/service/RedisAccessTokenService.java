@@ -36,6 +36,8 @@ public class RedisAccessTokenService {
             return false;
         }
 
+        // 회원 탈퇴 추가하면 "QUIT"랑 "LOGOUT" 구분하는 처리 추가해주기
+
         return true;
     }
 

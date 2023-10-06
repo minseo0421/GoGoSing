@@ -1,0 +1,57 @@
+/* CardLiked.module.css */
+
+.container {
+  display: flex;
+  width: 100%; /* 가로 길이 100% 설정 */
+  height: 80px;
+  box-sizing: border-box;
+  margin: 5px;
+}
+
+.image {
+  height: 100%;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.infoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  margin: 10px 10px;
+  height: 100%;
+  width: 60%;
+}
+
+.musicinfo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  max-width: 80%;
+}
+
+.musicinfo span {
+  /* display: inline-block; */
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  text-align: start;
+  margin-top: 5px;
+}
+.title {
+  font-weight: bold;
+}
+
+.icon {
+  font-size: 24px;
+  color: red;
+  cursor: pointer;
+  /* width: 20%; */
+}

@@ -1,0 +1,12 @@
+/* MainContainer.module.css */
+.container {
+  width: 100%;
+  height:100%;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+}
+
+/* If you'd like to hide the scrollbar for Webkit browsers as well */
+::-webkit-scrollbar {
+  display: none;
+}

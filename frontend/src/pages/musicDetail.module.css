@@ -1,0 +1,94 @@
+/* musicDetail.module.css */
+.blur {
+  position: absolute;
+  top:0;
+  z-index: 1001;
+  background-size: cover; /* 이미지를 요소의 전체 크기에 맞춰서 보여줍니다. */
+  background-repeat: no-repeat;
+  background-position: center center;
+  filter: blur(3px);
+  opacity: 0.7;
+  width: 120vw; /* 너비를 뷰포트의 105%로 설정 */
+  height: 50%; /* 높이를 뷰포트의 50%로 설정 */
+  border-radius: 20px;
+}
+
+.lyricsContainer {
+  /* height: 50vh; 화면 세로 크기의 50%만큼 높이를 설정 */
+  color: aquamarine;
+  margin:10% 0;
+}
+
+.lyrics {
+  line-height: 2;
+  color: white;
+  font-size: 16px;
+  text-align: center;
+  max-height: 35vh;
+  overflow-y: auto;
+  margin:5% 10%;  
+  width: 80%; /* 가로 폭을 설정하거나 필요한 경우 조절 */
+}
+
+.musicContainer {
+  /* flex: 50;
+  position: absolute; */
+  width: 90%;
+  margin-top: 15%;
+  z-index: 1002;
+  /* z-index: 2000; */
+  /* margin-top: 5%; */
+}
+
+.iconContainer {
+  height: 10vw;
+  width: 90%;
+  margin: 0 5%;
+  padding:14px 0;
+  border-radius: 20px;
+  justify-content: space-evenly;
+  align-items: center;
+  display: flex; /* 이 부분 추가: 이미지들을 가로로 나열하기 위해 flexbox 사용 */
+  background-color: rgba(240, 248, 255,0.2);  
+}
+
+.iconContainer img {
+  margin-left: 5%;
+  margin-right: 5%;
+  height: 100%;
+  width: auto;
+}
+
+.musicImage {
+  margin-top: 5%;
+  margin-bottom: 10%;
+  width: 150px;
+  height: 150px;
+  border-radius: 20px;
+}
+
+.numFont {
+  background-color: aliceblue;
+  color:black;
+  width:50px;
+  margin:auto;
+  padding: 2px 5px;
+  border-radius: 10px;
+}
+.titleFont {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+.singerFont {
+  margin-top: 10px;
+  font-size: 16px;
+  /* margin-bottom: 3%; */
+}
+
+.icon {
+  font-size: 35px;
+  color: red;
+  cursor: pointer;
+  width: 20%;
+}

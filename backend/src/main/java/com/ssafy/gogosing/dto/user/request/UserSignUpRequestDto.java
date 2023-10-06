@@ -18,6 +18,9 @@ public class UserSignUpRequestDto {
     @NotBlank(message = "email은 빈값이 올 수 없습니다")
     private String email;
 
+    @NotBlank(message = "emailCertificationNumber은 빈값이 올 수 없습니다")
+    private String emailCertificationNumber;
+
     @NotBlank(message = "password는 빈값이 올 수 없습니다")
     private String password;
 
@@ -38,7 +41,7 @@ public class UserSignUpRequestDto {
                 .nickname(this.nickname)
                 .gender(Gender.valueOf(this.gender))
                 .birth(LocalDate.parse(this.birth))
-                .role(Role.USER)
+                .role(Role.FIRST)
                 .socialType(SocialType.X)
                 .build();
     }
